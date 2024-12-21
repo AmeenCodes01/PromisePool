@@ -1,0 +1,10 @@
+{
+ name:"citrus", 
+ country:"pakistan", 
+ adminRoom:"vit",
+ scores: 100, 
+ activeSession:{
+    sessionId:"sessionID",
+    rated:false,  
+ }
+}
