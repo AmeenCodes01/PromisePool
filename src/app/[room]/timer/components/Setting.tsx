@@ -73,12 +73,12 @@ function Setting({
         <div className="flex flex-col gap-2">
           <span>mode</span>
 
-          <Toggle
+          {/* <Toggle
             onClick={() => setMode(mode == "work" ? "break" : "work")}
             className="border-[1px]"
           >
             {mode == "work" ? "Work" : "Break"}
-          </Toggle>
+          </Toggle> */}
         </div>
       </DialogContent>
     </Dialog>

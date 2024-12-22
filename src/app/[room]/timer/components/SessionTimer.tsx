@@ -8,6 +8,7 @@ import ProgressDialog from "./ProgressDialog";
 import { useMutation, useQueries, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import usePersistState from "@/hooks/usePersistState";
+import { Toggle } from "@/components/ui/toggle";
 
 function SessionTimer() {
   const [workMin, setWorkMin] = usePersistState(60, "sec");
@@ -29,14 +30,15 @@ function SessionTimer() {
   8; // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
   useEffect(() => {
     if (secLeft == 0 && mode == "work") {
-      console.log(secLeft, "open rate");
       // get progress. open progres
       onOpen();
+      
     }
   }, [secLeft]);
-
+console.log(secLeft,"SECLEFT")
   useEffect(() => {
     mode == "break" ? setSecLeft(breakMin) : setSecLeft(workMin);
+    onPause()
   }, [mode]);
 
   const onChangeSec = (min: number, type?: "work" | "break") => {
@@ -51,7 +53,7 @@ function SessionTimer() {
 
   const onSeshStart = async () => {
     // call convex function. if returns true, start session.
-    if (mode == "work") {
+    if (mode == "work" && secLeft == workMin) {
       const result = await startSesh({ duration: workMin, room: "vit" });
       if (result?.message) {
         console.log("prev sesh not rated");
@@ -68,10 +70,16 @@ function SessionTimer() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
       {/* Countdown */}
-      <div className="flex flex-row  justify-center items-center ">
-        <div className="mr-2">
+        <Toggle
+            onClick={() => setMode(mode == "work" ? "break" : "work")}
+            className="border-[1px] justify-center self-center justify-self-center mb-4"
+          >
+            {mode == "work" ? "Work" : "Break"}
+          </Toggle>
+      <div className="flex flex-row  justify-center items-center relative ">
+        <div className="flex-shrink-0 flex">
           <span className="text-3xl">
             {minutes < 10 ? "0" + minutes : minutes}:
           </span>
@@ -79,6 +87,7 @@ function SessionTimer() {
             {seconds < 10 ? "0" + seconds : seconds}
           </span>
         </div>
+    <div className=" pl-2">
 
         <Setting
           workMin={workMin}
@@ -86,7 +95,8 @@ function SessionTimer() {
           onChangeSec={onChangeSec}
           mode={mode}
           setMode={setMode}
-        />
+          />
+          </div>
       </div>
       <div className="flex flex-row gap-2 mt-4  mx-auto justify-center ">
         {pause ? (

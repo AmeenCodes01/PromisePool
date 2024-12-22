@@ -11,9 +11,9 @@ function useCountdown({min}: {min: number}) {
     setSecLeft(secLeft - 1 < 0 ? 0 : secLeft - 1);
   }
 
-  const onPause = () => setPause(!pause);
+  const onPause = () => setPause(true);
   const onPlay = () => {
-    setPause(!pause);
+    setPause(false);
   };
   const onReset = () => {
     //del Session
