@@ -6,15 +6,15 @@ import Stream from "./components/Stream";
 function page() {
  
   return (
-    <div className="w-full h-full flex justify-center items-center ">
+    <div className="w-full h-full flex flex-col sm:flex-row justify-center items-center sm:p-0 pt-8 ">
       {/* Video */}
-      <div className="flex flex-1 bg-gray-600">{/* Yt video embed, simple */}
+      <div className="flex flex-1  w-full h-full">{/* Yt video embed, simple */}
 
       <Stream/>
 
       </div>
       {/* Timer */}
-      <div className="flex flex-1  ">
+      <div className="flex flex-1  sm:justify-center items-center    ">
 
       <Tabs defaultValue="pomodoro" className="">
   <TabsList>

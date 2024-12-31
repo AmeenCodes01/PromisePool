@@ -5,6 +5,7 @@ import {
   Inbox,
   Search,
   Settings,
+  Store
 } from "lucide-react";
 
 import {
@@ -50,6 +51,11 @@ const items = [
     title: "History",
     url: "history",
     icon: Settings,
+  },
+  {
+    title: "Shop",
+    url: "/shop",
+    icon: Store,
   },
 ];
 

@@ -70,7 +70,7 @@ console.log(secLeft,"SECLEFT")
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col sm:justify-center sm:items-center ">
       {/* Countdown */}
         <Toggle
             onClick={() => setMode(mode == "work" ? "break" : "work")}
