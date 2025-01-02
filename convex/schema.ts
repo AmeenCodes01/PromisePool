@@ -25,6 +25,18 @@ sessions: defineTable({
     room: v.string(),
     userId: v.id("users")
 
-}).index("userId",["userId"])
+}).index("userId",["userId"]),
+
+promises:defineTable({
+    title:v.string(), 
+    coins: v.optional(v.number()),
+    userId:v.id("users")   
+}).index("by_userId", ["userId"]),
+
+entertainment: defineTable({
+    title: v.string(), 
+    price: v.number(), 
+    finished: v.boolean(), 
+})  
 
   });
