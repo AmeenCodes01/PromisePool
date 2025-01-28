@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import useCountdown from "./useCountdown";
 import Setting from "./Setting";
 import { Play, Pause, TimerReset, Settings } from "lucide-react";
@@ -15,9 +15,10 @@ function SessionTimer() {
   const [breakMin, setBreakMin] = usePersistState(10, "breakSec");
   const [rating, setRating] = useState<number | null>(null);
   const [mode, setMode] = usePersistState<"work" | "break">("work", "mode");
+  const [seshId, setSeshId] = usePersistState<null | string>(null,"seshId")
   const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
     {
-      min: mode == "work" ? workMin : breakMin,
+      sec: mode == "work" ? workMin*60 : breakMin*60,
     }
   );
   const onOpen = useDialog((state) => state.onOpen);
@@ -27,7 +28,7 @@ function SessionTimer() {
   const seconds = Math.floor(secLeft % 60);
   const startSesh = useMutation(api.sessions.start);
   const resetSesh = useMutation(api.sessions.reset);
-  8; // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
+   // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
   useEffect(() => {
     if (secLeft == 0 && mode == "work") {
       // get progress. open progres
@@ -35,26 +36,26 @@ function SessionTimer() {
       
     }
   }, [secLeft]);
-console.log(secLeft,"SECLEFT")
+
   useEffect(() => {
-    mode == "break" ? setSecLeft(breakMin) : setSecLeft(workMin);
+    mode == "break" ? setSecLeft(breakMin*60) : setSecLeft(workMin*60);
     onPause()
   }, [mode]);
 
   const onChangeSec = (min: number, type?: "work" | "break") => {
     if (type === "break") {
       setBreakMin(min);
-      mode == "break" && setSecLeft(min);
+      mode == "break" && setSecLeft(min*60);
     } else {
       setWorkMin(min);
-      mode == "work" && setSecLeft(min);
+      mode == "work" && setSecLeft(min*60);
     }
   };
-
   const onSeshStart = async () => {
     // call convex function. if returns true, start session.
-    if (mode == "work" && secLeft == workMin) {
+    if (mode == "work" && secLeft == workMin*60) {
       const result = await startSesh({ duration: workMin, room: "vit" });
+      console.log(result,"sesh start")
       if (result?.message) {
         console.log("prev sesh not rated");
         onOpen();
@@ -70,32 +71,36 @@ console.log(secLeft,"SECLEFT")
   };
 
   return (
-    <div className="flex flex-col sm:justify-center sm:items-center ">
+    <div className="flex flex-col sm:justify-center sm:items-center border-4 p-6 rounded-md bg-green-900 border-green-700   ">
       {/* Countdown */}
+      <div className="flex flex-row gap-2">
+
         <Toggle
             onClick={() => setMode(mode == "work" ? "break" : "work")}
             className="border-[1px] justify-center self-center justify-self-center mb-4"
-          >
+            >
             {mode == "work" ? "Work" : "Break"}
           </Toggle>
-      <div className="flex flex-row  justify-center items-center relative ">
-        <div className="flex-shrink-0 flex">
-          <span className="text-3xl">
-            {minutes < 10 ? "0" + minutes : minutes}:
-          </span>
-          <span className="text-3xl">
-            {seconds < 10 ? "0" + seconds : seconds}
-          </span>
-        </div>
-    <div className=" pl-2">
-
-        <Setting
+          <Setting
           workMin={workMin}
           breakMin={breakMin}
           onChangeSec={onChangeSec}
           mode={mode}
           setMode={setMode}
           />
+          </div>
+      <div className="flex flex-row  justify-center items-center relative ">
+        <div className="flex-shrink-0 flex">
+          <span className="text-4xl font-mono">
+            {minutes < 10 ? "0" + minutes : minutes}:
+          </span>
+          <span className="text-xl font-mono">
+            {seconds < 10 ? "0" + seconds : seconds}
+          </span>
+        </div>
+    <div className=" pl-2 ">
+
+      
           </div>
       </div>
       <div className="flex flex-row gap-2 mt-4  mx-auto justify-center ">
@@ -104,7 +109,7 @@ console.log(secLeft,"SECLEFT")
         ) : (
           <>
             <Pause onClick={() => onPause()} />
-            <TimerReset onClick={onSeshReset} />
+            <TimerReset onClick={()=>onSeshReset()} />
           </>
         )}
       </div>

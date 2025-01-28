@@ -41,7 +41,6 @@ onReset
   //also show the amount of coins earned.
   // watch coins + money.
   // calc function, api call from here as well.
-    console.log(rated)
   return (
     <div>
       <AlertDialog
@@ -64,7 +63,7 @@ onReset
             onChange={(e) => setRating(parseInt(e.target.value))}
           />
           <span className="italic text-sm ">rate out of 10</span>
-          {rated ? (
+          {/* {rated ? (
             <div className="flex flex-col ">
               <span className="text-sm opacity-80">
                 promise coins:{"  "}
@@ -75,10 +74,10 @@ onReset
                 {(duration / 60).toFixed(2)}
               </span>
             </div>
-          ) : null}
+          ) : null} */}
 
           <AlertDialogFooter className="sm:justify-end flex flex-row">
-          <Button
+          {/* <Button
             className="justify-end w-fit "
             onClick={() => {
               setRated(true);
@@ -86,17 +85,17 @@ onReset
             disabled={rating ? false : true}
           >
             Rate
-          </Button>
+          </Button> */}
             <Button
             className="justify-end w-fit "
             onClick={() => {
-              endSesh({rating: rating as number,pCoins: calcReward(duration,rating as number), wCoins:parseFloat((duration / 60).toFixed(2))   })
-            //  setRated(true);
+              endSesh({rating: rating as number,pCoins: calcReward(duration,rating as number), wCoins:calcReward(duration, rating as number )   })
+              setRated(false);
               onClose()
             }}
             disabled={rating ? false : true}
           >
-            Close
+            Rate
           </Button>
           <Button onClick={()=> {
             resetSesh()

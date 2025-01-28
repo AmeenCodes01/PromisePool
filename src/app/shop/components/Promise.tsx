@@ -1,78 +1,48 @@
 "use client"
-import { useMutation } from 'convex/react';
-import { BadgePlus, Edit, Plus } from 'lucide-react';
-import React from 'react'
-import { api } from '../../../../convex/_generated/api';
-import { Doc } from '../../../../convex/_generated/dataModel';
-import PromiseDialog from './PromiseDialog';
+import React, { Fragment } from "react";
+import PromiseCard from "./PromiseCard";
+import { Coins, Plus } from "lucide-react";
+import { useMutation, useQuery } from "convex/react";
+import PromiseDialog from "./PromiseDialog";
+import { api } from "../../../../convex/_generated/api";
+import CoinBar from "./CoinBar";
+import CardList from "./CardList";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
+function Promise() {
+    const user = useQuery(api.users.current);
+    const promises = useQuery(api.promises.get);
 
-
-function Promise({
-    promise, 
-
-}: {promise:Doc<"promises">}) {
-  const edit = useMutation(api.promises.edit)
-  const del = useMutation(api.promises.del)
-  const invest = useMutation(api.promises.invest)
-
-  const onEdit = (title:string)=>{
-     edit({title, pId:promise._id})
-  }
-  const onDel=()=> del({pId:promise._id})
-
-  const onInvest= (title:string,coins:number)=> invest({pId:promise._id, coins})
-
+    const create = useMutation(api.promises.create);
+    const createPromise = async (title: string, coins: number) => {
+        console.log(title, coins);
+        await create({ title, coins });
+      };
   return (
-    <>
-      <div className="flex bg-accent flex-col h-[300px] w-[200px]  font-serif border-1 p-1">
-        <PromiseDialog
-        icon={        <Edit className='ml-auto ' size={18}/>}
-        header='Edit promise'
-        editTitle={promise.title}
-        onClick={onEdit}
-        btnTitle={"Edit"}
-        
-      
-        >
-          <PromiseDialog.NameInput/>
-          <div className='flex flex-row gap-2 justify-end'>
-
-          <PromiseDialog.Btn/>
-          <PromiseDialog.Btn customBtnTitle={"Delete"} customOnClick={onDel} />
-          </div>
-        </PromiseDialog>
-        <div className=" items-center justify-center p-[10px] h-[90%] flex text-md   ">
-          <span className="text-center text-accent-content tracking-wide">
-            {promise.title}
-          </span>
-        </div>
-        <div className=" w-[100%] p-[5px] flex  flex-row gap-[10px] items-center justify-between bg-neutral text-white ">
-          {promise.coins}
+    <div>
+        <div className="w-full flex flex-row p-2 justify-between   ">
+        <div className="self-center my-auto">
           <PromiseDialog
-        icon={     <BadgePlus size={18}/>}
-        header='Invest'
-        onClick={onInvest}
-        btnTitle={"Invest"}
-        
-      
-        >
-          <PromiseDialog.CoinsInput/>
-
-          <PromiseDialog.Btn/>
-        </PromiseDialog>
-          
-          {/* <CiSquarePlus
-            size={25}
-            onClick={() => {
-              setMode("update");
-              setCurrentProm({_id: id, promise: promise, coins: coins});
-              openModal();
-            }}
-          /> */}
+            maxCoins={user?.pCoins as number}
+            icon={<Plus />}
+            header={"Create new promise"}
+            btnTitle="Create"
+            onClick={createPromise}
+          >
+            <PromiseDialog.NameInput />
+            <PromiseDialog.CoinsInput />
+            <PromiseDialog.Btn/>
+          </PromiseDialog>
         </div>
+       <CoinBar coins={user?.pCoins}/>
+        {/* <span>watch coins</span>
+            <div className='border-2 p-2 w-fit h-fit'>{user?.wCoins}</div> */}
       </div>
-    </>
+      {/* Promises */}
+      <CardList data={promises as Doc<"promises">[]} type="promise"/>
+
+
+    </div>
   )
 }
 

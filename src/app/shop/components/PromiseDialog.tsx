@@ -1,11 +1,9 @@
 "use client";
-import { LucideProps, Plus } from "lucide-react";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,22 +19,22 @@ import {
   useState,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { edit } from "../../../../convex/promises";
+
+
 type CommonProps = {
   pId?: Id<"promises">;
   btnTitle: string;
   onClick: 
    |((title: string, coins: number) => void) // Requires both
   | ((title: string) => void) // Requires only title
-  | ((coins: number) => void); // Requires only coins
+  | ((coins: number) => void) // Requires only coins
+  | (()=>void);
   maxCoins?: number;
   
 };
 type PDialogProps = PropsWithChildren &
-  CommonProps & { icon?: React.ReactElement; header: string; editTitle?:string; };
+  CommonProps & { icon?: React.ReactElement; header: string; editTitle?:string; editCoins?:number; };
 type PDialogCtxProps = Pick<
   CommonProps,
   "pId" | "btnTitle" | "onClick"  | "maxCoins"
@@ -66,10 +64,11 @@ function PromiseDialog({
   btnTitle,
   onClick,
   children,
+  editCoins
 }: PDialogProps) {
   console.log(editTitle)
   const [title, setTitle] = useState( editTitle ??"");
-  const [coins, setCoins] = useState(0);
+  const [coins, setCoins] = useState(editCoins ??0);
 
   return (
     <PDialogContext.Provider
@@ -88,7 +87,7 @@ function PromiseDialog({
         <DialogTrigger asChild>{icon}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Promise</DialogTitle>
+            <DialogTitle>{header}</DialogTitle>
           </DialogHeader>
           <DialogDescription></DialogDescription>
           {children}
@@ -108,12 +107,12 @@ PromiseDialog.NameInput = function DialogInput() {
   );
 };
 
-PromiseDialog.CoinsInput = function DialogInput() {
+PromiseDialog.CoinsInput = function DialogInput({title}:{title?:string}) {
   const { maxCoins, coins, setCoins } = usePDialogContext();
 
   return (
     <>
-      <Label>coins</Label>
+      <Label>{title ??"coins"}</Label>
 
       <Input
         type="number"
@@ -140,6 +139,10 @@ function isCoinsFunc(func: any): func is (coins: number) => void {
   return func.length === 1 && typeof func === 'function';
 }
 
+function isVoidFunc(func: any): func is () => void {
+  return func.length === 0 && typeof func === 'function';
+}
+
 PromiseDialog.Btn = function DialogBtn({
   customBtnTitle,
   customOnClick,
@@ -154,6 +157,7 @@ PromiseDialog.Btn = function DialogBtn({
       <Button
         variant={customBtnTitle ? "destructive" : "default"}
         onClick={() => {
+          console.log("click");
           if (customBtnTitle) {
             customOnClick?.(); // Call customOnClick if it's defined
           } else {
@@ -163,9 +167,12 @@ PromiseDialog.Btn = function DialogBtn({
               onClick(title);
             } else if (isCoinsFunc(onClick)) {
               onClick(coins);
+            } else if (isVoidFunc(onClick)) {
+              const voidClick = onClick as ()=>void
+              voidClick() 
             }
           }
-        }}
+        }}  
       >
         <span>{customBtnTitle || btnTitle}</span>
       </Button>

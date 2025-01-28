@@ -6,7 +6,7 @@ import Stream from "./components/Stream";
 function page() {
  
   return (
-    <div className="w-full h-full flex flex-col sm:flex-row justify-center items-center sm:p-0 pt-8 ">
+    <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  ">
       {/* Video */}
       <div className="flex flex-1  w-full h-full">{/* Yt video embed, simple */}
 
@@ -17,11 +17,11 @@ function page() {
       <div className="flex flex-1  sm:justify-center items-center    ">
 
       <Tabs defaultValue="pomodoro" className="">
-  <TabsList>
+   <TabsList className="flex  justify-self-center ">
     <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
-    <TabsTrigger value="record">Record</TabsTrigger>
+    {/* <TabsTrigger value="record">Record</TabsTrigger> */}
   </TabsList>
-  <TabsContent value="record">Make changes to your account here.</TabsContent>
+  {/* <TabsContent value="record">Make changes to your account here.</TabsContent> */}
   <TabsContent value="pomodoro">
 
       <SessionTimer/>
