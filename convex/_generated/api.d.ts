@@ -16,6 +16,7 @@ import type {
 import type * as http from "../http.js";
 import type * as promises from "../promises.js";
 import type * as rewards from "../rewards.js";
+import type * as rooms from "../rooms.js";
 import type * as sessions from "../sessions.js";
 import type * as users from "../users.js";
 
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   promises: typeof promises;
   rewards: typeof rewards;
+  rooms: typeof rooms;
   sessions: typeof sessions;
   users: typeof users;
 }>;

@@ -2,8 +2,26 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { getCurrentUserOrThrow } from "./users";
 import { Id } from "./_generated/dataModel";
+import {
+  getAll,
+  getOneFrom,
+  getManyFrom,
+  getManyVia,
+} from "convex-helpers/server/relationships";
 
-export const start = mutation({
+export const get = query({
+  args:{}, 
+  handler: async (ctx, args)=>{
+    const user = await getCurrentUserOrThrow(ctx)
+    const sessions = await getManyFrom(ctx.db, "sessions","userId", user._id)
+    return sessions
+  }
+})
+
+
+
+export const start = mutation
+({
   args: {
     duration: v.number(),
     room: v.string(),

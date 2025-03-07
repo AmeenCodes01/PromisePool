@@ -7,6 +7,8 @@ import {ConvexProviderWithClerk} from "convex/react-clerk";
 import {ConvexReactClient} from "convex/react";
 import {Authenticated, Unauthenticated} from "convex/react";
 import AuthScreen from "./AuthScreen";
+import { SidebarProvider, SidebarTrigger } from "./ui/sidebar";
+import { AppSidebar } from "./app-sidebar";
 
 const convex = new ConvexReactClient(
   process.env.NEXT_PUBLIC_CONVEX_URL as string
@@ -26,7 +28,20 @@ export default function Providers({children}: {children: React.ReactNode}) {
         </Unauthenticated>
 
         {/* Render children for authenticated users */}
-        <Authenticated>{children}</Authenticated>
+        <Authenticated>
+        <div className="w-full h-full flex flex-1 pr-7">
+    <SidebarProvider>
+            <AppSidebar />
+            <main
+              className="flex flex-1 w-full h-full 
+              ">
+              <SidebarTrigger />
+              {children}
+            </main>
+          </SidebarProvider>
+  </div>
+
+        </Authenticated>
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );

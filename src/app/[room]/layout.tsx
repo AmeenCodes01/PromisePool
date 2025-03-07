@@ -4,14 +4,13 @@ import { AppSidebar } from "@/components/app-sidebar";
 
 export default function layout({children}: {children: React.ReactNode}) {
   return <div className="w-full h-full flex flex-1 pr-7">
-    <SidebarProvider>
-            <AppSidebar />
+   
             <main
               className="flex flex-1 w-full h-full 
               ">
-              <SidebarTrigger />
+   
               {children}
             </main>
-          </SidebarProvider>
+   
   </div>;
 }

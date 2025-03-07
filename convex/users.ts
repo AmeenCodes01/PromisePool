@@ -1,6 +1,7 @@
 import { internalMutation, query, QueryCtx } from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 import { v, Validator } from "convex/values";
+import { create, createRoom } from "./rooms";
 
 export const current = query({
   args: {},
@@ -16,12 +17,13 @@ export const upsertFromClerk = internalMutation({
       name: `${data.username}`,
       externalId: data.id,
     };
-
+  
     const user = await userByExternalId(ctx, data.id);
     if (user === null) {
    
 
-      await ctx.db.insert("users", userAttributes);
+      const userId = await ctx.db.insert("users", userAttributes);
+      await createRoom(ctx,userAttributes.name,userId)
     } else {
       await ctx.db.patch(user._id, userAttributes);
     }

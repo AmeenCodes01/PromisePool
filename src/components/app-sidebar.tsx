@@ -5,7 +5,7 @@ import {
   Inbox,
   Search,
   Settings,
-  Store
+  Store,
 } from "lucide-react";
 
 import {
@@ -26,30 +26,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import {ModeToggle} from "./mode-toggle";
+import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 // Menu items.
 const items = [
   {
     title: "Map",
-    url: "map",
+    url: "/map",
     icon: Inbox,
   },
   {
     title: "Timer",
-    url: "timer",
+    url: "/timer",
     icon: Calendar,
   },
   {
     title: "Leaderboard",
-    url: "leaderboard",
+    url: "/leaderboard",
     icon: Search,
   },
   {
     title: "History",
-    url: "history",
+    url: "/history",
     icon: Settings,
   },
   {
@@ -60,6 +62,9 @@ const items = [
 ];
 
 export function AppSidebar() {
+  
+  const rooms = useQuery(api.rooms.get);
+  const inRoom = rooms ? rooms[0]?.name : "citrus"
   return (
     <Sidebar>
       <SidebarHeader>
@@ -73,14 +78,13 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-popper-anchor-width] z-[100] bg-green-900 rounded-b-[3px] p-1  ">
-                <Link href={"/vit/timer"}>
-                  <DropdownMenuItem>
-                    <span>Vit c room</span>
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
-                </DropdownMenuItem>
+                {rooms?.map((room) => (
+                  <Link href={`/${room.name}/timer`} key={room._creationTime}>
+                    <DropdownMenuItem>
+                      <span>{room.name}</span>
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
@@ -93,7 +97,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={"/"+inRoom + "/" + item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>

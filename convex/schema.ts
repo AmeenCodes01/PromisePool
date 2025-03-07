@@ -38,4 +38,9 @@ export default defineSchema({
     finished: v.boolean(),
     userId: v.id("users"),
   }).index("by_userId", ["userId"]),
+  
+  rooms: defineTable({
+    name: v.string(),
+    owner_id: v.id("users")
+  })
 });
