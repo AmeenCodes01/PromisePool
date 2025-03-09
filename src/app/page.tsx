@@ -1,8 +1,13 @@
 
+import CheckRedirect from "@/components/CheckRedirect";
 import {redirect} from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
 
-  redirect("/vit/timer")
-  return <div className="">hello</div>;
+
+  //redirect to user default room. we get that by intaking room. 
+  return <div className="">
+
+    <CheckRedirect/>
+  </div>;
 }

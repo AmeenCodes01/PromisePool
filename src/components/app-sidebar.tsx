@@ -20,17 +20,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+
 import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import CreateRoomDialog from "./CreateRoomDialog";
 
 // Menu items.
 const items = [
@@ -65,12 +64,14 @@ export function AppSidebar() {
   
   const rooms = useQuery(api.rooms.get);
   const inRoom = rooms ? rooms[0]?.name : "citrus"
+  console.log("re render")
   return (
     <Sidebar>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
+                <Dialog>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   Select Room
@@ -85,8 +86,17 @@ export function AppSidebar() {
                     </DropdownMenuItem>
                   </Link>
                 ))}
+                <DialogTrigger asChild>
+                <DropdownMenuItem>
+                  Open
+                </DropdownMenuItem>
+
+
+                </DialogTrigger>
               </DropdownMenuContent>
             </DropdownMenu>
+                <CreateRoomDialog/>
+                </Dialog>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

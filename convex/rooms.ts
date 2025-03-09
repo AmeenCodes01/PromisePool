@@ -1,7 +1,8 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { query, mutation, MutationCtx } from "./_generated/server";
 import { getAll } from "convex-helpers/server/relationships";
 import { Id } from "./_generated/dataModel";
+import { getCurrentUserOrThrow } from "./users";
 
 
 export const get = query({
@@ -14,14 +15,32 @@ export const get = query({
 
 export const create = mutation({
     args:{name:v.string(),
-        id:v.id("users")
+      
+        password:v.optional(v.string()),
+        type: v.union(
+
+            v.literal("private"), //default room
+            v.literal("public"), //streamer's room
+            v.literal("group"), // friends created room.
+            
+             
+          ) 
     },
-    handler: async (ctx,{name,id})=>{
-        await createRoom(ctx,name, id)
+    handler: async (ctx,{name, type, password})=>{
+        const user = await getCurrentUserOrThrow(ctx)
+        const existingRoom = await ctx.db.query("rooms")
+        .filter(q => q.eq(q.field("name"), name))
+        .unique();
+  
+      if (existingRoom) {
+        throw new ConvexError({message:"Room with this name already exists"});
+      }
+  
+        await createRoom(ctx,name, user._id, type,password)
     }
 })
 
-export async function createRoom(ctx:MutationCtx,name:string,id:Id<"users">){
+export async function createRoom(ctx:MutationCtx,name:string,id:Id<"users">, type:"private" | "public" | "group", password?:string){
     
- return   await ctx.db.insert("rooms",{name, owner_id:id})
+ return   await ctx.db.insert("rooms",{name, owner_id:id, type:type, password:password })
 }

@@ -23,7 +23,7 @@ export const upsertFromClerk = internalMutation({
    
 
       const userId = await ctx.db.insert("users", userAttributes);
-      await createRoom(ctx,userAttributes.name,userId)
+      await createRoom(ctx,userAttributes.name,userId,"private")
     } else {
       await ctx.db.patch(user._id, userAttributes);
     }

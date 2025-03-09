@@ -32,7 +32,13 @@ function SessionTimer() {
   useEffect(() => {
     if (secLeft == 0 && mode == "work") {
       // get progress. open progres
-      onOpen();
+      if(mode == "work"){
+        onOpen();
+        setBreakMin(breakMin*60)
+      }else{
+        setWorkMin(workMin*60)
+      }
+      
       
     }
   }, [secLeft]);
@@ -69,13 +75,14 @@ function SessionTimer() {
     mode == "work" && (await resetSesh());
     onReset();
   };
-
+    const playing = secLeft !== 0 && (mode ==="work" && secLeft !== workMin*60)
   return (
     <div className="flex flex-col sm:justify-center sm:items-center border-4 p-6 rounded-md bg-green-900 border-green-700   ">
       {/* Countdown */}
       <div className="flex flex-row gap-2">
 
         <Toggle
+        disabled={playing}
             onClick={() => setMode(mode == "work" ? "break" : "work")}
             className="border-[1px] justify-center self-center justify-self-center mb-4"
             >
