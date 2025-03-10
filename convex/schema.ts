@@ -42,7 +42,7 @@ export default defineSchema({
   rooms: defineTable({
     name: v.string(),
     owner_id: v.id("users"),
-  type: v.union(
+    type: v.union(
 
     v.literal("private"), //default room
     v.literal("public"), //streamer's room
@@ -51,6 +51,6 @@ export default defineSchema({
      
   ),
   password:v.optional(v.string())
-  }),
+  }).index("name",["name"]),
 
 });

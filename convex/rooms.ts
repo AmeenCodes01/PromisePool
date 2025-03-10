@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { query, mutation, MutationCtx } from "./_generated/server";
-import { getAll } from "convex-helpers/server/relationships";
+import { getAll, getOneFrom } from "convex-helpers/server/relationships";
 import { Id } from "./_generated/dataModel";
 import { getCurrentUserOrThrow } from "./users";
 
@@ -39,6 +39,16 @@ export const create = mutation({
         await createRoom(ctx,name, user._id, type,password)
     }
 })
+
+export const getOne = query({
+  args: {name:v.string()},
+  handler: async (ctx,{name})=>{
+   const room = await getOneFrom(ctx.db, "rooms","name", name);
+   return room;
+  }
+})
+
+
 
 export async function createRoom(ctx:MutationCtx,name:string,id:Id<"users">, type:"private" | "public" | "group", password?:string){
     

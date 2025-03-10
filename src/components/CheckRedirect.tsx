@@ -6,7 +6,7 @@ function CheckRedirect() {
     const { user } = useUser();
     console.log(user," user")
 
-        redirect(`/${user?.username}/timer`)
+        redirect(`/${user?.username}`)
   return (
     <div>
       

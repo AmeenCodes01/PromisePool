@@ -6,8 +6,8 @@
 
 -- room creation -- 
 [X] create room with password
-[ ] unique room name
+[X] unique room name
+[X] enter room by giving room name, then password. 
 [ ] room shows in list of owner only. 
-[ ] enter room by giving room name, then password. 
 [ ] shareable link
 

@@ -8,7 +8,6 @@ async function page({
 }) {
   //get room. if room
 const p = await params
-
 console.log(p.room," params")
   return <div className="w-full h-full">
     <CheckPrivate room={p.room}/>
