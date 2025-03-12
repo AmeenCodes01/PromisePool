@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
 import PromiseDialog from "./PromiseDialog";
-import { api } from "../../../../convex/_generated/api";
+
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import CoinBar from "./CoinBar";
 import { Plus } from "lucide-react";
 import CardList from "./CardList";
-import { Doc } from "../../../../convex/_generated/dataModel";
 
 function Reward() {
   const user = useQuery(api.users.current);

@@ -4,10 +4,10 @@ import PromiseCard from "./PromiseCard";
 import { Coins, Plus } from "lucide-react";
 import { useMutation, useQuery } from "convex/react";
 import PromiseDialog from "./PromiseDialog";
-import { api } from "../../../../convex/_generated/api";
 import CoinBar from "./CoinBar";
 import CardList from "./CardList";
-import { Doc } from "../../../../convex/_generated/dataModel";
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
 function Promise() {
     const user = useQuery(api.users.current);

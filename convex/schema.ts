@@ -13,6 +13,8 @@ export default defineSchema({
     email: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
+    roomIds : v.optional(v.array(v.id("rooms")))
+
   }).index("byExternalId", ["externalId"]),
 
   sessions: defineTable({
@@ -47,10 +49,17 @@ export default defineSchema({
     v.literal("private"), //default room
     v.literal("public"), //streamer's room
     v.literal("group"), // friends created room.
-    
-     
+
   ),
+  startTime: v.optional(v.number()),
+  endTime: v.optional(v.number()),
+  duration: v.optional(v.number()),
+  timerStatus:v.optional(v.union(v.literal("running"),v.literal("ended"),v.literal("not started"))),
+  participants: v.optional(v.array(v.id("users"))), 
   password:v.optional(v.string())
-  }).index("name",["name"]),
+  }).index("name",["name"])
+  .index("type",["type"]),
+  
+
 
 });

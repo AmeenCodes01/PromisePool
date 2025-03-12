@@ -2,8 +2,10 @@
 import { useMutation } from 'convex/react';
 import { BadgePlus, Edit, Plus } from 'lucide-react';
 import React from 'react'
-import { api } from '../../../../convex/_generated/api';
-import { Doc } from '../../../../convex/_generated/dataModel';
+
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
+
 import PromiseDialog from './PromiseDialog';
 
 

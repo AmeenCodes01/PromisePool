@@ -4,7 +4,7 @@ import usePersistState from "@/hooks/usePersistState";
 import { useEffect, useRef } from "react";
 import { clearInterval, setInterval } from "worker-timers";
 
-function useCountdown({ sec }: { sec: number }) {
+function useCountdown({ sec,resetDependency }: { sec: number, resetDependency:number; }) {
   const [pause, setPause] = usePersistState(true, "pause");
   const [secLeft, setSecLeft] = usePersistState(sec, "secLeft");
 
@@ -20,6 +20,10 @@ function useCountdown({ sec }: { sec: number }) {
   //   secLeftRef.current = secLeft;
   // }, [secLeft]);
 
+  // useEffect(() => {
+  //   setSecLeft(sec); // Reset secLeft when sec or resetDependency changes
+  // }, [sec, resetDependency]);
+  
   function tick() {
 
     setSecLeft(secLeft -1 < 0 ? 0: secLeft-1)

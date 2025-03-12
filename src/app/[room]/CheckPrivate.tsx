@@ -1,6 +1,6 @@
 "use client"
 import { useUser } from "@clerk/clerk-react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { redirect } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import {
@@ -18,15 +18,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import usePersistState from "@/hooks/usePersistState";
 
-const CheckPass=({password,onVerify}:{password:string; onVerify:()=>void})=>{
+const CheckPass=({password,onVerify, onCancel}:{password:string; onVerify:()=>void; onCancel:()=>void;})=>{
  const [open, setOpen] = useState(true)
  const [pass,setPass]=useState("")
  const [error, setError] = useState<null| string>(null)
 
-
+  
  const checkPass= ()=> {
   if(pass === password){
     setOpen(false);
+    // add to owner rooms.
     onVerify()
   }else{
 
@@ -47,7 +48,7 @@ const CheckPass=({password,onVerify}:{password:string; onVerify:()=>void})=>{
     <Input value={pass}  onChange={(e)=> setPass(e.target.value)} />
     {error &&  <p className="text-red-400 text-sm"> {error} </p>}
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
       <Button onClick={checkPass}>Continue</Button>
     </AlertDialogFooter>
   </AlertDialogContent>
@@ -58,24 +59,39 @@ const CheckPass=({password,onVerify}:{password:string; onVerify:()=>void})=>{
 
 
 function CheckPrivate({room}:{room:string}) {
-    const { user } = useUser();
-    const [verified, setVerified]= usePersistState(false, `${room}Verify`)
-    console.log(user," user")
+  const user = useQuery(api.users.current)
+  const [verified, setVerified]= usePersistState(false, `${room}${user?._id}Verify`)
     const roomInfo = useQuery(api.rooms.getOne,{name:room})
-
-  const onVerified = ()=> setVerified(true)
+    const addRoom = useMutation(api.rooms.add)
+  const onVerified = ()=> {
+    setVerified(true)
+    roomInfo ? addRoom({id:roomInfo?._id}) : null
+  }
+if(!roomInfo){
+  return <> <div className="w-full h-full">
+  <h1>404 - Page Not Found</h1>
+  <p>The page you are looking for does not exist.</p>
+</div>
+  </>
+}
 
   if(roomInfo?.type ==="private"){
-    if(user?.username !== room){
+    if(user?.name !== room){
    
-        redirect(`/${user?.username}/timer`)
+        redirect(`/${user?.name}/timer`)
     }
     
   }
-if(roomInfo?.type ==="group" && !verified && roomInfo.owner_id ){
+
+const onCancel = ()=>{
+  redirect(`/${user?.name}/timer`)
+
+}
+
+if(roomInfo?.type ==="group" && !verified && roomInfo.owner_id !== user?._id ){
   return (
     <div>
-  <CheckPass password = {roomInfo.password as string} onVerify={onVerified}/>
+  <CheckPass password = {roomInfo.password as string} onVerify={onVerified} onCancel={onCancel}/>
     </div>
   )
 }

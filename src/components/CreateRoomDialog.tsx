@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from 'next/navigation'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,7 +31,7 @@ const formSchema = z.object({
   })
 })
 
- function CreateRoomDialog() {
+ function CreateRoomDialog({onCreated}:{onCreated:()=>void}) {
     const createRoom = useMutation(api.rooms.create)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,7 +40,7 @@ const formSchema = z.object({
           password:"",
         },
       })
-     
+     const router = useRouter()
       // 2. Define a submit handler.
       async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
@@ -47,6 +48,8 @@ const formSchema = z.object({
         try{
 
           await createRoom({type:"group", name: values.name, password:values.password })
+          onCreated()
+          router.push(`/${values.name}`)
         }catch(error){
           const errorMessage = error instanceof ConvexError
           ? (error.data as { message: string }).message

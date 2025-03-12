@@ -20,6 +20,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
@@ -27,9 +33,10 @@ import { UserButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Dialog, DialogTrigger } from "./ui/dialog";
-import CreateRoomDialog from "./CreateRoomDialog";
+import { useEffect, useState } from "react";
+import usePersistState from "@/hooks/usePersistState";
+import RoomDropDown from "./RoomDropDown";
+import { useParams } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -61,42 +68,27 @@ const items = [
 ];
 
 export function AppSidebar() {
+  // if no room is chosen, default is user name. for that, we need user from clerk/convex? 
+  const user = useQuery(api.users.current)
+  const params = useParams()
+  console.log(params)
+  const [inRoom,setInRoom]= useState<string| undefined>( params.room as string)
   
-  const rooms = useQuery(api.rooms.get);
-  const inRoom = rooms ? rooms[0]?.name : "citrus"
-  console.log("re render")
+  useEffect(() => {
+    if (params.room) {
+      // If params.room is defined, use it
+      setInRoom(params.room as string);
+    } else if (user?.name) {
+      // If params.room is undefined, use user.name as the default
+      setInRoom(user.name);
+    }
+  }, [params.room, user?.name]);
   return (
     <Sidebar>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-                <Dialog>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  Select Room
-                  <ChevronDown className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-popper-anchor-width] z-[100] bg-green-900 rounded-b-[3px] p-1  ">
-                {rooms?.map((room) => (
-                  <Link href={`/${room.name}/timer`} key={room._creationTime}>
-                    <DropdownMenuItem>
-                      <span>{room.name}</span>
-                    </DropdownMenuItem>
-                  </Link>
-                ))}
-                <DialogTrigger asChild>
-                <DropdownMenuItem>
-                  Open
-                </DropdownMenuItem>
-
-
-                </DialogTrigger>
-              </DropdownMenuContent>
-            </DropdownMenu>
-                <CreateRoomDialog/>
-                </Dialog>
+              <RoomDropDown inRoom={inRoom} setInRoom={setInRoom} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

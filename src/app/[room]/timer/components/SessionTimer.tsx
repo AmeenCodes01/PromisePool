@@ -9,18 +9,30 @@ import { useMutation, useQueries, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import usePersistState from "@/hooks/usePersistState";
 import { Toggle } from "@/components/ui/toggle";
+import { Switch } from "@/components/ui/switch";
+import { Doc, Id } from "../../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
 
-function SessionTimer() {
+function SessionTimer({room}:{room:string}) {
+  const user = useQuery(api.users.current)
+
+
   const [workMin, setWorkMin] = usePersistState(60, "sec");
   const [breakMin, setBreakMin] = usePersistState(10, "breakSec");
   const [rating, setRating] = useState<number | null>(null);
   const [mode, setMode] = usePersistState<"work" | "break">("work", "mode");
-  const [seshId, setSeshId] = usePersistState<null | string>(null,"seshId")
+  const [groupSesh,setGroupSesh]=usePersistState<boolean>(false,`${user?._id}groupSesh`)
+  const [ownerSesh,setOwnerSesh]=usePersistState(false,`${user?._id}ownerSesh`)
+
+  const roomInfo = useQuery(api.rooms.getOne,{name:room}) as Doc<"rooms">
+  const roomId = roomInfo?._id as Id<"rooms">;
   const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
     {
       sec: mode == "work" ? workMin*60 : breakMin*60,
+      resetDependency:workMin
     }
   );
+  
   const onOpen = useDialog((state) => state.onOpen);
 
   const minutes = Math.floor(secLeft / 60);
@@ -28,8 +40,19 @@ function SessionTimer() {
   const seconds = Math.floor(secLeft % 60);
   const startSesh = useMutation(api.sessions.start);
   const resetSesh = useMutation(api.sessions.reset);
+  const createGroupSesh = useMutation(api.rooms.createSesh)
+  const cancelGroupSesh = useMutation(api.rooms.cancelSesh)
+  const joinGroupSesh = useMutation(api.rooms.participate)
+  const startGroupSesh = useMutation(api.rooms.startSesh)
    // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
-  useEffect(() => {
+  
+   useEffect(()=>{
+
+    console.log(roomInfo?.timerStatus," status")
+
+   },[roomInfo])
+  
+   useEffect(() => {
     if (secLeft == 0 && mode == "work") {
       // get progress. open progres
       if(mode == "work"){
@@ -42,7 +65,7 @@ function SessionTimer() {
       
     }
   }, [secLeft]);
-
+  
   useEffect(() => {
     mode == "break" ? setSecLeft(breakMin*60) : setSecLeft(workMin*60);
     onPause()
@@ -57,16 +80,30 @@ function SessionTimer() {
       mode == "work" && setSecLeft(min*60);
     }
   };
+
   const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin*60) {
-      const result = await startSesh({ duration: workMin, room: "vit" });
+      const result = await startSesh({ duration: workMin, room: roomInfo.name });
+      console.log("Hello", groupSesh,ownerSesh)
+       groupSesh && ownerSesh ? await startGroupSesh({roomId}) : null 
+    
+
+
+    
       console.log(result,"sesh start")
       if (result?.message) {
         console.log("prev sesh not rated");
+
         onOpen();
+        // if rating required, then update workMin to match. 
         return;
       }
+    }
+    if(groupSesh){
+      const remainingTime =  (roomInfo.endTime as number) - Date.now()  //in ms
+      setWorkMin(remainingTime/60000)
+
     }
     onPlay();
   };
@@ -76,10 +113,52 @@ function SessionTimer() {
     onReset();
   };
     const playing = secLeft !== 0 && (mode ==="work" && secLeft !== workMin*60)
+
+  const onGroupSesh = (s:boolean)=>{
+    console.log(s)
+    if(s){
+      setOwnerSesh(true)
+      setGroupSesh(true)
+      createGroupSesh({duration:workMin, roomId: roomId })
+    }else{
+      setOwnerSesh(false);
+      setGroupSesh(false);
+      cancelGroupSesh({roomId: roomId})
+    }
+    //a modal to ask.
+  }
+
+
+  useEffect(()=>{
+  const status = roomInfo?.timerStatus
+  console.log(roomInfo,"info")
+   if(status=="not started"){
+    setGroupSesh(true);
+   } 
+
+   if(status =="running"){
+    setMode("work");
+    const remainingTime =  (roomInfo.endTime as number) - Date.now()  //in ms
+    setSecLeft(remainingTime/60000)
+    setWorkMin(remainingTime/60000)
+    console.log(workMin,"workMin", remainingTime/60000)
+onSeshStart()
+    
+   }
+
+   if(status =="ended"){
+    setSecLeft(0)
+   }
+
+  }, [roomInfo])
+console.log(ownerSesh,"ownweSe")
   return (
-    <div className="flex flex-col sm:justify-center sm:items-center border-4 p-6 rounded-md bg-green-900 border-green-700   ">
+    <div className="flex flex-col w-full h-full sm:justify-center sm:items-center border-4 p-6 rounded-md bg-green-900 border-green-700   ">
       {/* Countdown */}
       <div className="flex flex-row gap-2">
+
+
+
 
         <Toggle
         disabled={playing}
@@ -95,6 +174,9 @@ function SessionTimer() {
           mode={mode}
           setMode={setMode}
           />
+
+<Switch checked={groupSesh} onCheckedChange={onGroupSesh}  id="groupSesh" />
+
           </div>
       <div className="flex flex-row  justify-center items-center relative ">
         <div className="flex-shrink-0 flex">
@@ -127,6 +209,13 @@ function SessionTimer() {
         setRating={setRating}
         onReset={onReset}
       />
+{/* session must not have started. */}
+      { groupSesh && !ownerSesh ?
+      <div>
+       <Button onClick={()=>joinGroupSesh({userId:user?._id as Id<"users">, roomId: roomId})    }>Opt in</Button>   
+      </div> : null
+
+      }
     </div>
   );
 }
