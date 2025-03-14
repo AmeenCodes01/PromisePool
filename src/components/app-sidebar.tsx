@@ -71,7 +71,6 @@ export function AppSidebar() {
   // if no room is chosen, default is user name. for that, we need user from clerk/convex? 
   const user = useQuery(api.users.current)
   const params = useParams()
-  console.log(params)
   const [inRoom,setInRoom]= useState<string| undefined>( params.room as string)
   
   useEffect(() => {

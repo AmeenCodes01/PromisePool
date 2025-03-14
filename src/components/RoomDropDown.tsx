@@ -22,7 +22,6 @@ function RoomDropDown({inRoom, setInRoom}:{inRoom:string | undefined;
       const [open, setOpen]= useState(false)
       const onCreated = ()=> setOpen(false)
       const rooms = useQuery(api.rooms.get);
-    console.log(rooms,"rooms")
   return (
     <Dialog open={open} onOpenChange={setOpen} >
     <DropdownMenu modal={false}>

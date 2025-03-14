@@ -61,7 +61,6 @@ const handleSeekMouseUp = (val:number) => {
     
   }, []);
 
-  console.log(url!=="","red", url)
   return (
     <div className="w-full h-full flex ">
       { url !== "" ?

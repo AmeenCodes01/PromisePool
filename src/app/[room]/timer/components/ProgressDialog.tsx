@@ -37,7 +37,8 @@ onReset
   const onClose = useDialog((state) => state.onClose);
   const endSesh = useMutation(api.sessions.stop)
   const resetSesh = useMutation(api.sessions.reset)
-  
+
+  console.log(isOpen," isOpen")
   //also show the amount of coins earned.
   // watch coins + money.
   // calc function, api call from here as well.

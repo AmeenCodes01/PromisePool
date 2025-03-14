@@ -1,5 +1,5 @@
 "use client";
-import React, {  useEffect, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import useCountdown from "./useCountdown";
 import Setting from "./Setting";
 import { Play, Pause, TimerReset, Settings } from "lucide-react";
@@ -26,10 +26,12 @@ function SessionTimer({room}:{room:string}) {
 
   const roomInfo = useQuery(api.rooms.getOne,{name:room}) as Doc<"rooms">
   const roomId = roomInfo?._id as Id<"rooms">;
+  const isInitialRender = useRef(true);
+
+
   const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
     {
       sec: mode == "work" ? workMin*60 : breakMin*60,
-      resetDependency:workMin
     }
   );
   
@@ -46,12 +48,6 @@ function SessionTimer({room}:{room:string}) {
   const startGroupSesh = useMutation(api.rooms.startSesh)
    // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
   
-   useEffect(()=>{
-
-    console.log(roomInfo?.timerStatus," status")
-
-   },[roomInfo])
-  
    useEffect(() => {
     if (secLeft == 0 && mode == "work") {
       // get progress. open progres
@@ -66,10 +62,7 @@ function SessionTimer({room}:{room:string}) {
     }
   }, [secLeft]);
   
-  useEffect(() => {
-    mode == "break" ? setSecLeft(breakMin*60) : setSecLeft(workMin*60);
-    onPause()
-  }, [mode]);
+  //to change time when mode changes.
 
   const onChangeSec = (min: number, type?: "work" | "break") => {
     if (type === "break") {
@@ -80,6 +73,10 @@ function SessionTimer({room}:{room:string}) {
       mode == "work" && setSecLeft(min*60);
     }
   };
+
+
+
+
 
   const onSeshStart = async () => {
     // call convex function. if returns true, start session.
@@ -128,30 +125,40 @@ function SessionTimer({room}:{room:string}) {
     //a modal to ask.
   }
 
+//change mode
+const onChangeMode = (md:"work"|"break")=>{
+  setMode(md)
+  md === "break" ? setSecLeft(breakMin*60) : setSecLeft(workMin*60);
+onPause()
 
-  useEffect(()=>{
-  const status = roomInfo?.timerStatus
-  console.log(roomInfo,"info")
-   if(status=="not started"){
-    setGroupSesh(true);
-   } 
 
-   if(status =="running"){
-    setMode("work");
-    const remainingTime =  (roomInfo.endTime as number) - Date.now()  //in ms
-    setSecLeft(remainingTime/60000)
-    setWorkMin(remainingTime/60000)
-    console.log(workMin,"workMin", remainingTime/60000)
-onSeshStart()
+  
+}
+
+
+  // useEffect(()=>{
+  // const status = roomInfo?.timerStatus
+  // console.log(roomInfo,"info")
+  //  if(status=="not started"){
+  //   setGroupSesh(true);
+  //  } 
+
+  //  if(status =="running"){
+  //   setMode("work");
+  //   const remainingTime =  (roomInfo.endTime as number) - Date.now()  //in ms
+  //   // 
+  //   setSecLeft(remainingTime/1000)
+  //   console.log(workMin,"workMin", remainingTime/60000)
+  //   onSeshStart()
     
-   }
+  //  }
 
-   if(status =="ended"){
-    setSecLeft(0)
-   }
+  //  if(status =="ended"){
+  //   setSecLeft(0)
+  //  }
 
-  }, [roomInfo])
-console.log(ownerSesh,"ownweSe")
+  // }, [roomInfo])
+
   return (
     <div className="flex flex-col w-full h-full sm:justify-center sm:items-center border-4 p-6 rounded-md bg-green-900 border-green-700   ">
       {/* Countdown */}
@@ -162,7 +169,7 @@ console.log(ownerSesh,"ownweSe")
 
         <Toggle
         disabled={playing}
-            onClick={() => setMode(mode == "work" ? "break" : "work")}
+            onClick={() => onChangeMode(mode == "work" ? "break" : "work")}
             className="border-[1px] justify-center self-center justify-self-center mb-4"
             >
             {mode == "work" ? "Work" : "Break"}
