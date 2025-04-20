@@ -71,8 +71,10 @@ export const reset =  mutation({
   handler: async (ctx, args) => {
     //need to check if prev session
     const user = await getCurrentUserOrThrow(ctx)
+    if(user.lastSeshId){
 
-    await ctx.db.delete(user.lastSeshId as Id<"sessions">)
+      await ctx.db.delete(user.lastSeshId as Id<"sessions">)
+    }
     const session = await ctx.db.query("sessions").withIndex("userId", q=> q.eq("userId", user._id)).order("desc").first()
     console.log(session)
     await ctx.db.patch(user._id, {lastSeshId: session?._id ?? undefined, lastSeshRated:true })

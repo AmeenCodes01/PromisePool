@@ -7,7 +7,7 @@ async function page({children, params}: {children: React.ReactNode,params: Promi
   const p = await params
  
   return (
-    <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  ">
+    <div className="w-full h-full pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  ">
       {/* Video */}
       <div className="flex flex-1  w-full h-full">{/* Yt video embed, simple */}
 
@@ -15,15 +15,15 @@ async function page({children, params}: {children: React.ReactNode,params: Promi
 
       </div>
       {/* Timer */}
-      <div className="flex flex-1  w-full h-full  sm:justify-center items-center    ">
+      <div className="flex flex-1  w-full h-full   sm:justify-center items-center    ">
 
-      <Tabs defaultValue="pomodoro" className="">
-   <TabsList className="flex  justify-self-center ">
-    <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
-    {/* <TabsTrigger value="record">Record</TabsTrigger> */}
-  </TabsList>
+      <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col">
+   {/* <TabsList className="  w-fit mx-auto justify-self-center justify-center ">
+    <TabsTrigger value="pomodoro" className="">Pomodoro</TabsTrigger>
+     <TabsTrigger value="record">Record</TabsTrigger> 
+  </TabsList> */}
   {/* <TabsContent value="record">Make changes to your account here.</TabsContent> */}
-  <TabsContent value="pomodoro">
+  <TabsContent value="pomodoro" className="w-full flex-1 ">
 
       <SessionTimer room={p.room}/>
   </TabsContent>

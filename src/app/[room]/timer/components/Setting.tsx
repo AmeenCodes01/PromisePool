@@ -46,7 +46,6 @@ function Setting({
             <Input
               value={work}
               onChange={(e) => {
-                console.log(e.target.value === "", "e");
                    setWork(
                        parseInt(e.target.value)
                     )
@@ -64,7 +63,6 @@ function Setting({
             <Input
               value={brk}
               onChange={(e) => {
-                console.log(e.target.value === "", "e");
                 setBrk(
                   e.target.value === "" ? 0 : parseInt(e.target.value),
                   

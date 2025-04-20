@@ -44,6 +44,7 @@ export default defineSchema({
   rooms: defineTable({
     name: v.string(),
     owner_id: v.id("users"),
+    session_ownerId:v.optional(v.id("users")),
     type: v.union(
 
     v.literal("private"), //default room
@@ -55,7 +56,10 @@ export default defineSchema({
   endTime: v.optional(v.number()),
   duration: v.optional(v.number()),
   timerStatus:v.optional(v.union(v.literal("running"),v.literal("ended"),v.literal("not started"))),
-  participants: v.optional(v.array(v.id("users"))), 
+  participants: v.optional(v.array(v.object({
+    id: v.id("users"),
+    name: v.string()
+  }))), 
   password:v.optional(v.string())
   }).index("name",["name"])
   .index("type",["type"]),

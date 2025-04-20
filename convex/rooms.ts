@@ -77,32 +77,12 @@ export const createSesh = mutation({
       await ctx.db.patch(roomId, {
         timerStatus: "not started",
         duration,
-        participants: [...(room.participants ?? []), user._id],
+        session_ownerId: user._id as Id<"users">,
+        participants: [{id: user._id, name:user.name}],
       });
     }
   },
 });
-
-export const cancelSesh = mutation({
-  args: {
-    roomId: v.id("rooms"),
-  },
-  handler: async (ctx, args) => {
-    const { roomId } = args;
-    const room = await ctx.db.get(roomId);
-    // don't start if one already started.
-    if (room) {
-      await ctx.db.patch(roomId, {
-        timerStatus: undefined,
-        participants: undefined,
-        duration: undefined,
-        startTime:undefined,
-        endTime:undefined
-      });
-    }
-  },
-})
-
 
 export const startSesh = mutation({
   args: {
@@ -112,7 +92,7 @@ export const startSesh = mutation({
   handler: async (ctx, args) => {
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
-    console.log(room,"room")
+  
     if (room) {
       const startTime = Date.now();
       const endTime = startTime + (room?.duration as number) * 60000; // Convert minutes to milliseconds
@@ -135,13 +115,58 @@ export const participate = mutation({
   handler: async (ctx, args) => {
     const { roomId, userId } = args;
     const room = await ctx.db.get(roomId);
-    if (room && room.timerStatus === "not started") {
+    const user = await getCurrentUserOrThrow(ctx);
+    const participant = room?.participants?.find(p=> p.id ===userId)
+    console.log("sleep ", participant)
+    if (room && room.timerStatus === "not started"&& !participant) {
       await ctx.db.patch(roomId, {
-        participants: [...(room.participants ?? []), userId],
+        participants: [...(room.participants ?? []), {id:userId,name:user.name}],
       });
     }
   },
 });
+
+export const endSesh = mutation({
+  args: {
+    roomId: v.id("rooms"),
+    // Duration in minutes
+  },
+  handler: async (ctx, args) => {
+    const { roomId } = args;
+    const room = await ctx.db.get(roomId);
+
+    if (room) {
+     
+      await ctx.db.patch(roomId, {
+        timerStatus: "ended",
+       
+      });
+    }
+  },
+});
+
+
+export const cancelSesh = mutation({
+  args: {
+    roomId: v.id("rooms"),
+  },
+  handler: async (ctx, args) => {
+    const { roomId } = args;
+    const room = await ctx.db.get(roomId);
+    // don't start if one already started.
+    if (room) {
+      await ctx.db.patch(roomId, {
+        timerStatus: undefined,
+        participants: undefined,
+        duration: undefined,
+        startTime:undefined,
+        endTime:undefined
+      });
+    }
+  },
+})
+
+
 
 export async function createRoom(
   ctx: MutationCtx,

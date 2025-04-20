@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { calcReward } from "@/lib/calcReward";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import usePersistState from "@/hooks/usePersistState";
 import { useState } from "react";
 
 function ProgressDialog({
@@ -38,7 +37,6 @@ onReset
   const endSesh = useMutation(api.sessions.stop)
   const resetSesh = useMutation(api.sessions.reset)
 
-  console.log(isOpen," isOpen")
   //also show the amount of coins earned.
   // watch coins + money.
   // calc function, api call from here as well.

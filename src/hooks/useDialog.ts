@@ -10,7 +10,7 @@ interface DialogProps {
 }
 
 export const useDialog = create<DialogProps>()(
-    persist (
+    
     (set)=>({
     isOpen:false, 
     onOpen: ()=> set({isOpen:true}), 
@@ -18,8 +18,6 @@ export const useDialog = create<DialogProps>()(
     // data:{}, 
     // setData: (data)=> set({data:data})
 
-}),{
-name:"dialogOpen"
 }))
 
 

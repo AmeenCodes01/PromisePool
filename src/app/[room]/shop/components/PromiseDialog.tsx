@@ -67,7 +67,6 @@ function PromiseDialog({
   children,
   editCoins
 }: PDialogProps) {
-  console.log(editTitle)
   const [title, setTitle] = useState( editTitle ??"");
   const [coins, setCoins] = useState(editCoins ??0);
 
@@ -158,7 +157,6 @@ PromiseDialog.Btn = function DialogBtn({
       <Button
         variant={customBtnTitle ? "destructive" : "default"}
         onClick={() => {
-          console.log("click");
           if (customBtnTitle) {
             customOnClick?.(); // Call customOnClick if it's defined
           } else {

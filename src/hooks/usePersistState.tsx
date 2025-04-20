@@ -1,21 +1,35 @@
 import { useEffect, useMemo, useState } from "react";
 
-export default function usePersistState<T>(initial_value: T, id: string): [T, (new_state: T) => void] {
-    const _initial_value = useMemo(() => {
-        const local_storage_value_str = localStorage.getItem('state:' + id);
-        // If there is a value stored in localStorage, use that
-        if(local_storage_value_str) {
-            
-            return JSON.parse(local_storage_value_str);
-        } 
-        // Otherwise use initial_value that was passed to the function
-        return initial_value;
-    }, []);
-    const [state, setState] = useState(_initial_value);
-    
-    useEffect(() => {
-        const state_str = JSON.stringify(state); // Stringified state
-        localStorage.setItem('state:' + id, state_str) // Set stringified state as item in localStorage
-    }, [state]);
-    return [state, setState];
+/**
+ * Custom hook that syncs a piece of state with localStorage.
+ *
+ * @param initialValue - Initial value if localStorage doesn't have a saved one.
+ * @param id - A unique key to store and retrieve state in localStorage.
+ * @returns [state, setState] tuple like useState
+ */
+export default function usePersistState<T>(initialValue: T, id: string): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const _initialValue = useMemo(() => {
+    try {
+      const stored = localStorage.getItem("state:" + id);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.warn("Failed to parse localStorage for:", id, e);
+    }
+    return initialValue;
+  }, [id, initialValue]);
+
+  const [state, setState] = useState<T>(_initialValue);
+
+  useEffect(() => {
+    try {
+      const stateStr = JSON.stringify(state);
+      localStorage.setItem("state:" + id, stateStr);
+    } catch (e) {
+      console.warn("Failed to save to localStorage:", id, e);
+    }
+  }, [state, id]);
+
+  return [state, setState];
 }

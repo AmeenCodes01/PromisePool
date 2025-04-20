@@ -34,7 +34,6 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import usePersistState from "@/hooks/usePersistState";
 import RoomDropDown from "./RoomDropDown";
 import { useParams } from "next/navigation";
 

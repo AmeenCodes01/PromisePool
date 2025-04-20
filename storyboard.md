@@ -13,8 +13,8 @@
 
 
 -- timer -- 
-[] group timer start 
-[] session status updates
+[X] group timer start 
+[X] session status updates 
 [] diamond animation
 [] turn animation on/off
 [] stopwatch
@@ -30,6 +30,7 @@
     does something change in db on invidual side ? No. 
     but we need to store group session for stats ig. 
 
+//implement cancel session. no drop outs, pure cancel for everyone.
 
 PHASE 1 
 [] create room.
@@ -37,5 +38,5 @@ PHASE 1
 [] share room. 
 [] start/stop sessions with rating
 [] start/stop group session 
-[] stopwatch + countdown
+[] countdown
 [] use shop for rewards & promises.
