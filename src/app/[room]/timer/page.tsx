@@ -7,13 +7,16 @@ async function page({children, params}: {children: React.ReactNode,params: Promi
   const p = await params
  
   return (
-    <div className="w-full h-full pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  ">
+    <div className="w-full   h-full pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  *:
+    
+    
+    ">
       {/* Video */}
-      <div className="flex flex-1  w-full h-full">{/* Yt video embed, simple */}
+      {/* <div className="flex flex-1  w-full h-full">
 
       <Stream/>
 
-      </div>
+      </div> */}
       {/* Timer */}
       <div className="flex flex-1  w-full h-full   sm:justify-center items-center    ">
 

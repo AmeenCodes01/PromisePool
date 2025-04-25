@@ -8,7 +8,6 @@ import ProgressDialog from "./ProgressDialog";
 import { useMutation, useQueries, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import usePersistState from "@/hooks/usePersistState";
-import { Toggle } from "@/components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
 import { Doc, Id } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,7 @@ function SessionTimer({ room }: { room: string }) {
   const [breakMin, setBreakMin] = usePersistState(10, "breakSec");
   const [rating, setRating] = useState<number | null>(null);
   const [mode, setMode] = usePersistState<"work" | "break">("work", "mode");
-  
+
   const [groupSesh, setGroupSesh] = usePersistState<boolean>(
     false,
     `${user?._id}groupSesh`
@@ -36,9 +35,9 @@ function SessionTimer({ room }: { room: string }) {
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
-  const participant = roomInfo?.participants?.find(p=> p.id === user._id) 
-  const ownerSesh = roomInfo?.session_ownerId === user?._id
-  console.log(participant, " participant")
+  const participant = roomInfo?.participants?.find((p) => p.id === user._id);
+  const ownerSesh = roomInfo?.session_ownerId === user?._id;
+  console.log(participant, " participant");
   const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
     {
       sec: mode == "work" ? workMin * 60 : breakMin * 60,
@@ -47,9 +46,8 @@ function SessionTimer({ room }: { room: string }) {
 
   const onOpen = useDialog((state) => state.onOpen);
 
-  const minutes = Math.floor(secLeft / 60);
-
-  const seconds = Math.floor(secLeft % 60);
+  
+  
   const startSesh = useMutation(api.sessions.start);
   const resetSesh = useMutation(api.sessions.reset);
   const createGroupSesh = useMutation(api.rooms.createSesh);
@@ -64,8 +62,7 @@ function SessionTimer({ room }: { room: string }) {
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-      !groupSesh && onChangeMode("break");
-
+        !groupSesh && onChangeMode("break");
       } else {
         setWorkMin(workMin * 60);
       }
@@ -73,7 +70,7 @@ function SessionTimer({ room }: { room: string }) {
       if (groupSesh) {
         endGroupSesh({ roomId });
         setGroupSesh(false);
-     //   setOwnerSesh(false)
+        //   setOwnerSesh(false)
       }
     }
   }, [secLeft]);
@@ -92,23 +89,18 @@ function SessionTimer({ room }: { room: string }) {
   const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin * 60) {
-     
-      if(user?.lastSeshRated===true || user?.lastSeshRated === undefined){
-
+      if (user?.lastSeshRated === true || user?.lastSeshRated === undefined) {
         const result = await startSesh({
-          duration: participant && roomInfo.duration ? roomInfo.duration: workMin,
+          duration:
+            participant && roomInfo.duration ? roomInfo.duration : workMin,
           room: roomInfo.name,
         });
         groupSesh && ownerSesh ? await startGroupSesh({ roomId }) : null;
-      }else{
-
+      } else {
         onOpen();
-
       }
 
-      
-        // if rating required, then update workMin to match.
-        
+      // if rating required, then update workMin to match.
     }
     if (groupSesh) {
       const remainingTime = (roomInfo.endTime as number) - Date.now(); //in ms
@@ -119,7 +111,7 @@ function SessionTimer({ room }: { room: string }) {
 
   const onSeshReset = async () => {
     if (mode == "work") {
-       secLeft !== workMin*60 ?  await resetSesh() : null;
+      secLeft !== workMin * 60 ? await resetSesh() : null;
       participant && (await cancelGroupSesh({ roomId }));
     }
 
@@ -130,26 +122,24 @@ function SessionTimer({ room }: { room: string }) {
 
   const onGroupSesh = (start: boolean) => {
     setGroupSesh(start);
-   // setOwnerSesh(start);
-  
+    // setOwnerSesh(start);
+
     if (start) {
       createGroupSesh({ duration: workMin, roomId });
     } else {
       cancelGroupSesh({ roomId });
     }
   };
-  
-  
+
   //change mode
   const onChangeMode = (md: "work" | "break") => {
     setMode(md);
     md === "break" ? setSecLeft(breakMin * 60) : setSecLeft(workMin * 60);
-    console.log(md, breakMin, " md ",secLeft )
+    console.log(md, breakMin, " md ", secLeft);
 
     onPause();
   };
 
-  
   const syncTime = () => {
     const remainingTime = (roomInfo.endTime as number) - Date.now(); //in ms
     //
@@ -157,10 +147,7 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   useEffect(() => {
-    if (
-      roomInfo?.timerStatus === "running" &&
-participant
-    ) {
+    if (roomInfo?.timerStatus === "running" && participant) {
       syncTime();
     }
     //sync time.
@@ -169,9 +156,8 @@ participant
   useEffect(() => {
     const status = roomInfo?.timerStatus;
     if (!roomInfo || !participant) {
-      console.log(roomInfo,"rooomInfo")
+      console.log(roomInfo, "rooomInfo");
     } else {
-
       if (status === "running") {
         setMode("work");
         syncTime();
@@ -181,7 +167,7 @@ participant
       if (status === "ended") {
         setSecLeft(0);
         onChangeMode("break");
-        console.log("roomInfo  useEffect run")
+        console.log("roomInfo  useEffect run");
       }
     }
 
@@ -192,21 +178,42 @@ participant
     if (status === undefined && groupSesh && roomInfo) {
       onSeshReset();
       setGroupSesh(false);
-    //  !ownerSesh && setOwnerSesh(false);
+      //  !ownerSesh && setOwnerSesh(false);
     }
   }, [roomInfo]);
+
+  const hours =  Math.floor(Math.floor(secLeft/60)/60)
+
+  const minutes = Math.floor(secLeft / 60) >= 60 ? hours*60 - Math.floor(secLeft / 60):Math.floor(secLeft / 60);
+
+  const seconds = Math.floor(secLeft % 60);
+  
+  console.log(hours, minutes, seconds, " hrs min sec")
   return (
-    <div className="flex flex-col w-full h-full items-center border-4  rounded-md bg-green-900 border-green-700   ">
+    <div className="flex flex-col w-full h-full items-center   rounded-md    ">
       {/* Countdown */}
-      <div className="items-center py-6 flex-1  ">
+      <div className="items-center flex flex-col justify-end py-6 flex-1  ">
         <div className="flex flex-row gap-2">
-          <Toggle
+
+          <Button className="text-xs border-[2px]  " variant={ mode =="break" ?"outline":"default"} onClick={()=>setMode("work")}
+                        disabled={playing}
+
+            >
+Work
+          </Button>
+          <Button className="text-xs  border-[2px]"
+                      disabled={playing}
+
+          variant={ mode =="work" ?"outline":"default"} onClick={()=>setMode("break")}>
+Break
+          </Button>
+          {/* <Toggle
             disabled={playing}
             onClick={() => onChangeMode(mode == "work" ? "break" : "work")}
             className="border-[1px] justify-center self-center justify-self-center mb-4"
           >
             {mode == "work" ? "Work" : "Break"}
-          </Toggle>
+          </Toggle> */}
           <Setting
             workMin={workMin}
             breakMin={breakMin}
@@ -217,10 +224,14 @@ participant
         </div>
         <div className="flex flex-row  justify-center items-center relative ">
           <div className="flex-shrink-0 flex">
-            <span className="text-4xl font-mono">
+          {hours !==0 &&  
+          <span className="text-6xl font-mono">
+              {hours < 10  ? "0" + hours : hours}:
+            </span>}
+            <span className="text-6xl font-mono">
               {minutes < 10 ? "0" + minutes : minutes}:
             </span>
-            <span className="text-xl font-mono">
+            <span className="text-4xl font-mono">
               {seconds < 10 ? "0" + seconds : seconds}
             </span>
           </div>
@@ -229,7 +240,6 @@ participant
         <div className="flex flex-row gap-2 mt-4  mx-auto justify-center ">
           {pause ? (
             <button disabled={participant && !ownerSesh}>
-
               <Play onClick={() => onSeshStart()} />
             </button>
           ) : (
@@ -237,77 +247,81 @@ participant
               {groupSesh && roomInfo?.timerStatus === "running" ? null : (
                 <Pause onClick={() => onPause()} />
               )}
-
             </>
           )}
-<TimerReset onClick={() => onSeshReset()} />
+          <TimerReset onClick={() => onSeshReset()} />
         </div>
       </div>
-      <div className="border-2 flex-1 w-full flex gap-6 flex-col  items-center py-6 px-2">
+      <div className=" flex-1  w-full flex gap-6 flex-col  items-center py-6 px-2">
         <div className="flex flex-col items-center">
-       {mode=="work"?   <div>
-            {groupSesh ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-lightbold">Group Session: </span>
-                <Switch
-                  checked={groupSesh}
-                  onCheckedChange={(s) => {
-                    setGroupSesh(false);
-                    onGroupSesh(s);
-                  }}
-                  id="groupSesh"
-                  disabled={groupSesh && !ownerSesh}
-                />
-              </div>
-            ) : (
-              <Dialog>
-                <DialogTrigger className="flex items-center gap-4">
+          {mode == "work" ? (
+            <div>
+              {groupSesh ? (
+                <div className="flex items-center gap-4">
                   <span className="text-sm font-lightbold">
                     Group Session:{" "}
                   </span>
-                  <Switch checked={groupSesh} id="groupSesh" />
-                  {/* <Button onClick={()=>setGroupSesh(prev=>!prev)}>
+                  <Switch
+                    checked={groupSesh}
+                    onCheckedChange={(s) => {
+                      setGroupSesh(false);
+                      onGroupSesh(s);
+                    }}
+                    id="groupSesh"
+                    disabled={groupSesh && !ownerSesh}
+                  />
+                </div>
+              ) : (
+                <Dialog>
+                  <DialogTrigger className="flex items-center gap-4">
+                    <span className="text-sm font-lightbold">
+                      Group Session:{" "}
+                    </span>
+                    <Switch checked={groupSesh} id="groupSesh" />
+                    {/* <Button onClick={()=>setGroupSesh(prev=>!prev)}>
 
 </Button> */}
-                </DialogTrigger>
-                <ConfirmDialog
-                  title={"Start a group session"}
-                  desc={`Send invite to all of a ${workMin} minutes ? `}
-                  onConfirm={onGroupSesh}
-                />
-              </Dialog>
-            )}
-          </div>:null}
+                  </DialogTrigger>
+                  <ConfirmDialog
+                    title={"Start a group session"}
+                    desc={`Send invite to all of a ${workMin} minutes ? `}
+                    onConfirm={onGroupSesh}
+                  />
+                </Dialog>
+              )}
+            </div>
+          ) : null}
 
           {groupSesh && !ownerSesh ? (
             roomInfo?.timerStatus === "not started" ? (
               <>
-              <div className="space-x-2">
-                {
-                  !participant ?
-                <>
-                <Button
-                  onClick={() =>
-                    !participant
-                    ? joinGroupSesh({
-                      userId: user?._id as Id<"users">,
-                      roomId: roomId,
-                        })
-                      : null
-                  }
-                  >
-                  Join
-                </Button>
-                <span className="text-md ">
-                  {" "}
-                  a {roomInfo?.duration} min session ?
-                </span>
-                </>: <>
-                <span>Session joined</span>
-                </>
-                }
-              </div>
+                <div className="space-x-2">
+                  {!participant ? (
+                    <>
+                      <Button
+                        onClick={() =>
+                          !participant
+                            ? joinGroupSesh({
+                                userId: user?._id as Id<"users">,
+                                roomId: roomId,
+                              })
+                            : null
+                        }
+                      >
+                        Join
+                      </Button>
+                      <span className="text-md ">
+                        {" "}
+                        a {roomInfo?.duration} min session ?
+                      </span>
                     </>
+                  ) : (
+                    <>
+                      <span>Session joined</span>
+                    </>
+                  )}
+                </div>
+              </>
             ) : (
               <>
                 <span>session {roomInfo?.timerStatus}</span>
@@ -318,12 +332,9 @@ participant
 
         <div className="flex flex-col gap-2 overflow-auto max-w-[400px] text-center w-full mx-auto  ">
           <span className="text-md font-semibold ">Participants:</span>
-          {roomInfo?.participants?.map(p=>(
+          {roomInfo?.participants?.map((p) => (
             <div>
-             <span className="text-sm italic">
-               {p.name}
-              </span>
-            
+              <span className="text-sm italic">{p.name}</span>
             </div>
           ))}
         </div>
