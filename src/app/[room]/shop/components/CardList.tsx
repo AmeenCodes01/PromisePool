@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
-import { Doc } from '../../../../convex/_generated/dataModel'
 import PromiseCard from './PromiseCard'
 import RewardCard from './RewardCard'
+import { Doc } from '../../../../../convex/_generated/dataModel';
 
 function CardList({
     data,
@@ -14,7 +14,7 @@ function CardList({
 
 }) {
   return (
-    <div className="  grid grid-cols-4 gap-4 ">
+    <div className="grid gap-x-8 gap-y-6 w-fit max-w-[95%] grid-cols-[repeat(auto-fit,minmax(200px,1fr))] ">
     {data ? (
       data.map((p) => (
         <Fragment key={p._id}>

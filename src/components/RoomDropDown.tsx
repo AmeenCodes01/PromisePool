@@ -31,7 +31,7 @@ function RoomDropDown({inRoom, setInRoom}:{inRoom:string | undefined;
           <ChevronDown className="ml-auto" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[--radix-popper-anchor-width] z-[100] bg-green-900 rounded-b-[3px] p-1  ">
+      <DropdownMenuContent className="w-(--radix-popper-anchor-width) z-100 bg-green-900 rounded-b-[3px] p-1  ">
       <Accordion type="multiple"  >
 <AccordionItem value="item-1">
 <AccordionTrigger>Public</AccordionTrigger>

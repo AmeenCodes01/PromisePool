@@ -15,39 +15,36 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { calcReward } from "@/lib/calcReward";
+import  calcReward  from "@/lib/calcReward";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function ProgressDialog({
-  rating,
-  setRating,
+  
   duration,
 onReset
 }: {
   duration: number;
-  rating: number | null;
-  setRating: React.Dispatch<React.SetStateAction<null | number>>;
   onReset: ()=> void
 }) {
   const [rated, setRated] = useState(false);
+  const [rating, setRating] = useState<number | null>(null);
+  
   const isOpen = useDialog((state) => state.isOpen);
   const onClose = useDialog((state) => state.onClose);
   const endSesh = useMutation(api.sessions.stop)
   const resetSesh = useMutation(api.sessions.reset)
 
-  //also show the amount of coins earned.
-  // watch coins + money.
+  console.log(rated, " rated")
+  const getReward = useCallback(()=>{
+      return calcReward(60,rating as number)
+  },[rating,duration])
   // calc function, api call from here as well.
   return (
     <div>
-      <AlertDialog
-        onOpenChange={() => {
-        isOpen&&  setRated(false)
-
-          onClose();
-        }}
+      <AlertDialog 
+       
         open={isOpen}
         defaultOpen={isOpen}
       >
@@ -59,47 +56,61 @@ onReset
             type="number"
             min={1}
             max={10}
-            onChange={(e) => setRating(parseInt(e.target.value))}
-          />
+            disabled={rated}
+            onChange={(e)=>setRating(e.target.value ? parseFloat(e.target.value): 0)}          />
           <span className="italic text-sm ">rate out of 10</span>
-          {/* {rated ? (
-            <div className="flex flex-col ">
-              <span className="text-sm opacity-80">
-                promise coins:{"  "}
-                {calcReward(3600, rating as number)}
-              </span>
-              <span className="text-sm opacity-80">
-                watch coins:{"  "}
-                {(duration / 60).toFixed(2)}
-              </span>
-            </div>
-          ) : null} */}
-
+          {rated ? (
+  <div className="flex flex-col">
+    {(() => {
+      const reward = getReward();
+      console.log(reward,"reward")
+      return (
+        <>
+          <span className="text-sm opacity-80">
+            promise coins: {reward}
+          </span>
+          <span className="text-sm opacity-80">
+            watch coins: {reward}
+          </span>
+        </>
+      );
+    })()}
+  </div>
+) : null}
           <AlertDialogFooter className="sm:justify-end flex flex-row">
-          {/* <Button
+          
+            <Button
             className="justify-end w-fit "
             onClick={() => {
+              setRated(prev=>{
+                if(!prev){
+                  console.log("In there")
+                  endSesh({rating: rating as number,pCoins: getReward(), wCoins:calcReward(duration, rating as number )   })
+              return true
+                }
+                
+                  onClose();
+                
+                return false
+              })
+              if(rated){
+              onClose()
+                 return; 
+              }
               setRated(true);
             }}
             disabled={rating ? false : true}
           >
-            Rate
-          </Button> */}
-            <Button
-            className="justify-end w-fit "
-            onClick={() => {
-              endSesh({rating: rating as number,pCoins: calcReward(duration,rating as number), wCoins:calcReward(duration, rating as number )   })
-              setRated(false);
-              onClose()
-            }}
-            disabled={rating ? false : true}
-          >
-            Rate
+            {rated ?"Close":"Rate"}
           </Button>
-          <Button onClick={()=> {
+          <Button
+          disabled={rated}
+          onClick={()=> {
             resetSesh()
             onReset()
+            setRated(false)
             onClose()
+            
             }}>Delete Sesh</Button>
           </AlertDialogFooter>
         </AlertDialogContent>

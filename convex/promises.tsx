@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
+import { query, mutation, MutationCtx } from "./_generated/server";
 import { getCurrentUserOrThrow } from "./users";
+import { Id } from "./_generated/dataModel";
 
 export const get = query({
   args: {},
@@ -40,9 +41,10 @@ export const invest = mutation({
     coins: v.number(),
   },
   handler: async (ctx, { pId, coins }) => {
+    console.log(coins,pId, "coins + pid")
     const user = await getCurrentUserOrThrow(ctx);
     const promise = await ctx.db.get(pId);
-    await ctx.db.patch(pId, { coins: (promise?.coins as number) + coins });
+    await ctx.db.patch(pId, { coins: promise?.coins? promise.coins + coins : coins });
     await ctx.db.patch(user._id,{pCoins:(user.pCoins ?? 0) - coins})
   },
 });
@@ -63,3 +65,14 @@ export const del = mutation({
 
     }
 })
+
+
+export async function PSpromise ( ctx: MutationCtx,
+    id: Id<"users">,
+  ){
+    await ctx.db.insert("promises", {
+      title: "Donate to Palestine",
+      userId: id,
+    });
+
+}

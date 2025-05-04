@@ -18,6 +18,8 @@ function Promise() {
         console.log(title, coins);
         await create({ title, coins });
       };
+
+      
   return (
     <div>
         <div className="w-full flex flex-row p-2 justify-between   ">

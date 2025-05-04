@@ -10,7 +10,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Toggle } from "@/components/ui/toggle";
 
 import { Settings } from "lucide-react";
 import { useState } from "react";
@@ -40,25 +39,28 @@ function Setting({
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
-        <div className="flex gap-2 ">
-          <div>
-            <span>work</span>
+        <div className="flex gap-2  justify-between ">
+          <div className="flex flex-col gap-[1px]">
+            <span className="">work</span>
             <Input
               value={work}
               onChange={(e) => {
+                isNaN(parseInt(e.target.value))|| parseInt(e.target.value)==0 ?
+                setWork(0)
+                :
                    setWork(
                        parseInt(e.target.value)
                     )
                  
-                // onChangeSec(
-                //   e.target.value === "" ? 0 : parseInt(e.target.value), "work"
-                // );
-              }}
+                
+                  }}
               type="number"
               min={10}
             />
+                      <span className="text-xs mt-auto text-gray-400 ">min</span>
+
           </div>
-          <div>
+          <div className="flex  flex-col gap-[1px]">
             <span>break</span>
             <Input
               value={brk}
@@ -71,19 +73,10 @@ function Setting({
               type="number"
               min={1}
             />
+          <span className="text-xs text-gray-400 ">min</span>
           </div>
-          <span className="text-xs mt-auto ">min</span>
         </div>
-        <div className="flex flex-col gap-2">
-          <span>mode</span>
-
-          {/* <Toggle
-            onClick={() => setMode(mode == "work" ? "break" : "work")}
-            className="border-[1px]"
-          >
-            {mode == "work" ? "Work" : "Break"}
-          </Toggle> */}
-        </div>
+       
         <DialogClose asChild>
 
         <Button 

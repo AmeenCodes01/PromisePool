@@ -24,12 +24,12 @@ function PromiseCard({
   const onDel=()=> del({pId:promise._id})
 
   const onInvest= (title:string,coins:number)=> invest({pId:promise._id, coins})
-
+console.log(promise, " Promise")
   return (
     <>
       <div className="flex bg-accent flex-col h-[300px] w-[200px]  font-serif border-1 p-1">
         <PromiseDialog
-        icon={        <Edit className='ml-auto ' size={18}/>}
+        icon={ promise.title!=="Donate to Palestine" ?    <Edit className='ml-auto ' size={18}/>:<div/>}
         header='Edit promise'
         editTitle={promise.title}
         onClick={onEdit}
@@ -50,7 +50,7 @@ function PromiseCard({
           </span>
         </div>
         <div className=" w-[100%] p-[5px] flex  flex-row gap-[10px] items-center justify-between bg-neutral text-white ">
-          {promise.coins}
+          {promise.coins ?  promise.coins:0}
           <PromiseDialog
         icon={     <BadgePlus size={18}/>}
         header='Invest'

@@ -29,10 +29,10 @@ function useCountdown({ sec,resetDependency }: { sec: number, resetDependency?:n
     return () => clearInterval(interval);
   }, [pause, secLeft]);
   
-  useEffect(() => {
-  setSecLeft(sec);
-  setPause(true);
-}, [sec]); // reset timer when mode changes
+//   useEffect(() => {
+//   setSecLeft(sec);
+//   setPause(true);
+// }, [sec]); // reset timer when mode changes
 
 
   return {

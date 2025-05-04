@@ -1,20 +1,27 @@
-export const calcReward = (duration:number, rating:number) => {
-    const base_rate = 10; // Base rate multiplier
-    const min_duration = 10; // Minimum duration required for coins
-    const max_duration = 300; // Cap duration at 400 minutes
-  
-    if (duration < min_duration) {
-      // No reward for durations less than 10 minutes
-      return 0;
-    }
-  
-    // Cap the duration at 400 minutes
-    const effective_minutes = Math.min(duration, max_duration);
-    const effective_hours = effective_minutes / 60;
-  
-    // Calculate coins based on duration, rating, and base rate
-    const coins = effective_hours * (rating / 5) * base_rate;
-  
-    // Return whole number coins
-    return Math.floor(coins);
-  };
+export default function calcRewards(durationMinutes: number, rating: number, isManual = false): number {
+  rating = Math.max(1, Math.min(rating, 10));
+
+  const baseRatePerMinute = 0.2;
+  const ratingMultiplier = 0.8 + (rating / 20);
+     let coins;
+if(rating>4){
+   coins = durationMinutes * baseRatePerMinute* ratingMultiplier;
+   
+}else{
+     coins = durationMinutes * 0.05 * ratingMultiplier;
+}
+ 
+  // Bonus for long timer sessions only
+  if (!isManual && durationMinutes >= 90) {
+    coins += 10;
+  }
+
+  // Soften reward after 120 min for timer sessions
+  if (!isManual && durationMinutes > 120) {
+    const excessMinutes = durationMinutes - 120;
+    coins += excessMinutes * 0.15 * ratingMultiplier;
+  }
+
+  // Manual logs get full rewards, no cap, no diminish
+  return Math.floor(coins);
+}

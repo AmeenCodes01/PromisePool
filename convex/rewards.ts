@@ -68,9 +68,25 @@ export const edit = mutation({
   },
 });
 
+// //coins really
+// export const addCoins = mutation({
+//   args: { coins: v.number() },
+//   handler: async (ctx, { coins }) => {
+//     const user = await getCurrentUserOrThrow(ctx);
+//     if(user){
+//       await ctx.db.patch(user._id,{pCoins:(user.pCoins ?? 0) + coins, wCoins:(user.wCoins??0)+coins})
+
+//     }
+//   },
+// });
+
+
 export const del = mutation({
   args: { rId: v.id("rewards") },
   handler: async (ctx, { rId }) => {
     await ctx.db.delete(rId);
   },
 });
+
+
+

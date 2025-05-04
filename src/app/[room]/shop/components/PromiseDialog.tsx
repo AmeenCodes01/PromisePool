@@ -119,7 +119,7 @@ PromiseDialog.CoinsInput = function DialogInput({title}:{title?:string}) {
         min={0}
         max={maxCoins}
         value={coins}
-        onChange={(e) => setCoins(parseInt(e.target.value))}
+        onChange={(e) => setCoins(e.target.value ? parseInt(e.target.value):0)}
       />
     </>
   );

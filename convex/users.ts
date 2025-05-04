@@ -2,6 +2,7 @@ import { internalMutation, query, QueryCtx } from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 import { v, Validator } from "convex/values";
 import { create, createRoom } from "./rooms";
+import {PSpromise} from "./promises"
 
 export const current = query({
   args: {},
@@ -19,11 +20,11 @@ export const upsertFromClerk = internalMutation({
     };
   
     const user = await userByExternalId(ctx, data.id);
-    if (user === null) {
-   
 
+    if (user === null) {
       const userId = await ctx.db.insert("users", userAttributes);
       await createRoom(ctx,userAttributes.name,userId,"private")
+      await PSpromise(ctx, userId)
     } else {
       await ctx.db.patch(user._id, userAttributes);
     }
@@ -65,3 +66,5 @@ async function userByExternalId(ctx: QueryCtx, externalId: string) {
     .withIndex("byExternalId", (q) => q.eq("externalId", externalId))
     .unique();
 }
+
+
