@@ -8,6 +8,7 @@ import CoinBar from "./CoinBar";
 import CardList from "./CardList";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
 
 function Promise() {
     const user = useQuery(api.users.current);
@@ -21,12 +22,18 @@ function Promise() {
 
       
   return (
-    <div>
+    <div className="">
         <div className="w-full flex flex-row p-2 justify-between   ">
         <div className="self-center my-auto">
           <PromiseDialog
             maxCoins={user?.pCoins as number}
-            icon={<Plus />}
+            icon={
+            <Button className="text-sm">
+            <Plus />
+            Create
+            </Button>
+            
+          }
             header={"Create new promise"}
             btnTitle="Create"
             onClick={createPromise}

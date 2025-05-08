@@ -25,7 +25,7 @@ function page() {
         </TabsContent>
       </Tabs>
       {/*Watch coins*/}
-      <div className="absolute bottom-8 right-0 m-4 bg-accent  rounded-md">
+      <div className="absolute bottom-10 right-0 m-4 bg-accent  rounded-md">
         <Dialog>
           <DialogTrigger>
             <Button>Submit offline Hours</Button>

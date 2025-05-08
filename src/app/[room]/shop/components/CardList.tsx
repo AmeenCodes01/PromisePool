@@ -14,7 +14,7 @@ function CardList({
 
 }) {
   return (
-    <div className="grid gap-x-8 gap-y-6 w-fit max-w-[95%] grid-cols-[repeat(auto-fit,minmax(200px,1fr))] ">
+    <div className="grid mt-4 gap-x-12 gap-y-14 w-fit max-w-[95%] grid-cols-[repeat(auto-fit,minmax(200px,1fr))] ">
     {data ? (
       data.map((p) => (
         <Fragment key={p._id}>

@@ -31,7 +31,7 @@ export default defineSchema({
     title: v.string(),
     coins: v.optional(v.number()),
     userId: v.id("users"),
-  }).index("by_userId", ["userId"]),
+  }).index("by_userId", ["userId"]).index("title",["title"]),
 
   rewards: defineTable({
     title: v.string(),

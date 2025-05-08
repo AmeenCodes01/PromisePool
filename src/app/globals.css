@@ -308,3 +308,95 @@
     @apply bg-background text-foreground;
   }
 }
+
+.blink {
+  animation: blink 15s infinite ease-in-out;
+}
+
+
+@keyframes blink {
+  0% {
+    background-color: #f75055; /* soft red */
+    box-shadow:
+      inset 0px 0px 5px 5px #e31b23, /* inner red glow */
+      0px 0px 5px 3px #e31b23; /* outer red glow */
+  }
+  25% {
+    background-color: #2e2e2e; /* soft black */
+    box-shadow:
+      inset 0px 0px 5px 7px #1a1a1a, 
+      0px 0px 5px 3px #1a1a1a;
+  }
+  50% {
+    background-color: #ffffff;
+    box-shadow:
+      inset 0px 0px 5px 9px #e0e0e0,
+      0px 0px 5px 3px #e0e0e0;
+  }
+  75% {
+    background-color: #2baf6b; /* soft green */
+    box-shadow:
+      inset 0px 0px 5px 11px #17975e,
+      0px 0px 5px 3px #17975e;
+  }
+  100% {
+    background-color: #fa656b;
+    box-shadow:
+      inset 0px 0px 5px 3px #e31b23,
+      0px 0px 5px 3px #e31b23;
+  }
+}
+
+
+.blue-diamond {
+  
+  animation: bluePulse 15s infinite ease-in-out;
+  /* background-color: #2e2e2e;
+  box-shadow:
+    inset 0px 0px 5px 7px #1a1a1a, 
+    0px 0px 5px 3px #1a1a1a; */
+
+
+}
+
+
+@keyframes bluePulse {
+  0% {
+    background-color: #7dddf5; /* soft cyan */
+    box-shadow:
+      inset 0px 0px 5px 5px #3aaed8, /* inner blue glow */
+      0px 0px 5px 3px #3aaed8;
+  }
+  50% {
+    background-color: #b6effa; /* lighter blue pulse */
+    box-shadow:
+      inset 0px 0px 10px 10px #5dc8ea,
+      0px 0px 8px 5px #5dc8ea;
+  }
+  100% {
+    background-color: #7dddf5;
+    box-shadow:
+      inset 0px 0px 5px 5px #3aaed8,
+      0px 0px 5px 3px #3aaed8;
+  }
+}
+@keyframes pulseGlow {
+  0% {
+    background-color: #2e2e2e;
+    box-shadow:
+      inset 0px 0px 5px 7px #1a1a1a, 
+      0px 0px 5px 3px #1a1a1a;
+  }
+  50% {
+    background-color: #ffffff;
+    box-shadow:
+      inset 0px 0px 5px 9px #e0e0e0,
+      0px 0px 5px 3px #e0e0e0;
+  }
+  100% {
+    background-color: #2e2e2e;
+    box-shadow:
+      inset 0px 0px 5px 7px #1a1a1a, 
+      0px 0px 5px 3px #1a1a1a;
+  }
+}
