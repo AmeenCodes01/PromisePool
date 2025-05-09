@@ -78,7 +78,7 @@ export const createSesh = mutation({
         timerStatus: "not started",
         duration,
         session_ownerId: user._id as Id<"users">,
-        participants: [{id: user._id, name:user.name}],
+        participants: [{id: user._id, name: user.name as string}],
       });
     }
   },
@@ -120,7 +120,7 @@ export const participate = mutation({
     console.log("sleep ", participant)
     if (room && room.timerStatus === "not started"&& !participant) {
       await ctx.db.patch(roomId, {
-        participants: [...(room.participants ?? []), {id:userId,name:user.name}],
+        participants: [...(room.participants ?? []), {id:userId,name:user.name as string}],
       });
     }
   },

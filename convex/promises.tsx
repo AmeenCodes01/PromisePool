@@ -1,7 +1,8 @@
 import { v } from "convex/values";
 import { query, mutation, MutationCtx } from "./_generated/server";
-import { getCurrentUserOrThrow } from "./users";
+
 import { Id } from "./_generated/dataModel";
+import { getCurrentUserOrThrow } from "./users";
 
 export const get = query({
   args: {},

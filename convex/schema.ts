@@ -1,21 +1,22 @@
 import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { v } from "convex/values";import { authTables } from "@convex-dev/auth/server";
+
 
 export default defineSchema({
+  ...authTables,
+
   users: defineTable({
-    name: v.string(),
+    name: v.optional(v.string()),
     country: v.optional(v.string()),
     score: v.optional(v.number()),
     lastSeshId: v.optional(v.id("sessions")),
     lastSeshRated: v.optional(v.boolean()),
-    // this the Clerk ID, stored in the subject JWT field
-    externalId: v.string(),
     email: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
     roomIds : v.optional(v.array(v.id("rooms")))
 
-  }).index("byExternalId", ["externalId"]),
+  }),
 
   sessions: defineTable({
     duration: v.number(),
@@ -65,5 +66,6 @@ export default defineSchema({
   .index("type",["type"]),
   
 
-
+},{
+  
 });

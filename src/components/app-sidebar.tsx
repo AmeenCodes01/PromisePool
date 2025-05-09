@@ -3,6 +3,7 @@ import {
   ChevronDown,
   Home,
   Inbox,
+  LogOut,
   Search,
   Settings,
   Store,
@@ -29,13 +30,13 @@ import {
 
 import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import RoomDropDown from "./RoomDropDown";
 import { useParams } from "next/navigation";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 // Menu items.
 const items = [
@@ -71,7 +72,7 @@ export function AppSidebar() {
   const user = useQuery(api.users.current)
   const params = useParams()
   const [inRoom,setInRoom]= useState<string| undefined>( params.room as string)
-  
+  const { signOut } = useAuthActions();
   useEffect(() => {
     if (params.room) {
       // If params.room is defined, use it
@@ -114,7 +115,10 @@ export function AppSidebar() {
             <ModeToggle />
           </SidebarMenuItem>
           <SidebarMenuItem className=" justify-end flex">
-            <UserButton />
+            <Button  onClick={() => void signOut()}>
+
+          <LogOut />
+            </Button>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
