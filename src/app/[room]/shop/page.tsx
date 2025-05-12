@@ -7,7 +7,7 @@ import Reward from "./components/Reward";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import AddCoinsDialog from "./components/AddCoinsDialog";
+import OfflineHours from "./components/OfflineHours";
 
 function page() {
   return (
@@ -30,7 +30,7 @@ function page() {
           <DialogTrigger>
             <Button>Submit offline Hours</Button>
           </DialogTrigger>
-          <AddCoinsDialog />
+          <OfflineHours />
         </Dialog>
       </div>
     </div>

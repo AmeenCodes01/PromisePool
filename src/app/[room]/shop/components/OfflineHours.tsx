@@ -12,7 +12,7 @@ import { api } from "../../../../../convex/_generated/api";
 import calcRewards from "@/lib/calcReward";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useParams } from "next/navigation";
-function AddCoinsDialog() {
+function OfflineHours() {
   const [hours, setHours] = useState(0);
   const [rating, setRating] = useState(7);
   const startSesh = useMutation(api.sessions.start);
@@ -68,4 +68,4 @@ function AddCoinsDialog() {
   );
 }
 
-export default AddCoinsDialog;
+export default OfflineHours;

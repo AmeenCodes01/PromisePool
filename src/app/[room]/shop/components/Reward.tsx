@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "convex/react";
 import CoinBar from "./CoinBar";
 import { Plus } from "lucide-react";
 import CardList from "./CardList";
+import { Button } from "@/components/ui/button";
 
 function Reward() {
   const user = useQuery(api.users.current);
@@ -22,7 +23,13 @@ function Reward() {
         <div className="self-center my-auto">
           <PromiseDialog
             maxCoins={user?.wCoins as number}
-            icon={<Plus />}
+            icon={
+           <Button className="text-sm">
+            <Plus />
+            Create
+            </Button>
+           
+          }
             header={"Create new reward"}
             btnTitle="Create"
             onClick={createReward}

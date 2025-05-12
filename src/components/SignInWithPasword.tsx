@@ -61,10 +61,14 @@ export function SignInWithPassword({
           });
       }}
     >
+      <div className="hidden">
+
       <label htmlFor="email">Email</label>
       <Input name="email" id="email" className="mb-4" autoComplete="email" defaultValue={""}/>
+      </div>
       <label htmlFor="name">Username</label>
       <Input name="name" id="name" className="mb-4" autoComplete="username"/>
+      {/* <span className="text-sm italic">Please use </span> */}
       <div className="flex items-center justify-between">
         <label htmlFor="password">Password</label>
         {handlePasswordReset && flow === "signIn" ? (

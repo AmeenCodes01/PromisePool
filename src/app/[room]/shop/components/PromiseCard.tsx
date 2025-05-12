@@ -38,15 +38,17 @@ function PromiseCard({ promise }: { promise: Doc<"promises"> }) {
           {promise.title}
         </span>{promise.title.toLowerCase().includes("palestine") &&
         <span className="bg-gray-700 mt-2 w-[30px] h-[15px] text-xs font-mono font-semibold text-center rounded-sm"
-        title="real $ you promised to donate. "
+        title="$ you promised to donate. "
         >
           $ { " "}
           {promise.coins? Dollars(promise.coins):0} 
         </span>}
       </div>
       </div>
-      <div className="ml-auto  border-2 ">
-
+{ promise.title=="Coins for Palestine"&&
+  <span className="text-xs bg-gray-800 text-gray-300 italic w-fit p-[2px] border-2 gap-1 flex flex-row">350 <Coins size={12} className="mt-auto"  />= 1$</span>
+}
+      <div className="ml-auto   ">
       <PromiseDialog
           icon={
             promise.title !== "Coins for Palestine" ? (

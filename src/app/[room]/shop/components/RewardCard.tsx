@@ -1,11 +1,13 @@
 "use client";
 import { useMutation } from "convex/react";
-import { BadgePlus, Edit, Plus, Unlock } from "lucide-react";
+import { BadgePlus, Edit, Plus, ShoppingCart, Unlock } from "lucide-react";
 import React, { useState } from "react";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 import PromiseDialog from "./PromiseDialog";
 import { Toggle } from "@/components/ui/toggle";
+import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 
 function RewardCard({
   reward,
@@ -15,7 +17,6 @@ function RewardCard({
   wCoins: number;
 }) {
   const [finished, setFinished] = useState(reward.finished);
-
   const edit = useMutation(api.rewards.edit);
   const del = useMutation(api.rewards.del);
   const unlock = useMutation(api.rewards.unlock);
@@ -32,13 +33,13 @@ function RewardCard({
     if (wCoins >= reward.price) {
       unlock({ rId: reward._id });
     } else {
-      alert("not enough reward coins");
+   toast.error("not enough reward coins");
     }
   };
   return (
     <>
       <div
-        className={`flex bg-accent flex-col h-[300px] w-[200px]  font-serif border-1 p-1  ${reward.finished ? null : ""}`}
+        className={`flex bg-accent flex-col h-[250px] w-[200px] flower font-serif border-1 p-1  ${reward.finished ? null : ""}`}
       >
         <PromiseDialog
           icon={<Edit className="ml-auto " size={18} />}
@@ -50,9 +51,14 @@ function RewardCard({
         >
           <PromiseDialog.NameInput />
           <PromiseDialog.CoinsInput title="Price" />
-          <Toggle onClick={() => setFinished((prev) => !prev)}>
-            Finished : {finished ? "true" : "false"}
-          </Toggle>
+          {/* <div className="flex flex-row gap-2 items-center text-sm">
+            Finished :
+          <Switch onClick={() => setFinished((prev) => !prev)}>
+          </Switch>
+            
+             {finished ? "true" : "false"}
+
+          </div> */}
           <div className="flex flex-row gap-2 justify-end">
             <PromiseDialog.Btn />
             <PromiseDialog.Btn
@@ -64,7 +70,8 @@ function RewardCard({
         <div className=" items-center justify-center p-[10px] h-[90%] flex flex-col text-md   ">
           <span className="text-center flex flex-col text-accent-content tracking-wide">
             <span className="italic">{reward.title}</span>
-            <span >{reward.partsUnlocked}</span>
+           
+            <span className="flex flex-row items-center gap-2"> <Unlock size={14}/> {reward.partsUnlocked}</span>
           </span>
         </div>
         <div className=" w-[100%] p-[5px] flex  flex-row gap-[10px] items-center justify-between bg-neutral text-white ">
@@ -72,7 +79,7 @@ function RewardCard({
            {reward.price}
           </span>
           <PromiseDialog
-            icon={<Unlock size={18} />}
+            icon={<ShoppingCart size={18} />}
             header="Unlock"
             onClick={onUnlock}
             btnTitle={"Buy"}
