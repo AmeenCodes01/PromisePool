@@ -14,6 +14,8 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       if (!args.profile.name) {
         console.error("No name in profile", args.profile);
       }
+      console.log(args.profile.name,"name")
+      console.log("e n a u")
       const userId = await ctx.db.insert("users", {
         name: args.profile.name,
         email: args.profile.email,
@@ -21,6 +23,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
 
       await PSpromise(ctx,userId);
       await createRoom(ctx,args.profile.name as string,userId,"private")
+
       return userId
     },
   },

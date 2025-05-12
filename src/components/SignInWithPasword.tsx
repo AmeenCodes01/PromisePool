@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import { Password } from "@convex-dev/auth/providers/Password";
 
 import { ConvexError } from "convex/values";
+import { redirect } from "next/dist/server/api-utils";
 
 
 export function SignInWithPassword({
@@ -35,28 +36,32 @@ export function SignInWithPassword({
         event.preventDefault();
         setSubmitting(true);
         const formData = new FormData(event.currentTarget);
+        formData.set("email",formData.get("name")as string)
         for (let pair of formData.entries()) {
             console.log(pair[0]+ ': ' + pair[1]);
-          }        signIn(provider ?? "password", formData)
+          }        
+          signIn(provider ?? "password", formData)
           .then(() => {
             handleSent?.(formData.get("email") as string);
           })
           .catch((error) => {
-            console.error(error);
+            console.error("error",error);
+            
             let toastTitle: string;
-            if (
-              error instanceof ConvexError &&
-              error.data === "INVALID_PASSWORD"
-            ) {
-              toastTitle =
-                "Invalid password - check the requirements and try again.";
-            } else {
-              toastTitle =
-                flow === "signIn"
-                  ? "Could not sign in, did you mean to sign up?"
-                  : "Could not sign up, did you mean to sign in?";
-            }
-            toast.error(toastTitle);
+            // if (
+            //   error instanceof ConvexError &&
+            //   error.data === "INVALID_PASSWORD"
+            // ) {
+            //   toastTitle =
+            //   "Invalid password";
+            // } else {
+            //   console.log("erro")
+            //   toastTitle =
+            //     flow === "signIn"
+            //       ? "Could not sign in, did you mean to sign up?"
+            //       : "Could not sign up, did you mean to sign in?";
+            // }
+            toast.error("Wrong Credentials.");
             setSubmitting(false);
           });
       }}
