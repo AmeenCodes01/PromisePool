@@ -1,7 +1,6 @@
 import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { getAuthToken } from "@/lib/auth";
 import CheckPrivate from "./CheckPrivate";
 import { Dollars } from "@/lib/utils";
 import { fetchQuery } from "convex/nextjs";

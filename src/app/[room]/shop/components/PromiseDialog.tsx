@@ -16,6 +16,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import { Button } from "@/components/ui/button";
@@ -107,9 +108,13 @@ PromiseDialog.NameInput = function DialogInput() {
   );
 };
 
-PromiseDialog.CoinsInput = function DialogInput({title}:{title?:string}) {
-  const { maxCoins, coins, setCoins } = usePDialogContext();
 
+PromiseDialog.CoinsInput = function DialogInput({title,presetCoins}:{title?:string; presetCoins?:number}) {
+  const { maxCoins, coins, setCoins } = usePDialogContext();
+    // useEffect(()=>{
+    //   presetCoins? setCoins(presetCoins):null;
+    // },[])
+    
   return (
     <>
       <Label>{title ??"coins"}</Label>
@@ -117,8 +122,9 @@ PromiseDialog.CoinsInput = function DialogInput({title}:{title?:string}) {
       <Input
         type="number"
         min={0}
+        disabled={presetCoins ? true:false}
         max={maxCoins}
-        value={coins}
+        value={ presetCoins ?? coins}
         onChange={(e) => setCoins(e.target.value ? parseInt(e.target.value):0)}
       />
     </>

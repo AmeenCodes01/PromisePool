@@ -77,7 +77,7 @@ function PromiseCard({ promise }: { promise: Doc<"promises"> }) {
         <div className="flex flex-row gap-1" title="Study coins">
         {promise.coins ? promise.coins : 0} 
 
-        <Coins size={15} className=" z-1000 my-auto" />
+        <Coins size={15} className=" z-100 my-auto" />
         </div>
         <PromiseDialog
           icon={<Plus size={18} />}

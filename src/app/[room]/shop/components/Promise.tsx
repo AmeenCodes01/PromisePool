@@ -9,6 +9,7 @@ import CardList from "./CardList";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
+import InfoDialog from "../../InfoDialog";
 
 function Promise() {
     const user = useQuery(api.users.current);
@@ -23,6 +24,33 @@ function Promise() {
       
   return (
     <div className="">
+      <div className=" ml-auto w-fit flex z-[1000]">
+
+      <InfoDialog title="Welcome to Shop's Promises section"
+      
+      desc={
+        <>
+        <p className="italic">
+A quiet space for your personal promises — little goals, dreams, and intentions you keep for yourself. You can add coins to them, giving your promises weight, worth, and a sense of progress as you move toward them.          <br/><br/>
+
+There’s one special collective promise here too: <br/>
+“Coins for Palestine” — a shared self-promise by everyone using this platform to donate real money for Palestine.<br/><br/>
+
+Each user decides how much they’ll pledge, and their promise adds to the total.<br/>
+350 coins = $1 — and together, we track our collective intent to give.<br/><br/>
+
+It’s not a donation platform — it’s a promise to yourself that you’ll follow through in real life.
+
+<br/><br/>
+
+<span className="text-green-400 text-sm">Even if you don't use this timer, you can get coins by submitting offline hours + rating by
+  the "Submit offline hours" button bottom-right".
+</span>
+        </p>
+        </>
+      }
+      />
+      </div>
         <div className="w-full flex flex-row p-2 justify-between   ">
         <div className="self-center my-auto">
           <PromiseDialog

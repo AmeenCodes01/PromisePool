@@ -44,8 +44,7 @@ function SessionTimer({ room }: { room: string }) {
 
   const onOpen = useDialog((state) => state.onOpen);
 
-  
-  console.log(roomId,"roomid")
+  console.log(roomId, "roomid");
   const startSesh = useMutation(api.sessions.start);
   const resetSesh = useMutation(api.sessions.reset);
   const createGroupSesh = useMutation(api.rooms.createSesh);
@@ -59,7 +58,7 @@ function SessionTimer({ room }: { room: string }) {
     if (secLeft == 0 && mode == "work") {
       // get progress. open progres
       if (mode == "work") {
-        console.log(" useeffect")
+        console.log(" useeffect");
         onOpen();
         !groupSesh && onChangeMode("break");
       } else {
@@ -96,10 +95,9 @@ function SessionTimer({ room }: { room: string }) {
         });
         groupSesh && ownerSesh ? await startGroupSesh({ roomId }) : null;
       } else {
-        console.log("open")
+        console.log("open");
         onOpen();
-        if(!participant){
-
+        if (!participant) {
           return;
         }
       }
@@ -114,7 +112,7 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   const onSeshReset = async () => {
-    console.log("Hitting reset")
+    console.log("Hitting reset");
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
       ownerSesh && (await cancelGroupSesh({ roomId }));
@@ -123,7 +121,7 @@ function SessionTimer({ room }: { room: string }) {
     onReset();
   };
 
-  console.log(secLeft," secLeft")
+  console.log(secLeft, " secLeft");
   const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
   const onGroupSesh = (start: boolean) => {
@@ -134,7 +132,7 @@ function SessionTimer({ room }: { room: string }) {
       createGroupSesh({ duration: workMin, roomId });
     } else {
       cancelGroupSesh({ roomId });
-      onSeshReset()
+      onSeshReset();
     }
   };
 
@@ -144,7 +142,6 @@ function SessionTimer({ room }: { room: string }) {
     setMode(md);
     md === "break" ? setSecLeft(breakMin * 60) : setSecLeft(workMin * 60);
     console.log(md, breakMin, " md ", secLeft);
-
   };
 
   const syncTime = () => {
@@ -154,9 +151,8 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   useEffect(() => {
-
     if (roomInfo?.timerStatus === "running" && participant) {
-      console.log("hello  ")
+      console.log("hello  ");
       syncTime();
     }
     //sync time.
@@ -168,7 +164,7 @@ function SessionTimer({ room }: { room: string }) {
       console.log(roomInfo, "rooomInfo");
     } else {
       if (status === "running") {
-        console.log("reset sesh")
+        console.log("reset sesh");
 
         setMode("work");
         syncTime();
@@ -176,7 +172,7 @@ function SessionTimer({ room }: { room: string }) {
       }
 
       if (status === "ended") {
-        console.log("reset sesh")
+        console.log("reset sesh");
 
         setSecLeft(0);
         onChangeMode("break");
@@ -185,41 +181,48 @@ function SessionTimer({ room }: { room: string }) {
     }
 
     if (status === "not started") {
-      console.log("reset sesh")
+      console.log("reset sesh");
 
       setGroupSesh(true);
     }
 
     if (status === undefined && groupSesh && roomInfo) {
-      console.log("reset sesh")
+      console.log("reset sesh");
       onSeshReset();
       setGroupSesh(false);
       //  !ownerSesh && setOwnerSesh(false);
     }
   }, [roomInfo]);
 
-  const hours =  Math.floor(Math.floor(secLeft/60)/60)
+  const hours = Math.floor(Math.floor(secLeft / 60) / 60);
 
-  const minutes = Math.floor(secLeft / 60) >= 60 ? hours*60 - Math.floor(secLeft / 60):Math.floor(secLeft / 60);
+  const minutes =
+    Math.floor(secLeft / 60) >= 60
+      ? hours * 60 - Math.floor(secLeft / 60)
+      : Math.floor(secLeft / 60);
 
   const seconds = Math.floor(secLeft % 60);
-  
+
   return (
     <div className="flex flex-col w-full h-full bg-color-background items-center   rounded-md    ">
       {/* Countdown */}
       <div className="items-center gap-4 flex flex-col justify-end py-6 flex-1  ">
-        <div className="flex flex-row gap-2">
-          <Button className="text-xs border-[2px]  " variant={mode =="break" ?"outline":"default"} onClick={()=>onChangeMode("work")}
-                        disabled={playing}
-
-            >
-Work
+        <div className="flex flex-row  gap-2 ml-6 ">
+          <Button
+            className="text-xs border-[2px]  "
+            variant={mode == "break" ? "outline" : "default"}
+            onClick={() => onChangeMode("work")}
+            disabled={playing}
+          >
+            Work
           </Button>
-          <Button className="text-xs  border-[2px]"
-                      disabled={playing}
-
-          variant={ mode =="work" ?"outline":"default"} onClick={()=>onChangeMode("break")}>
-Break
+          <Button
+            className="text-xs  border-[2px]"
+            disabled={playing}
+            variant={mode == "work" ? "outline" : "default"}
+            onClick={() => onChangeMode("break")}
+          >
+            Break
           </Button>
           {/* <Toggle
             disabled={playing}
@@ -228,20 +231,21 @@ Break
           >
             {mode == "work" ? "Work" : "Break"}
           </Toggle> */}
-          <Setting
+          {/* <Setting
             workMin={workMin}
             breakMin={breakMin}
             onChangeSec={onChangeSec}
             mode={mode}
             setMode={setMode}
-          />
+          /> */}
         </div>
-        <div className="flex flex-row  justify-center items-center relative ">
+        <div className="flex flex-row  relative ">
           <div className="shrink-0 flex">
-          {hours !==0 &&  
-          <span className="text-8xl font-mono">
-              {hours < 10  ? "0" + hours : hours}:
-            </span>}
+            {hours !== 0 && (
+              <span className="text-8xl font-mono">
+                {hours < 10 ? "0" + hours : hours}:
+              </span>
+            )}
             <span className="text-8xl font-mono">
               {minutes < 10 ? "0" + minutes : minutes}:
             </span>
@@ -251,7 +255,7 @@ Break
           </div>
           <div className=" pl-2 "></div>
         </div>
-        <div className="flex flex-row gap-2   mx-auto justify-center ">
+        <div className="flex flex-row gap-4 ml-8   ">
           {pause ? (
             <button disabled={participant && !ownerSesh}>
               <Play onClick={() => onSeshStart()} />
@@ -343,23 +347,22 @@ Break
             )
           ) : null}
         </div>
-{roomInfo?.type!=="private" && participant ?
-        <div className="flex flex-col gap-2 p-2  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary-foreground rounded-md  ">
-          <span className="text-md font-serif opacity-90 underline  ">Participants</span>
-          {roomInfo?.participants?.map((p) => (
-            <div key={p.id}>
-              <span className="text-sm italic">{p.name}</span>
-            </div>
-          ))}
-        </div>:null}
+        {roomInfo?.type !== "private" && participant ? (
+          <div className="flex flex-col gap-2 p-2  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary-foreground rounded-md  ">
+            <span className="text-md font-serif opacity-90 underline  ">
+              Participants
+            </span>
+            {roomInfo?.participants?.map((p) => (
+              <div key={p.id}>
+                <span className="text-sm italic">{p.name}</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {/* Play/Pause.  */}
-      <ProgressDialog
-        duration={workMin}
-        
-        onReset={onReset}
-      />
+      <ProgressDialog duration={workMin} onReset={onReset} />
       {/* session must not have started. */}
     </div>
   );

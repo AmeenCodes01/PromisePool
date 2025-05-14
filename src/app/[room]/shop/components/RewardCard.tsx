@@ -8,6 +8,9 @@ import PromiseDialog from "./PromiseDialog";
 import { Toggle } from "@/components/ui/toggle";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Dollars } from "@/lib/utils";
+import calcRewards from "@/lib/calcReward";
 
 function RewardCard({
   reward,
@@ -50,7 +53,10 @@ function RewardCard({
           editCoins={reward.price}
         >
           <PromiseDialog.NameInput />
-          <PromiseDialog.CoinsInput title="Price" />
+      
+          <PromiseDialog.CoinsInput title="Price"  />
+
+          
           {/* <div className="flex flex-row gap-2 items-center text-sm">
             Finished :
           <Switch onClick={() => setFinished((prev) => !prev)}>

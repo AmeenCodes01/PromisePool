@@ -175,10 +175,14 @@ export async function createRoom(
   type: "private" | "public" | "group",
   password?: string
 ) {
-  return await ctx.db.insert("rooms", {
+  const user = await ctx.db.get(id);
+const roomId=   await ctx.db.insert("rooms", {
     name,
     owner_id: id,
     type: type,
     password: password,
   });
+
+  await ctx.db.patch(id,{roomIds:[...(user?.roomIds ?? []),roomId]})
+  
 }

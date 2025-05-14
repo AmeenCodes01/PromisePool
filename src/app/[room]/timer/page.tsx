@@ -1,6 +1,7 @@
 import SessionTimer from "./components/SessionTimer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Stream from "./components/Stream";
+import InfoDialog from "../InfoDialog";
 
 // hook gives all countdown functionality. handle end session/rat e session here.
 async function page({children, params}: {children: React.ReactNode,params: Promise<{ room: string }>}) {
@@ -8,9 +9,30 @@ async function page({children, params}: {children: React.ReactNode,params: Promi
  
   return (
     <div className="w-full  h-full  pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  *:
-    
+    relative
     
     ">
+<div className="absolute top-3 right-3">
+
+      <InfoDialog title="It’s Timer Time! ⏳"
+      desc={
+        <>
+        <p>
+          Start a session, stay locked in, and make those promises count. <br/>
+        Go solo or jump into a Group Timer ( in public or group rooms) for extra accountability. <br/>
+        
+In the end, rate your sessions, earn Reward coins and Promise coins. Go to the Shop to know what these coins are about!
+<br/>
+All the best!
+        </p>
+        </>
+        
+        
+
+
+}
+/>
+</div>
       {/* Video */}
       {/* <div className="flex flex-1  w-full h-full">
 
