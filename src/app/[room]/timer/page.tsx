@@ -2,11 +2,7 @@ import SessionTimer from "./components/SessionTimer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Stream from "./components/Stream";
 import InfoDialog from "../InfoDialog";
-interface PageProps {
-  params: {
-    room: string;
-  };
-}
+
 // hook gives all countdown functionality. handle end session/rat e session here.
 async function page({children, params}: {children: React.ReactNode,params: { room: string }}) {
   const {room} =  params
