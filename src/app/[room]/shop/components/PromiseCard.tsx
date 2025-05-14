@@ -8,8 +8,10 @@ import { Doc } from "../../../../../convex/_generated/dataModel";
 
 import PromiseDialog from "./PromiseDialog";
 import { Dollars } from "@/lib/utils";
+import { toast } from "sonner";
 
-function PromiseCard({ promise }: { promise: Doc<"promises"> }) {
+function PromiseCard({ promise ,coins}: { promise: Doc<"promises">  ;coins: number;
+ }) {
   const edit = useMutation(api.promises.edit);
   const del = useMutation(api.promises.del);
   const invest = useMutation(api.promises.invest);
@@ -19,8 +21,8 @@ function PromiseCard({ promise }: { promise: Doc<"promises"> }) {
   };
   const onDel = () => del({ pId: promise._id });
 
-  const onInvest = (title: string, coins: number) =>
-    invest({ pId: promise._id, coins });
+  const onInvest = (title: string, pcoins: number) =>
+    pcoins <= coins ?invest({ pId: promise._id, coins }):toast.error("Not enough coins");
   console.log(promise, " Promise");
   return (
     <div className="border-2 flex flex-col relative size-[200px] ">

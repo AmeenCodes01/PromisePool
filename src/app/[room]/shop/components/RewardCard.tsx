@@ -14,10 +14,10 @@ import calcRewards from "@/lib/calcReward";
 
 function RewardCard({
   reward,
-  wCoins,
+  coins,
 }: {
   reward: Doc<"rewards">;
-  wCoins: number;
+  coins: number;
 }) {
   const [finished, setFinished] = useState(reward.finished);
   const edit = useMutation(api.rewards.edit);
@@ -32,8 +32,8 @@ function RewardCard({
   const onDel = () => del({ rId: reward._id });
 
   const onUnlock = () => {
-    console.log(wCoins, "unlock");
-    if (wCoins >= reward.price) {
+    console.log(coins, "unlock");
+    if (coins >= reward.price) {
       unlock({ rId: reward._id });
     } else {
    toast.error("not enough reward coins");

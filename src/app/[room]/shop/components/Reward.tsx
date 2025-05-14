@@ -23,7 +23,7 @@ function Reward() {
   const create = useMutation(api.rewards.create);
   
   const createReward = (title: string, price: number) => {
-    create({ title,  });
+    create({ title,  price});
   };
   return (
     <div className=" ">
@@ -146,7 +146,7 @@ Simple. Fun. A good excuse to treat yourself only when you’ve earned it. <br/>
         </div>
         <CoinBar coins={user?.wCoins} />
       </div>
-        <CardList wCoins={user?.wCoins ?? 0} data={rewards as Doc<"rewards">[]} type="rewards"/>
+        <CardList coins={user?.wCoins ?? 0} data={rewards as Doc<"rewards">[]} type="rewards"/>
     </div>
   );
 }

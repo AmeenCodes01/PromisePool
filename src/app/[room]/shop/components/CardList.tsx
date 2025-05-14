@@ -6,11 +6,12 @@ import { Doc } from '../../../../../convex/_generated/dataModel';
 function CardList({
     data,
     type,
-    wCoins
+    coins,
+
 }: {
     data: Doc<"promises">[] | Doc<"rewards">[];
     type:string;
-    wCoins?:number
+    coins?:number
 
 }) {
   return (
@@ -21,8 +22,8 @@ function CardList({
             {
                type=="promise"?
 
-                <PromiseCard promise={p as Doc<"promises">} />:
-                <RewardCard reward={p as Doc<"rewards"> } wCoins={wCoins as number}/>
+                <PromiseCard promise={p as Doc<"promises"> }coins={coins as number} />:
+                <RewardCard reward={p as Doc<"rewards"> } coins={coins as number}/>
             }
 
           {/* <Promise promise={p.title} coins={p.coins ?? 0} key={p._id}/> */}
