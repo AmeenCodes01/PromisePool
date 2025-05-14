@@ -4,7 +4,7 @@ import Stream from "./components/Stream";
 import InfoDialog from "../InfoDialog";
 
 // hook gives all countdown functionality. handle end session/rat e session here.
-export default async function Page({children, params}: {children: React.ReactNode,params: Promise<{ room: string }>}) {
+export default async function Page({ params}: {params: Promise<{ room: string }>}) {
   const p = await params
  
   return (
