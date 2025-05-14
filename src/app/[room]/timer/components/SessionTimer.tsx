@@ -231,13 +231,13 @@ function SessionTimer({ room }: { room: string }) {
           >
             {mode == "work" ? "Work" : "Break"}
           </Toggle> */}
-          {/* <Setting
+          <Setting
             workMin={workMin}
             breakMin={breakMin}
             onChangeSec={onChangeSec}
             mode={mode}
             setMode={setMode}
-          /> */}
+          />
         </div>
         <div className="flex flex-row  relative ">
           <div className="shrink-0 flex">
