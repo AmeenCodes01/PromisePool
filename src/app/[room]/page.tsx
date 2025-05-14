@@ -2,7 +2,7 @@ import { Flower } from "lucide-react";
 import React from "react";
 import InfoDialog from "./InfoDialog";
 
-async function page({
+async function Page({
   params,
 }: {
   params: { room: string }
@@ -30,4 +30,4 @@ Welcome to your private room {p.room} <Flower className="ml-2 mt-auto"/>
   </div>;
 }
 
-export default page;
+export default Page;

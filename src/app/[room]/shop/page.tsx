@@ -9,7 +9,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import OfflineHours from "./components/OfflineHours";
 
-function page() {
+function Page() {
   return (
     <div className="w-full h-full relative  flex p-4 justify-center ">
       <Tabs defaultValue="promise" className=" w-full h-full ">
@@ -36,4 +36,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default Page;
