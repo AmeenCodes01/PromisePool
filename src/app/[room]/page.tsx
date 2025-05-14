@@ -5,9 +5,9 @@ import InfoDialog from "./InfoDialog";
 async function page({
   params,
 }: {
-  params: Promise<{ room: string }>
+  params: { room: string }
 }) {
-  const p = await params
+  const p =  params
   //get room. if room
   return <div className="w-full relative h-full justify-center items-center flex">
     <div className="absolute top-3 right-3">

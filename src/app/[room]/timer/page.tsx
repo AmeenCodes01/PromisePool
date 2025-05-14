@@ -2,10 +2,14 @@ import SessionTimer from "./components/SessionTimer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Stream from "./components/Stream";
 import InfoDialog from "../InfoDialog";
-
+interface PageProps {
+  params: {
+    room: string;
+  };
+}
 // hook gives all countdown functionality. handle end session/rat e session here.
-async function page({children, params}: {children: React.ReactNode,params: Promise<{ room: string }>}) {
-  const p = await params
+async function page({children, params}: {children: React.ReactNode,params: { room: string }}) {
+  const {room} =  params
  
   return (
     <div className="w-full  h-full  pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  *:
@@ -50,7 +54,7 @@ All the best!
   {/* <TabsContent value="record">Make changes to your account here.</TabsContent> */}
   <TabsContent value="pomodoro" className="w-full flex-1 ">
 
-      <SessionTimer room={p.room}/>
+      <SessionTimer room={room}/>
   </TabsContent>
 </Tabs>
       </div>
