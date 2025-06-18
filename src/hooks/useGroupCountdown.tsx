@@ -7,6 +7,9 @@ export default function useGroupCountdown() {
   const [pause, setPause] = usePersistState(true, "groupPause");
   const [endTime, setEndTime] = usePersistState(Date.now(), "endTime");
 
+
+
+  console.log("Pause grtc ", pause)
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const endTimeRef = useRef(endTime);
   endTimeRef.current = endTime;
@@ -44,12 +47,12 @@ export default function useGroupCountdown() {
 
   const onReset = () => {
     console.log("Resetting");
-    setPause(true);
     setSecLeft(workMin * 60);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+    setPause(true);
   };
 
   const onPause = () => {

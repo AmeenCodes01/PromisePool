@@ -36,19 +36,28 @@ function GroupCountDown({
   const startSesh = useMutation(api.sessions.start);
   const resetSesh = useMutation(api.sessions.reset);
   const cancelGroupSesh = useMutation(api.rooms.cancelSesh);
+  const leaveGroupSesh = useMutation(api.rooms.leaveSesh)
 
   const { secLeft, setSecLeft, onPlay, pause, onReset } = useGroupCountdown();
   
+  // there should be option to exit group timer. 
 
   
   const onSeshReset = async () => {
+    onReset();
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
-      ownerSesh && (await cancelGroupSesh({ roomId }));
-      setGroupSesh(false)
-    }
+      if(ownerSesh){
 
-    onReset();
+         (await cancelGroupSesh({ roomId }));
+         setGroupSesh(false)
+      }else{
+        await leaveGroupSesh({userId,roomId})
+      }
+      // we should show session ongoing ig. 
+
+    }
+    
   };
 
   const onSeshStart = async () => {
@@ -64,7 +73,7 @@ function GroupCountDown({
             })
           : null;
 
-        await startGroupSesh({ roomId });
+       ownerSesh && await startGroupSesh({ roomId });
       } else {
         onOpen();
         if (!participant) {
@@ -75,6 +84,11 @@ function GroupCountDown({
       // if rating required, then update workMin to match.
     }
 
+if(ownerSesh){
+  const startTime = Date.now();
+      const endTime = startTime + (roomInfo?.duration as number) * 60000;
+      onPlay(endTime)
+}
  //roomInfo?.endTime ?onPlay(roomInfo?.endTime):null;
     //  onPause()
   };
@@ -100,14 +114,17 @@ function GroupCountDown({
     }
   }, [secLeft]);
 
+console.log(pause," pause gct")
+
  useEffect(() => {
     const status = roomInfo?.timerStatus;
     if (!roomInfo || !participant ) {
     } else {
       if (status === "running") {
+        console.log("hit running")
         setMode("work");
+     !ownerSesh &&   onSeshStart();
         onPlay(roomInfo?.endTime as number)
-        onSeshStart();
       }
 
       if (status === "ended") {
@@ -137,7 +154,6 @@ function GroupCountDown({
         SettingWithProps={SettingWithProps}
         pause={pause}
         resetDisabled={false}
-        onPause={()=>{}}
         onSeshStart={onSeshStart}
         onSeshReset={onSeshReset}
           

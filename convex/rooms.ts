@@ -7,6 +7,7 @@ import {
 } from "convex-helpers/server/relationships";
 import { Id } from "./_generated/dataModel";
 import { getCurrentUserOrThrow } from "./users";
+import { use } from "react";
 
 export const get = query({
   handler: async (ctx) => {
@@ -139,7 +140,7 @@ export const endSesh = mutation({
      
       await ctx.db.patch(roomId, {
         timerStatus: "ended",
-       
+       participants: undefined
       });
     }
   },
@@ -166,6 +167,26 @@ export const cancelSesh = mutation({
   },
 })
 
+
+export const leaveSesh =mutation({
+  args: {
+    roomId: v.id("rooms"),
+    userId: v.id("users")
+  },
+  handler: async (ctx, args) => {
+    const { roomId,userId } = args;
+    const room = await ctx.db.get(roomId);
+    // don't start if one already started.
+    if (room) {
+      await ctx.db.patch(roomId, {
+        
+        participants: room?.participants ? room.participants?.filter((p)=> p.id !==userId): room?.participants
+        
+      });
+    }
+  },
+})
+ 
 
 
 export async function createRoom(

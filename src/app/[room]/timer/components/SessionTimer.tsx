@@ -72,6 +72,7 @@ function SessionTimer({ room }: { room: string }) {
         roomId: roomInfo._id as Id<"rooms">,
       });
 
+
     } else {
       cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
       onSeshReset();
@@ -108,6 +109,7 @@ useEffect(()=>{
   const SettingWithProps = () => (
     <Setting onChangeSec={onChangeSec} participant={participant} />
   );
+
 
   return (
     <div className="flex flex-col w-full h-full bg-color-background items-center   rounded-md    ">
