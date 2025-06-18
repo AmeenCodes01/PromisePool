@@ -1,21 +1,29 @@
 "use client";
 
 import usePersistState from "@/hooks/usePersistState";
-import { useEffect } from "react";
+import { usePromiseStore } from "@/hooks/usePromiseStore";
+import { useEffect, useRef } from "react";
 import { clearInterval, setInterval } from "worker-timers";
 
-function useCountdown({ sec,resetDependency }: { sec: number, resetDependency?:number; }) {
+function useCountdown({ sec }: { sec: number }) {
   const [pause, setPause] = usePersistState(true, "pause");
-  const [secLeft, setSecLeft] = usePersistState(sec, "secLeft");
+  const { secLeft, setSecLeft,decrement } = usePromiseStore((state) => state);
 
-  
+  const pauseRef = useRef(pause);
+  pauseRef.current = pause;
+
   function tick() {
-
-    setSecLeft(prev=> prev -1 < 0 ? 0: prev-1)
-    
+    if (pauseRef.current) return;
+console.log("Personal timer running")
+    if (secLeft <= 1) {
+      setPause(true);
+      setSecLeft(0);
+    } else {
+decrement()
+    }
   }
 
-  const onPause = () => {setPause(true);}
+  const onPause = () => setPause(true);
   const onPlay = () => setPause(false);
   const onReset = () => {
     setSecLeft(sec);
@@ -23,17 +31,9 @@ function useCountdown({ sec,resetDependency }: { sec: number, resetDependency?:n
   };
 
   useEffect(() => {
-    if (pause || secLeft <= 0) return;
-  
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [pause, secLeft]);
-  
-//   useEffect(() => {
-//   setSecLeft(sec);
-//   setPause(true);
-// }, [sec]); // reset timer when mode changes
-
+  }, []);
 
   return {
     pause,

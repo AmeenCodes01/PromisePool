@@ -1,6 +1,6 @@
 "use client";
 
-import { useDialog } from "@/hooks/useDialog";
+import { usePromiseStore  } from "@/hooks/usePromiseStore";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,12 +31,10 @@ onReset
   const [rated, setRated] = useState(false);
   const [rating, setRating] = useState<number | null>(null);
   
-  const isOpen = useDialog((state) => state.isOpen);
-  const onClose = useDialog((state) => state.onClose);
+  const {isOpen,onClose} = usePromiseStore((state) => state);
   const endSesh = useMutation(api.sessions.stop)
   const resetSesh = useMutation(api.sessions.reset)
 
-  console.log(rated, " rated")
   const getReward = useCallback(()=>{
       return calcReward(60,rating as number)
   },[rating,duration])
@@ -47,7 +45,7 @@ onReset
        
         open={isOpen}
         defaultOpen={isOpen}
-      >
+      > 
         <AlertDialogContent>
           <AlertDialogTitle>Rate your session</AlertDialogTitle>
 
@@ -63,7 +61,6 @@ onReset
   <div className="flex flex-col">
     {(() => {
       const reward = getReward();
-      console.log(reward,"reward")
       return (
         <>
           <span className="text-sm opacity-80">
@@ -84,7 +81,6 @@ onReset
             onClick={() => {
               setRated(prev=>{
                 if(!prev){
-                  console.log("In there")
                   endSesh({rating: rating as number,pCoins: getReward(), wCoins:calcReward(duration, rating as number )   })
               return true
                 }
