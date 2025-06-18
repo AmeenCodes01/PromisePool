@@ -1,11 +1,9 @@
-import useSessionCountdown from '@/hooks/useSessionCountdown';
 import React, { useEffect } from 'react'
 import TimerDisplay from '../../shop/components/TimerDisplay';
 import useCountdown from './useCountdown';
 import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import useStore from '@/hooks/useStore';
 import useGroupCountdown from '@/hooks/useGroupCountdown';
 
 export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,
@@ -19,7 +17,7 @@ SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
 
-const {workMin,onOpen,mode,setMode,breakMin,setWorkMin,setBreakMin,onChangeMode} = usePromiseStore((state) =>state);
+const {workMin,onOpen,mode,breakMin,setWorkMin,onChangeMode} = usePromiseStore((state) =>state);
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
@@ -73,7 +71,7 @@ const resetSesh = useMutation(api.sessions.reset);
       if (mode == "work") {
         onOpen();
         console.log("person ran")
-        onChangeMode("break");
+        onChangeMode("break",onPause);
       } else {
         setWorkMin(workMin * 60);
       }
@@ -94,7 +92,7 @@ const resetSesh = useMutation(api.sessions.reset);
       <TimerDisplay
     SettingWithProps={SettingWithProps}
     pause={pause}
-    resetDisabled={false}
+    showExitBtn={false}
     onPause={onBothCountDownPause}
     onSeshStart={onSeshStart}
     onSeshReset={onSeshReset}

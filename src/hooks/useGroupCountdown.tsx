@@ -30,7 +30,7 @@ export default function useGroupCountdown() {
         intervalRef.current = null;
         setPause(true);
       }
-    }, 1000);
+  }, 1000);
   };
 
   const onPlay = (newEndTime: number) => {

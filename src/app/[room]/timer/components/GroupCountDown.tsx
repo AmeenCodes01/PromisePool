@@ -5,7 +5,6 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id, Doc } from "../../../../../convex/_generated/dataModel";
 import {  usePromiseStore } from "@/hooks/usePromiseStore";
 import TimerDisplay from "../../shop/components/TimerDisplay";
-import useCountdown from "./useCountdown";
 
 function GroupCountDown({
   room,
@@ -13,7 +12,8 @@ function GroupCountDown({
   lastSeshRated,
   SettingWithProps
 }: {
-  room: Id<"rooms">;SettingWithProps: () => React.JSX.Element;
+  room: string;
+  SettingWithProps: () => React.JSX.Element;
   
   
 
@@ -38,7 +38,7 @@ function GroupCountDown({
   const cancelGroupSesh = useMutation(api.rooms.cancelSesh);
   const leaveGroupSesh = useMutation(api.rooms.leaveSesh)
 
-  const { secLeft, setSecLeft, onPlay, pause, onReset } = useGroupCountdown();
+  const { secLeft, setSecLeft, onPlay, pause, onReset,onPause } = useGroupCountdown();
   
   // there should be option to exit group timer. 
 
@@ -99,12 +99,12 @@ if(ownerSesh){
       if (mode == "work") {
         onOpen();
         console.log("this ran")
-        onChangeMode("break");
+        onChangeMode("break",onPause);
       } else {
         setWorkMin(workMin * 60);
       }
 
-      endGroupSesh({ roomId });
+     ownerSesh && endGroupSesh({ roomId });
       setGroupSesh(false);
       //   setOwnerSesh(false)
 
@@ -129,7 +129,7 @@ console.log(pause," pause gct")
 
       if (status === "ended") {
         setSecLeft(0);
-        onChangeMode("break" );
+        onChangeMode("break",onPause );
                 console.log("ended ran")
 
         setGroupSesh(false)
@@ -153,7 +153,7 @@ console.log(pause," pause gct")
      <TimerDisplay
         SettingWithProps={SettingWithProps}
         pause={pause}
-        resetDisabled={false}
+        showExitBtn={  participant }
         onSeshStart={onSeshStart}
         onSeshReset={onSeshReset}
           

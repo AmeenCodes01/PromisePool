@@ -10,13 +10,13 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 export default function TimerDisplay({
   SettingWithProps,
   pause,
-  resetDisabled,
+  showExitBtn,
   onPause,
   onSeshStart,
   onSeshReset,
 }: {
   pause: boolean;
-  resetDisabled: boolean;
+  showExitBtn: boolean;
   onPause?: () => void;
   onSeshStart: () => void;
   onSeshReset: () => void;
@@ -86,7 +86,7 @@ export default function TimerDisplay({
         {groupSesh ?
         <Dialog>
           <DialogTrigger>
-            <button>{groupSesh ? <Button size={"sm"}>Exit/End</Button> :<TimerReset />} </button>
+            <button>{groupSesh && showExitBtn? <Button size={"sm"}>Exit/End</Button> :<TimerReset />} </button>
           </DialogTrigger>
           <ConfirmDialog
             title="Exit Group Session"

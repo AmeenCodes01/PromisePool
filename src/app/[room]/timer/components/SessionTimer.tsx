@@ -1,11 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import useCountdown from "./useCountdown";
 import Setting from "./Setting";
-import { Play, Pause, TimerReset, Settings, UserRoundIcon } from "lucide-react";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
-import ProgressDialog from "./ProgressDialog";
-import { useMutation, useQueries, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import usePersistState from "@/hooks/usePersistState";
 import { Switch } from "@/components/ui/switch";
@@ -14,10 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@/components/ui/dialog";
 import ConfirmDialog from "@/components/ConfirmDialog";
-import useSessionCountdown from "@/hooks/useSessionCountdown";
 import GroupCountDown from "./GroupCountDown";
 import SoloCountDown from "./SoloCountDown";
-import useStore from "@/hooks/useStore";
+import ProgressDialog from "./ProgressDialog";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
@@ -129,71 +125,6 @@ useEffect(()=>{
         />
       )}
 
-      {/* Countdown */}
-      {/* <div className="items-center gap-4 flex flex-col justify-end py-6 flex-1  ">
-        <div className="flex flex-row  gap-2 ml-6 ">
-          <Button
-            className="text-xs border-[2px]  "
-            variant={mode == "break" ? "outline" : "default"}
-            onClick={() => onChangeMode("work")}
-            disabled={playing}
-          >
-            Work
-          </Button>
-          <Button
-            className="text-xs  border-[2px]"
-            disabled={playing}
-            variant={mode == "work" ? "outline" : "default"}
-            onClick={() => onChangeMode("break")}
-          >
-            Break
-          </Button>
-
-          <Setting
-            workMin={workMin}
-            breakMin={breakMin}
-            onChangeSec={onChangeSec}
-            mode={mode}
-            participant={participant}
-            setMode={setMode}
-          />
-        </div>
-        <div className="flex flex-row  relative ">
-          <div className="shrink-0 flex">
-            {hours !== 0 && (
-              <span className="text-8xl font-mono">
-                {hours < 10 ? "0" + hours : hours}:
-              </span>
-            )}
-            <span className="text-8xl font-mono">
-              {minutes < 10 ? "0" + minutes : minutes}:
-            </span>
-            <span className="text-6xl font-mono">
-              {seconds < 10 ? "0" + seconds : seconds}
-            </span>
-          </div>
-          <div className=" pl-2 "></div>
-        </div>
-        <div className="flex flex-row gap-4 ml-8   ">
-          {pause ? (
-            <button disabled={participant && !ownerSesh}>
-              <Play onClick={() => onSeshStart()} />
-            </button>
-          ) : (
-            <>
-              {groupSesh && roomInfo?.timerStatus === "running" ? null : (
-                <Pause onClick={() => onPause()} />
-              )}
-            </>
-          )}
-          <button
-            onClick={() => onSeshReset()}
-            disabled={participant && !ownerSesh}
-          >
-            <TimerReset />
-          </button>
-        </div>
-      </div> */}
       <div className=" flex-1 border-2 w-full flex gap-6 flex-col  items-center py-6 px-2">
         <div className="flex flex-col items-center mt-4">
           {mode == "work" && roomInfo?.type !== "private" ? (
@@ -220,9 +151,7 @@ useEffect(()=>{
                       Group Session:{" "}
                     </span>
                     <Switch checked={groupSesh} id="groupSesh" />
-                    {/* <Button onClick={()=>setGroupSesh(prev=>!prev)}>
-
-</Button> */}
+                    
                   </DialogTrigger>
                   <ConfirmDialog
                     title={"Start a group session"}
@@ -285,9 +214,7 @@ useEffect(()=>{
         ) : null}
       </div>
 
-      {/* Play/Pause.  *
-      <ProgressDialog duration={workMin} onReset={onReset} />
-      session must not have started. */}
+      <ProgressDialog  />
     </div>
   );
 }

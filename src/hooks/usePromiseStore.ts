@@ -44,7 +44,7 @@ export const usePromiseStore = create<DialogProps>()(
               mode: md,
               secLeft:   md === "break" ? state.breakMin * 60 :  state.workMin * 60,
             }));
-           // fn ? fn() : null;
+            fn ? fn() : null;
         // set({mode:md})
       },
       //   === "break" ? setSecLeft(breakMin * 60) : setSecLeft(workMin * 60);

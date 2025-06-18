@@ -23,8 +23,13 @@ decrement()
     }
   }
 
-  const onPause = () => setPause(true);
-  const onPlay = () => setPause(false);
+  const onPause = () =>{
+    pauseRef.current=true
+    setPause(true);}
+  const onPlay = () => {
+  pauseRef.current=false
+    setPause(false);
+  }
   const onReset = () => {
     setSecLeft(sec);
     setPause(true);
