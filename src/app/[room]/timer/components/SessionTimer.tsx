@@ -14,6 +14,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import GroupCountDown from "./GroupCountDown";
 import SoloCountDown from "./SoloCountDown";
 import ProgressDialog from "./ProgressDialog";
+import BuildAnimation from "./Animation";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
@@ -124,6 +125,8 @@ useEffect(()=>{
           SettingWithProps={SettingWithProps}
         />
       )}
+
+      {/* <BuildAnimation/> */}
 
       <div className=" flex-1 border-2 w-full flex gap-6 flex-col  items-center py-6 px-2">
         <div className="flex flex-col items-center mt-4">
