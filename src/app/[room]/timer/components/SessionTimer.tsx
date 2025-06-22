@@ -129,7 +129,7 @@ useEffect(()=>{
       {/* <BuildAnimation/> */}
 
       <div className=" flex-1 border-2 w-full flex gap-6 flex-col  items-center py-6 px-2">
-        <div className="flex flex-col items-center mt-4">
+        <div className="flex flex-col items-center mt-4    ">
           {mode == "work" && roomInfo?.type !== "private" ? (
             <div>
               {groupSesh ? (

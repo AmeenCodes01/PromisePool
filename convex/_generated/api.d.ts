@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as CustomProfile from "../CustomProfile.js";
 import type * as auth from "../auth.js";
+import type * as history from "../history.js";
 import type * as http from "../http.js";
 import type * as promises from "../promises.js";
 import type * as rewards from "../rewards.js";
@@ -33,6 +34,7 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   CustomProfile: typeof CustomProfile;
   auth: typeof auth;
+  history: typeof history;
   http: typeof http;
   promises: typeof promises;
   rewards: typeof rewards;

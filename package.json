@@ -37,7 +37,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",
     "react-player": "^2.16.0",
-    "recharts": "^2.15.1",
+    "recharts": "^2.15.4",
     "sonner": "^2.0.3",
     "svix": "^1.44.0",
     "tailwind-merge": "^2.6.0",
