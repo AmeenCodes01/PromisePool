@@ -31,7 +31,7 @@ function Promise() {
       desc={
         <>
         <p className="italic">
-A quiet space for your personal promises — little goals, dreams, and intentions you keep for yourself. You can add coins to them, giving your promises weight, worth, and a sense of progress as you move toward them.          <br/><br/>
+A quiet space for your personal promises — little goals, dreams, and intentions you keep for yourself. You can add coins to them, giving your promises depth, worth, and a sense of progress as you move toward them.          <br/><br/>
 
 There’s one special collective promise here too: <br/>
 “Coins for Palestine” — a shared self-promise by everyone using this platform to donate real money for Palestine.<br/><br/>

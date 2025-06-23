@@ -4,6 +4,7 @@ import { fetchQuery } from "convex/nextjs";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "../../../../convex/_generated/api";
 import Component, { RatingPie } from "./components/RatingPie";
+import { TimeLine } from "./components/TimeLine";
 
 const sessionData = [
   {
@@ -56,7 +57,7 @@ async function Page() {
 
   const weekly = await fetchQuery(api.history.getWeekly, {}, { token });
   
-console.log("Weekly Data:", weekly);
+  console.log(weekly, " weekly data");
 // get duration for each day and total duration
 
 const dayTotals = weekly.map(day=>{
@@ -64,7 +65,7 @@ const dayTotals = weekly.map(day=>{
   return { day: day.day, total };
 })
 
-
+//sun 0 mon1 tue2 wed3   
 const weeklyRatings: {rating:number;total:number}[] = []
 
 weekly.forEach((day) => {
@@ -80,9 +81,16 @@ weekly.forEach((day) => {
   });
 });
 console.log(weeklyRatings, " weekly rati")
-  return <div className="w-full  h-full  p-4 flex flex-row gap-4 ">
 
-{/* //Weekly first */}
+const date = new Date();
+
+const todayDay = date.getDay();
+const index = todayDay === 0 ? 6 : todayDay - 1; // Convert to 0-Mon, 1-Tue, ..., 6-Sun
+console.log(index, " today index");
+
+  return <div className="w-full  h-fit  p-4 flex flex-col">
+<div className="w-full justify-center items-center md:items-start md:justify-normal h-full  p-4 flex md:flex-row flex-col gap-4 " >
+
 <div className="w-fit h-fit flex">
 
 <ChartBarLabel data={dayTotals}/>
@@ -90,6 +98,11 @@ console.log(weeklyRatings, " weekly rati")
 <div className="w-fit h-fit flex">
 
 <RatingPie data={weeklyRatings}/>
+</div>
+{/* //Weekly first */}
+</div>
+<div className="w-fit h-fit flex min-w-[200px]">
+<TimeLine data={weekly[2].data}/>
 </div>
 
   </div>;
