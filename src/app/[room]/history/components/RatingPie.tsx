@@ -32,7 +32,7 @@ export function RatingPie({ data }: { data: { rating: number; total: number }[] 
   const displayData = filteredData.length > 0 ? filteredData : [{ rating: 0, total: 1 }]
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col mb-6 sm:mb-0">
       <CardHeader className="items-center pb-0">
         <CardTitle>Session Ratings Distribution</CardTitle>
         <CardDescription>This Week's Study Sessions</CardDescription>

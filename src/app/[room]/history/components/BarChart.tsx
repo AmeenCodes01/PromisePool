@@ -84,25 +84,25 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
 
 
   return (
-    <Card>
+    <Card className="max-w-[350px] flex ">
       <CardHeader>
         <CardTitle>Weekly Total Study Time </CardTitle>
         <CardDescription>{weekStart.getDate()} {startMonth === endMonth? null:startMonth} 
           {startYear === endYear?null:startYear}
            - {weekEnd.getDate()} {endMonth} {endYear}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className=" items-start justify-start flex">
         {/* <ResponsiveContainer width={"100%"} height={300}> */}
 
         <ChartContainer
           config={chartConfig}
-          className=" w-auto h-auto min-w-[300px] flex"
+          className="  h-auto w-[250px]  flex  "
         >
           <BarChart
             accessibilityLayer
             data={data}
             margin={{
-              top: 20,
+              top: 10,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -111,7 +111,7 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+//              tickFormatter={(value) => value.slice(0, 3)}
             />
 
             <YAxis

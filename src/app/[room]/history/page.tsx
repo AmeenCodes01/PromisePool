@@ -87,25 +87,27 @@ const date = new Date();
 const todayDay = date.getDay();
 const index = todayDay === 0 ? 6 : todayDay - 1; // Convert to 0-Mon, 1-Tue, ..., 6-Sun
 console.log(index, " today index");
+return (
+  <div className="w-full h-full  p-4  flex flex-col gap-4">
 
-  return <div className="w-full  h-fit  p-4 flex flex-col">
-<div className="w-full justify-center items-center md:items-start md:justify-normal h-full  p-4 flex md:flex-row flex-col gap-4 " >
+    {/* Charts Row */}
+<div className="w-full grid gap-y-6 gap-x-0  auto-rows-max grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+        <div className=" flex  ">
+      <TimeLine data={[...weekly[2].data, ...weekly[2].data].reverse()} />
+    </div>
+      <div className=" flex w-fit ">
+        <ChartBarLabel data={dayTotals} />
+      </div>
+      <div className=" flex ">
+        <RatingPie data={weeklyRatings} />
+      </div>
+    
+    </div>
 
-<div className="w-fit h-fit flex">
+    {/* Timeline */}
 
-<ChartBarLabel data={dayTotals}/>
-</div>
-<div className="w-fit h-fit flex">
-
-<RatingPie data={weeklyRatings}/>
-</div>
-{/* //Weekly first */}
-</div>
-<div className="w-fit h-fit flex min-w-[200px]">
-<TimeLine data={weekly[2].data}/>
-</div>
-
-  </div>;
+  </div>
+);
 }
 
 export default Page;
