@@ -40,3 +40,17 @@ PHASE 1
 [] start/stop group session 
 [] countdown
 [] use shop for rewards & promises.
+
+
+
+-----brainstorming for history section------
+
+weekly bar chart showing total duration of each day 
+
+pie chart showing ratings
+
+list of sessions done today (A list. )
+
+so I should get total sessionDatas. then derive datas for pie & bar chart eh. 
+
+I should ponder on how offline sessions are added

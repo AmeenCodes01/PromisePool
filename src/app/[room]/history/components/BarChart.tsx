@@ -50,13 +50,18 @@ const chartConfig = {
 
 //min into dec hours.min but label different
 
-export function ChartBarLabel() {
-  const weeklyData = useQuery(api.history.getWeekly);
-  console.log(weeklyData, " weeklyData");
+export function ChartBarLabel({data}:{
+  data: {
+    day: string;
+    total: number;
+}[]
+}) {
+ const totalDuration = data.reduce((sum, day) => sum + day.total, 0);
+
 
   const maxMinutes =
-    weeklyData && weeklyData.length
-      ? Math.max(...weeklyData.map((d) => d.total))
+    data && data.length
+      ? Math.max(...data.map((d) => d.total))
       : 0;
 
   const maxHours = Math.ceil(maxMinutes / 60);
@@ -82,7 +87,9 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
     <Card>
       <CardHeader>
         <CardTitle>Weekly Total Study Time </CardTitle>
-        <CardDescription>{weekStart.getDate()} {startMonth === endMonth? null:startMonth} - {weekEnd.getDate()} {endMonth} {endYear}</CardDescription>
+        <CardDescription>{weekStart.getDate()} {startMonth === endMonth? null:startMonth} 
+          {startYear === endYear?null:startYear}
+           - {weekEnd.getDate()} {endMonth} {endYear}</CardDescription>
       </CardHeader>
       <CardContent>
         {/* <ResponsiveContainer width={"100%"} height={300}> */}
@@ -93,7 +100,7 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
         >
           <BarChart
             accessibilityLayer
-            data={weeklyData}
+            data={data}
             margin={{
               top: 20,
             }}
@@ -121,13 +128,13 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
               cursor={{ fill: "rgba(0,0,0,0.05)" }}
               content={({ payload }) => {
                 if (!payload || !payload.length) return null;
-                const value = payload[0].value;
+                const value = payload[0].value as number;
                 const hours = Math.floor(value / 60);
                 const minutes = value % 60;
                 return (
                   <div className="p-2 rounded bg-[var(--chart-2)] shadow text-sm">
                     {/* <div className="font-medium">{payload[0].payload.day}</div> */}
-                    <div className=" text-sm">
+                    <div className=" text-sm text-white">
                       {hours > 0
                         ? `${hours}h${minutes ? ` ${minutes}m` : ""}`
                         : `${minutes}m`}
@@ -156,6 +163,16 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
         </ChartContainer>
         {/* </ResponsiveContainer> */}
       </CardContent>
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="flex items-center gap-2 leading-none font-medium">
+          Total: {Math.floor(totalDuration / 60)}h{" "}
+          {totalDuration % 60}m
+          {/* <TrendingUp className="h-4 w-4" /> */}
+        </div>
+        <div className="text-muted-foreground leading-none">
+          Showing total study time for the week
+        </div>    
+      </CardFooter>
     </Card>
   );
 }

@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { getCurrentUserOrThrow } from "./users";
 import { asyncMap } from "convex-helpers";
+import { Doc } from "./_generated/dataModel";
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const getWeekly = query({
@@ -9,7 +10,7 @@ export const getWeekly = query({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
 
-    const data: { day: string; total: number }[] = [];
+    const data: { day: string; data: Doc<"sessions">[] }[] = [];
 
     // Get week start (Monday 00:00)
     const now = new Date();
@@ -37,7 +38,7 @@ export const getWeekly = query({
   .collect();
 
       const totalDuration = results.reduce((sum, doc) => sum + doc.duration, 0);
-      data.push({ day: label, total: totalDuration });
+      data.push({ day: label, data: results });
     });
 
     return data;
