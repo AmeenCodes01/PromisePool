@@ -22,7 +22,7 @@ function ProgressDialog() {
   const [rating, setRating] = useState<number | null>(null);
 
 
-  const { isOpen, onClose,workMin,onChangeMode } = usePromiseStore((state) => state);
+  const { isOpen, onClose,workMin,onChangeMode,goal } = usePromiseStore((state) => state);
 
   const { onReset: onSoloReset } = useCountdown({ sec: workMin * 60 });
   const { onReset: onGroupReset } = useGroupCountdown();
@@ -37,7 +37,7 @@ function ProgressDialog() {
   const resetSesh = useMutation(api.sessions.reset);
 
   const getReward = useCallback(() => {
-    return calcReward(60, rating as number);
+    return calcReward(workMin, rating as number);
   }, [rating, workMin]);
 
 // useEffect(()=>{
@@ -91,7 +91,8 @@ function ProgressDialog() {
       rating: rating as number,
       pCoins: getReward(),
       wCoins: calcReward(workMin, rating as number),
-      duration:workMin
+      duration:workMin,
+      goal
     });
     setRated(true);
     setTimeout(() => onClose(), 0);

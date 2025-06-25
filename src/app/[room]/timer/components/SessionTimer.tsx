@@ -15,6 +15,7 @@ import GroupCountDown from "./GroupCountDown";
 import SoloCountDown from "./SoloCountDown";
 import ProgressDialog from "./ProgressDialog";
 import BuildAnimation from "./Animation";
+import { Edit } from "lucide-react";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
@@ -27,7 +28,9 @@ function SessionTimer({ room }: { room: string }) {
     mode,
     groupSesh,
     setGroupSesh,
+    goal,
     setSecLeft,
+    setGoalOpen
   } = usePromiseStore((state) => state);
   useEffect(() => {
     usePromiseStore.persist.rehydrate();
@@ -116,7 +119,11 @@ joinGroupSesh({
 }
   return (
   <div className="flex flex-col w-full h-full bg-color-background items-center pt-6l  rounded-md    ">
-    <div className="flex flex-1 w-full items-center justify-center">
+    <div className="flex flex-1 w-full items-center   "
+    style={{
+      justifyContent: goal!==""? "space-between":"center"
+    }}
+    >
 
       {groupSesh ? (
         <GroupCountDown
@@ -133,6 +140,13 @@ joinGroupSesh({
           SettingWithProps={SettingWithProps}
           />
         )}
+{goal!=="" &&
+        <div className="flex flex-col items-center gap-4 w-[40%] h-fit p-6 rounded-md  border-dashed justify-center border-[2px]">
+
+      <span className="italic text-6xl font-normal font-mono text-wrap text-primary flex mx-auto  ">{goal}</span>
+      <span className="text-sm text-chart-2 font-mono ml-auto"> We got this, lesgoooo</span>
+      <Edit size={18} className="ml-auto" onClick={()=>setGoalOpen(true)}/>
+        </div>}
         </div>
 
       {/* <BuildAnimation/> */}

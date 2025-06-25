@@ -20,7 +20,7 @@ function GroupCountDown({
   lastSeshRated: boolean | undefined;
   userId: Id<"users">;
 }) {
-  const {onOpen,workMin,setWorkMin,mode,setMode,setGroupSesh,onChangeMode} = usePromiseStore((state) => state);
+  const {onOpen,workMin,setWorkMin,mode,setMode,setGroupSesh,onChangeMode,setGoalOpen} = usePromiseStore((state) => state);
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
@@ -73,6 +73,7 @@ function GroupCountDown({
           : null;
 
        ownerSesh && await startGroupSesh({ roomId });
+       setGoalOpen(true)
       } else {
         onOpen();
         if (!participant) {

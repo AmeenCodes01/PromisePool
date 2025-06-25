@@ -53,7 +53,6 @@ export const stop =  mutation({
   handler: async (ctx, args) => {
     //need to check if prev session
     const user = await getCurrentUserOrThrow(ctx)
-
  //   await ctx.db.patch(user.lastSeshId as Id<"sessions">, args)
     await ctx.db.patch(user._id, {lastSeshRated : true, score: (user.score ?? 0) + args.pCoins,
       wCoins: (user.wCoins ?? 0) + args.wCoins,
@@ -61,7 +60,7 @@ export const stop =  mutation({
       totalDuration: (user.totalDuration??0) + args.duration
     })
 // patch session rating
-    user.lastSeshId &&  await ctx.db.patch(user.lastSeshId,{rating:args.rating})
+    user.lastSeshId &&  await ctx.db.patch(user.lastSeshId,{rating:args.rating, goal:args.goal})
   
   },
 });

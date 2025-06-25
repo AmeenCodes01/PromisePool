@@ -17,7 +17,10 @@ interface DialogProps {
   groupSesh: boolean;
   setGroupSesh: (state: boolean) => void;
   decrement: () => void;
-
+  goalOpen:boolean;
+  setGoalOpen:(state:boolean)=> void;  
+  goal:string;
+  setGoal: (goal:string)=>void
   // data:any;
   // setData(data:any):void;
 }
@@ -47,7 +50,10 @@ export const usePromiseStore = create<DialogProps>()(
             fn ? fn() : null;
         // set({mode:md})
       },
-      //   === "break" ? setSecLeft(breakMin * 60) : setSecLeft(workMin * 60);
+          goalOpen:false,
+          setGoalOpen: (state)=>set({goalOpen:state}),
+          goal:"",
+          setGoal:(goal)=>set({goal:goal})
     }),
     {
       name: "promise-pool",

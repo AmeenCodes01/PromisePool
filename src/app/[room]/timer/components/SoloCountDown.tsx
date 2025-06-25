@@ -17,7 +17,7 @@ SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
 
-const {workMin,onOpen,mode,breakMin,setWorkMin,onChangeMode} = usePromiseStore((state) =>state);
+const {workMin,onOpen,mode,breakMin,setGoalOpen,onChangeMode} = usePromiseStore((state) =>state);
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
@@ -30,6 +30,7 @@ const resetSesh = useMutation(api.sessions.reset);
           duration: workMin,
           room: roomName,
         });
+        setGoalOpen(true)
       } else {
         onOpen();
       return  

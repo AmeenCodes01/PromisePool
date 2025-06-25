@@ -152,9 +152,11 @@ function isVoidFunc(func: any): func is () => void {
 PromiseDialog.Btn = function DialogBtn({
   customBtnTitle,
   customOnClick,
+  wCoins
 }: {
   customBtnTitle?: string;
   customOnClick?: () => void;
+  wCoins?: number
 }) {
   const { onClick, title, coins, btnTitle } = usePDialogContext();
 
@@ -167,7 +169,8 @@ PromiseDialog.Btn = function DialogBtn({
             customOnClick?.(); // Call customOnClick if it's defined
           } else {
             if (isTitleAndCoinsFunc(onClick)) {
-              onClick(title, coins);
+              console.log("wef ",wCoins)
+              onClick(title, wCoins as number);
             } else if (isTitleFunc(onClick)) {
               onClick(title);
             } else if (isCoinsFunc(onClick)) {

@@ -6,6 +6,7 @@ import { usePromiseStore } from "@/hooks/usePromiseStore";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import GoalDialog from "../../timer/components/GoalDialog";
 
 export default function TimerDisplay({
   SettingWithProps,
@@ -22,7 +23,7 @@ export default function TimerDisplay({
   onSeshReset: () => void;
   SettingWithProps: () => React.JSX.Element;
 }) {
-  const { secLeft, workMin, mode, onChangeMode, groupSesh } = usePromiseStore(
+  const { secLeft, workMin, mode, onChangeMode, groupSesh,goal } = usePromiseStore(
     (state) => state
   );
 
@@ -38,7 +39,7 @@ export default function TimerDisplay({
   const seconds = Math.floor(secLeft % 60);
 
   return (
-    <div className="items-center gap-4 flex flex-col justify-end py-6 flex-1  ">
+    <div className="items-center gap-8 ml-6 border-dashed border-[2px] p-2 rounded-md flex flex-col justify-end py-6 flex-1  ">
       <div className="flex flex-row  gap-2 ml-6 ">
         <Button
           className="text-xs border-[2px]  "
@@ -98,6 +99,7 @@ export default function TimerDisplay({
 
         }
       </div>
+      <GoalDialog/>
     </div>
   );
 }
