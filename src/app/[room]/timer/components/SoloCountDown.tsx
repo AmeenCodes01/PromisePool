@@ -32,13 +32,13 @@ const resetSesh = useMutation(api.sessions.reset);
         });
       } else {
         onOpen();
-
+      return  
       }
-
+      
       // if rating required, then update workMin to match.
     }
+    onPlay();
   
-      onPlay();
     //  onPause()
     
     
@@ -59,11 +59,8 @@ const resetSesh = useMutation(api.sessions.reset);
     }
   );
 
-  const {onPause:onPauseGroup}= useGroupCountdown(
-    
-  )
+  const {onPause:onPauseGroup}= useGroupCountdown()
 
-  
 
   useEffect(() => {
     if (secLeft == 0) {
@@ -73,8 +70,8 @@ const resetSesh = useMutation(api.sessions.reset);
         console.log("person ran")
         onChangeMode("break",onPause);
       } else {
-        setWorkMin(workMin * 60);
-      }
+        onChangeMode("work",onPause);
+         }
 
       const bell = new Audio("/bell.wav");
 

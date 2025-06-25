@@ -62,7 +62,6 @@ function GroupCountDown({
 
   const onSeshStart = async () => {
 
-    console.log("red okated  ",roomInfo?.endTime)
     // call convex function. if returns true, start session.
     if (mode == "work") {
       if (lastSeshRated === true || lastSeshRated === undefined) {
@@ -98,7 +97,6 @@ if(ownerSesh){
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-        console.log("this ran")
         onChangeMode("break",onPause);
       } else {
         setWorkMin(workMin * 60);
@@ -114,14 +112,12 @@ if(ownerSesh){
     }
   }, [secLeft]);
 
-console.log(pause," pause gct")
 
  useEffect(() => {
     const status = roomInfo?.timerStatus;
     if (!roomInfo || !participant ) {
     } else {
       if (status === "running") {
-        console.log("hit running")
         setMode("work");
      !ownerSesh &&   onSeshStart();
         onPlay(roomInfo?.endTime as number)
@@ -130,7 +126,6 @@ console.log(pause," pause gct")
       if (status === "ended") {
         setSecLeft(0);
         onChangeMode("break",onPause );
-                console.log("ended ran")
 
         setGroupSesh(false)
       }

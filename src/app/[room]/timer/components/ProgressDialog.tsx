@@ -24,7 +24,7 @@ function ProgressDialog() {
 
   const { isOpen, onClose,workMin,onChangeMode } = usePromiseStore((state) => state);
 
-  const { onReset: onSoloReset, onPlay } = useCountdown({ sec: workMin * 60 });
+  const { onReset: onSoloReset } = useCountdown({ sec: workMin * 60 });
   const { onReset: onGroupReset } = useGroupCountdown();
 
   const onReset = () => {
@@ -39,6 +39,14 @@ function ProgressDialog() {
   const getReward = useCallback(() => {
     return calcReward(60, rating as number);
   }, [rating, workMin]);
+
+// useEffect(()=>{
+//   console.log("progresss useEffect ",isOpen,rated)
+//   if(!isOpen && rated){
+//     onPlay()
+//   }
+// },[isOpen])
+
   // calc function, api call from here as well.
   return (
     <div>
@@ -53,7 +61,7 @@ function ProgressDialog() {
             max={10}
             disabled={rated}
             onChange={(e) =>
-              setRating(e.target.value ? parseFloat(e.target.value) : 0)
+             parseFloat(e.target.value) < 10 && setRating(e.target.value ? parseFloat(e.target.value) : 0)
             }
           />
           <span className="italic text-sm ">rate out of 10</span>
@@ -77,28 +85,21 @@ function ProgressDialog() {
           <AlertDialogFooter className="sm:justify-end flex flex-row">
             <Button
               className="justify-end w-fit "
-              onClick={() => {
-                setRated((prev) => {
-                  if (!prev) {
-                    endSesh({
-                      rating: rating as number,
-                      pCoins: getReward(),
-                      wCoins: calcReward(workMin, rating as number),
-                    });
-                    return true;
-                  }
+             onClick={() => {
+  if (!rated) {
+    endSesh({
+      rating: rating as number,
+      pCoins: getReward(),
+      wCoins: calcReward(workMin, rating as number),
+      duration:workMin
+    });
+    setRated(true);
+    setTimeout(() => onClose(), 0);
+  } else {
+    onClose();
+  }
+}}
 
-                  onClose();
-                  onPlay()
-
-                  return false;
-                });
-                if (rated) {
-                  onClose();
-                  return;
-                }
-                setRated(true);
-              }}
               disabled={rating ? false : true}
             >
               {rated ? "Close" : "Rate"}

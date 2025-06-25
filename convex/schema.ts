@@ -11,12 +11,13 @@ export default defineSchema({
     score: v.optional(v.number()),
     lastSeshId: v.optional(v.id("sessions")),
     lastSeshRated: v.optional(v.boolean()),
+    totalDuration:v.optional(v.number()),
     email: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
     roomIds : v.optional(v.array(v.id("rooms")))
 
-  }),
+  }).index("pCoins",["pCoins"]),
 
   sessions: defineTable({
     duration: v.number(),
@@ -65,8 +66,14 @@ export default defineSchema({
   password:v.optional(v.string())
   }).index("name",["name"])
   .index("type",["type"]),
-  
 
+   
+  
+  roomUsers:defineTable({
+    userId: v.id("users"),
+    roomId: v.id("rooms"),
+    lastActive:v.number()
+  }).index("userId", ["userId"]).index("roomId",["roomId"])
 },{
   
 });

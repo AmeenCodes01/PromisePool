@@ -107,29 +107,38 @@ useEffect(()=>{
     <Setting onChangeSec={onChangeSec} participant={participant} />
   );
 
-
+const onJoinGroupSesh = ()=>{
+joinGroupSesh({
+                                userId: user?._id as Id<"users">,
+                                roomId: roomInfo._id as Id<"rooms">,
+                              })
+      roomInfo.duration && onChangeSec(roomInfo.duration,"work")
+}
   return (
-    <div className="flex flex-col w-full h-full bg-color-background items-center   rounded-md    ">
+  <div className="flex flex-col w-full h-full bg-color-background items-center pt-6l  rounded-md    ">
+    <div className="flex flex-1 w-full items-center justify-center">
+
       {groupSesh ? (
         <GroupCountDown
-          room={room as Id<"rooms">}
-          lastSeshRated={user?.lastSeshRated}
-          userId={user?._id}
-          SettingWithProps={SettingWithProps}
-
+        room={room as Id<"rooms">}
+        lastSeshRated={user?.lastSeshRated}
+        userId={user?._id}
+        SettingWithProps={SettingWithProps}
+        
         />
       ) : (
         <SoloCountDown
           lastSeshRated={user?.lastSeshRated}
           roomName={roomInfo?.name}
           SettingWithProps={SettingWithProps}
-        />
-      )}
+          />
+        )}
+        </div>
 
       {/* <BuildAnimation/> */}
 
-      <div className=" flex-1 border-2 w-full flex gap-6 flex-col  items-center py-6 px-2">
-        <div className="flex flex-col items-center mt-4    ">
+      <div className=" flex-1   w-full flex gap-2 flex-col  items-center py-6 px-2">
+        <div className="flex flex-col items-center mt-2    ">
           {mode == "work" && roomInfo?.type !== "private" ? (
             <div>
               {groupSesh ? (
@@ -175,10 +184,7 @@ useEffect(()=>{
                       <Button
                         onClick={() =>
                           !participant
-                            ? joinGroupSesh({
-                                userId: user?._id as Id<"users">,
-                                roomId: roomInfo._id as Id<"rooms">,
-                              })
+                            ? onJoinGroupSesh()
                             : null
                         }
                       >
@@ -203,11 +209,13 @@ useEffect(()=>{
             )
           ) : null}
         </div>
-        {roomInfo?.type !== "private" && participant ? (
-          <div className="flex flex-col gap-2 p-2  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary-foreground rounded-md  ">
-            <span className="text-md font-serif opacity-90 underline  ">
+            <span className="text-md mt-6 font-serif opacity-90 underline  ">
               Participants
             </span>
+        {roomInfo?.type !== "private" && participant ? (
+          <div className="grid auto-rows-max 
+          grid-cols-[repeat(auto-fit,minmax(80px,1fr))]
+          gap-2 p-3  max-h-[200px]  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary-foreground rounded-md  ">
             {roomInfo?.participants?.map((p) => (
               <div key={p.id}>
                 <span className="text-sm italic">{p.name}</span>

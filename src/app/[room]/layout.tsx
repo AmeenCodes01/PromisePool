@@ -6,10 +6,13 @@ import { Dollars } from "@/lib/utils";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import PromiseCircle from "./PromiseCircle";
+import RoomLog from "@/components/RoomLog";
 
 export default async function layout({children, params}: {children: React.ReactNode,params: Promise<{ room: string }>}) {
   const p =  await params
-  return <div className="w-full h-full flex flex-1 pr-7 relative">
+  console.log(p.room, " room")
+  return <div className="w-full h-full flex flex-1 pr-0 sm:pr-7 relative">
+<RoomLog name={p.room}/>
 
             <main
               className="flex flex-1 w-full h-full 

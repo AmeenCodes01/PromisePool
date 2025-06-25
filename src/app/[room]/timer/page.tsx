@@ -2,6 +2,7 @@ import SessionTimer from "./components/SessionTimer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Stream from "./components/Stream";
 import InfoDialog from "../InfoDialog";
+import RoomUsers from "@/components/RoomUsers";
 
 // hook gives all countdown functionality. handle end session/rat e session here.
 export default async function Page({ params}: {params: Promise<{ room: string }>}) {
@@ -12,8 +13,9 @@ export default async function Page({ params}: {params: Promise<{ room: string }>
     relative
     
     ">
-<div className="absolute top-3 right-3">
+<div className="absolute flex justify-center gap-3 top-3 right-3">
 
+      <RoomUsers name={p.room}/>
       <InfoDialog title="It’s Timer Time! ⏳"
       desc={
         <>

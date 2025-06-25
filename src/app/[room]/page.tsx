@@ -1,6 +1,7 @@
 import { Flower } from "lucide-react";
 import React from "react";
 import InfoDialog from "./InfoDialog";
+import RoomLog from "@/components/RoomLog";
 
 async function Page({
   params,
@@ -9,9 +10,13 @@ async function Page({
 }) {
   const p =  await params
   //get room. if room
+
+  // join room & send heartbeat
+
+
+
   return <div className="w-full relative h-full justify-center items-center flex">
     <div className="absolute top-3 right-3">
-
     <InfoDialog title="Welcome to Your Private Room!"
     desc={
       <p>

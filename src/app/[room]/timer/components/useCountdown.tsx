@@ -7,29 +7,35 @@ import { clearInterval, setInterval } from "worker-timers";
 
 function useCountdown({ sec }: { sec: number }) {
   const [pause, setPause] = usePersistState(true, "pause");
-  const { secLeft, setSecLeft,decrement } = usePromiseStore((state) => state);
+  const { secLeft, setSecLeft, decrement, } = usePromiseStore((state) => state);
 
+  const secLeftRef = useRef(secLeft);
   const pauseRef = useRef(pause);
   pauseRef.current = pause;
 
+  useEffect(() => {
+    secLeftRef.current = secLeft;
+  }, [secLeft]);
+
+
   function tick() {
     if (pauseRef.current) return;
-console.log("Personal timer running")
-    if (secLeft <= 1) {
+    if (secLeftRef.current <= 1) {
       setPause(true);
       setSecLeft(0);
     } else {
-decrement()
+decrement();
     }
   }
 
-  const onPause = () =>{
-    pauseRef.current=true
-    setPause(true);}
+  const onPause = () => {
+    pauseRef.current = true;
+    setPause(true);
+  };
   const onPlay = () => {
-  pauseRef.current=false
+    pauseRef.current = false;
     setPause(false);
-  }
+  };
   const onReset = () => {
     setSecLeft(sec);
     setPause(true);

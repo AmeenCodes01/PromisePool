@@ -9,7 +9,6 @@ export default function useGroupCountdown() {
 
 
 
-  console.log("Pause grtc ", pause)
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const endTimeRef = useRef(endTime);
   endTimeRef.current = endTime;
