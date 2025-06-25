@@ -87,8 +87,8 @@ function OfflineHours() {
             className=""
             onClick={async () => {
               const coins = calcRewards(hours * 60, rating, true);
-             // await startSesh({ duration: hours * 60, room: room });
-              //await endSesh({wCoins:coins, pCoins:coins, rating,duration:hours*60})
+              await startSesh({ duration: hours * 60, room: room });
+              await endSesh({wCoins:coins, pCoins:coins, rating,duration:hours*60})
               setShowCoins(true)
             }}
             >

@@ -40,17 +40,18 @@ function ProgressDialog() {
     return calcReward(workMin, rating as number);
   }, [rating, workMin]);
 
-// useEffect(()=>{
-//   console.log("progresss useEffect ",isOpen,rated)
-//   if(!isOpen && rated){
-//     onPlay()
-//   }
-// },[isOpen])
+  console.log(rating,rated,  " rating")
 
-  // calc function, api call from here as well.
   return (
     <div>
-      <AlertDialog open={isOpen} defaultOpen={isOpen}>
+      <AlertDialog open={isOpen} defaultOpen={isOpen}
+      
+      // onOpenChange={()=>{
+      //   setRated(false)
+      //   setRating(null)
+      //   console.log("run")
+      // }}
+      >
         <AlertDialogContent>
           <AlertDialogTitle>Rate your session</AlertDialogTitle>
 
@@ -95,8 +96,15 @@ function ProgressDialog() {
       goal
     });
     setRated(true);
-    setTimeout(() => onClose(), 0);
+    setTimeout(() => {
+      setRated(false)
+        setRating(null)
+      onClose()
+    console.log("r")
+    }, 0);
   } else {
+    setRated(false)
+        setRating(null)
     onClose();
   }
 }}

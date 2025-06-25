@@ -13,10 +13,9 @@ import { Coins } from "lucide-react";
 
 
 export function TimeLine({data}:{data:Doc<"sessions">[]}){
-     data.reverse()
     console.log(data, "timeline data")
     return(
-        <Card className=" w-[300px]  pr-4 overflow-scroll overflow-x-hidden max-h-[500px]"> 
+        <Card className=" w-[300px]  pr-4 "> 
             <CardHeader>
                 <CardTitle>Timeline</CardTitle>
                 <CardDescription>Timeline of today</CardDescription>
@@ -27,8 +26,8 @@ export function TimeLine({data}:{data:Doc<"sessions">[]}){
                     {
                         const startTime = new Date(session._creationTime);
                         const endTime = new Date(session._creationTime + session.duration * 60000);
-                        const formattedStartTime = `${startTime.getHours()}:${startTime.getMinutes().toString().padStart(2, '0')}`;
-                        const formattedEndTime = `${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`;
+                        const formattedStartTime = `${startTime.getHours().toString().padStart(2,"0")}:${startTime.getMinutes().toString().padStart(2, '0')}`;
+                        const formattedEndTime = `${endTime.getHours().toString().padStart(2,"0")}:${endTime.getMinutes().toString().padStart(2, '0')}`;
                        
 
                         return(
@@ -38,7 +37,7 @@ export function TimeLine({data}:{data:Doc<"sessions">[]}){
 
                             <span className="text-sm">{session.duration}m</span>
                             <span className="text-sm">{session.rating} <span className="text-[10px] text-muted-foreground ">/ 10</span> </span>
-                            <span className="text-sm">{session.pCoins} <Coins size={12}/></span>
+                            <span className="text-sm flex flex-row  items-center justify-between gap-2 w-[30px]">{session.pCoins ?session.pCoins :0} <Coins size={12}/></span>
                             </div>
                             <span className="text-sm text-gray-500">{formattedEndTime}</span>
                         </div>

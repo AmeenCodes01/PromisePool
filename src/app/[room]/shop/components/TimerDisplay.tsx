@@ -15,6 +15,7 @@ export default function TimerDisplay({
   onPause,
   onSeshStart,
   onSeshReset,
+  ownerSesh,
 }: {
   pause: boolean;
   showExitBtn: boolean;
@@ -22,10 +23,10 @@ export default function TimerDisplay({
   onSeshStart: () => void;
   onSeshReset: () => void;
   SettingWithProps: () => React.JSX.Element;
+  ownerSesh?: boolean;
 }) {
-  const { secLeft, workMin, mode, onChangeMode, groupSesh,goal } = usePromiseStore(
-    (state) => state
-  );
+  const { secLeft, workMin, mode, onChangeMode, groupSesh, goal } =
+    usePromiseStore((state) => state);
 
   const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
@@ -78,28 +79,46 @@ export default function TimerDisplay({
       </div>
       <div className="flex flex-row gap-4 ml-8   ">
         {pause ? (
-          <button>
-            <Play onClick={() => onSeshStart()} />
-          </button>
+          ownerSesh !== undefined ? (
+            ownerSesh ? (
+              <button>
+                <Play onClick={() => onSeshStart()} />
+              </button>
+            ) : (
+              <></>
+            )
+          ) : (
+            <button>
+              <Play onClick={() => onSeshStart()} />
+            </button>
+          )
         ) : (
           <>{onPause ? <Pause onClick={() => onPause()} /> : null}</>
         )}
-        {groupSesh ?
-        <Dialog>
-          <DialogTrigger>
-            <button>{groupSesh && showExitBtn? <Button size={"sm"}>Exit/End</Button> :<TimerReset />} </button>
-          </DialogTrigger>
-          <ConfirmDialog
-            title="Exit Group Session"
-            desc="Do you want to exit group session ?"
-            onConfirm={onSeshReset}
-          />
-        </Dialog>:
-                    <button onClick={()=>onSeshReset()}><TimerReset /> </button>
-
-        }
+        {groupSesh ? (
+          <Dialog>
+            <DialogTrigger>
+              <button>
+                {groupSesh && showExitBtn ? (
+                  <Button size={"sm"}>Exit/End</Button>
+                ) : (
+                  <TimerReset />
+                )}{" "}
+              </button>
+            </DialogTrigger>
+            <ConfirmDialog
+              title="Exit Group Session"
+              desc="Do you want to exit group session ?"
+              onConfirm={onSeshReset}
+            />
+          </Dialog>
+        ) : (
+          <button onClick={() => onSeshReset()}>
+            <TimerReset />{" "}
+          </button>
+        )}
       </div>
-      <GoalDialog/>
+      <GoalDialog />
     </div>
   );
 }

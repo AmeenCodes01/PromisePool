@@ -3,7 +3,7 @@ import { ChartBarLabel } from "./components/BarChart";
 import { fetchQuery } from "convex/nextjs";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "../../../../convex/_generated/api";
-import Component, { RatingPie } from "./components/RatingPie";
+import  { RatingPie } from "./components/RatingPie";
 import { TimeLine } from "./components/TimeLine";
 
 const sessionData = [
@@ -88,23 +88,22 @@ const todayDay = date.getDay();
 const index = todayDay === 0 ? 6 : todayDay - 1; // Convert to 0-Mon, 1-Tue, ..., 6-Sun
 console.log(index, " today index");
 return (
-  <div className="w-full h-full  p-4  flex flex-col gap-4">
+  <div className="w-full  h-full max-w-5xl p-4  flex flex-col gap-4">
 
     {/* Charts Row */}
-<div className="w-full grid gap-y-6 gap-x-0  auto-rows-max grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-        <div className=" flex  ">
-      <TimeLine data={[...weekly[2].data, ...weekly[2].data].reverse()} />
+<div className="w-full  grid gap-y-6 gap-x-2   auto-rows-max grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+        <div className=" flex  overflow-auto overflow-x-hidden max-h-[500px]">
+      <TimeLine data={weekly[2].data.reverse()} />
     </div>
-      <div className=" flex w-fit ">
+      <div className=" flex w-[300px]  ">
         <ChartBarLabel data={dayTotals} />
       </div>
-      <div className=" flex ">
+      <div className=" flex  w-[300px] ">
         <RatingPie data={weeklyRatings} />
       </div>
     
     </div>
 
-    {/* Timeline */}
 
   </div>
 );

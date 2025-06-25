@@ -32,7 +32,7 @@ export function RatingPie({ data }: { data: { rating: number; total: number }[] 
   const displayData = filteredData.length > 0 ? filteredData : [{ rating: 0, total: 1 }]
 
   return (
-    <Card className="flex flex-col mb-6 sm:mb-0">
+    <Card className="flex flex-col mb-6 sm:mb-0 w-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>Session Ratings Distribution</CardTitle>
         <CardDescription>This Week's Study Sessions</CardDescription>
@@ -71,7 +71,7 @@ export function RatingPie({ data }: { data: { rating: number; total: number }[] 
                 
   if (!payload || !payload.length) return null;
   return(
-    <div className="flex flex-row gap-2 text-sm items-center justify-center">
+    <div className="flex flex-row gap-2 text-sm items-center justify-center" key={Date.now()}>
         {payload.map((entry, index) => (
            <div className="flex gap-2 flex-row items-center mr-2">
             <div 
@@ -114,36 +114,36 @@ export function RatingPie({ data }: { data: { rating: number; total: number }[] 
         {/* <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this week <TrendingUp className="h-4 w-4" />
         </div> */}
-        <div className="text-muted-foreground leading-none">Showing rating distribution from recent sessions</div>
+        <div className="text-muted-foreground leading-none">Showing rating distribution for this week's sessions</div>
       </CardFooter>
     </Card>
   )
 }
 
-// Example usage with sample data
-export default function Component() {
-  const sampleData = [
-    {
-      rating: 5,
-      total: 3,
-    },
-    {
-      rating: 4,
-      total: 2,
-    },
-    {
-      rating: 3,
-      total: 2,
-    },
-    {
-      rating: 2,
-      total: 1,
-    },
-    {
-      rating: 8,
-      total: 1,
-    },
-  ]
+// // Example usage with sample data
+// export default function Component() {
+//   const sampleData = [
+//     {
+//       rating: 5,
+//       total: 3,
+//     },
+//     {
+//       rating: 4,
+//       total: 2,
+//     },
+//     {
+//       rating: 3,
+//       total: 2,
+//     },
+//     {
+//       rating: 2,
+//       total: 1,
+//     },
+//     {
+//       rating: 8,
+//       total: 1,
+//     },
+//   ]
 
-  return <RatingPie data={sampleData} />
-}
+//   return <RatingPie data={sampleData} />
+// }

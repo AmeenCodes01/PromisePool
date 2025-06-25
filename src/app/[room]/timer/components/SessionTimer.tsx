@@ -16,6 +16,7 @@ import SoloCountDown from "./SoloCountDown";
 import ProgressDialog from "./ProgressDialog";
 import BuildAnimation from "./Animation";
 import { Edit } from "lucide-react";
+import { useTheme } from "next-themes";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
@@ -50,6 +51,7 @@ function SessionTimer({ room }: { room: string }) {
 
   const joinGroupSesh = useMutation(api.rooms.participate);
   // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
+  const { theme } = useTheme();
 
 
   const onChangeSec = (min: number, type?: "work" | "break") => {
@@ -131,12 +133,15 @@ joinGroupSesh({
         lastSeshRated={user?.lastSeshRated}
         userId={user?._id}
         SettingWithProps={SettingWithProps}
+        seshId={user?.lastSeshId}
         
         />
       ) : (
         <SoloCountDown
           lastSeshRated={user?.lastSeshRated}
           roomName={roomInfo?.name}
+                  seshId={user?.lastSeshId}
+
           SettingWithProps={SettingWithProps}
           />
         )}
@@ -227,13 +232,18 @@ joinGroupSesh({
               Participants
             </span>
         {roomInfo?.type !== "private" && participant ? (
-          <div className="grid auto-rows-max 
-          grid-cols-[repeat(auto-fit,minmax(80px,1fr))]
-          gap-2 p-3  max-h-[200px]  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary-foreground rounded-md  ">
-            {roomInfo?.participants?.map((p) => (
-              <div key={p.id}>
-                <span className="text-sm italic">{p.name}</span>
-              </div>
+          <div className="flex flex-col 
+          gap-2 p-3  max-h-[200px]  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary rounded-md  ">
+            {roomInfo?.participants?.map((u,i) => (
+              <div
+              className="p-2 w-full min-w-[150px] rounded-sm bg-cover"
+              key={u.id}
+              style={{
+                backgroundImage: `url(${theme == "dark" ? (i % 2 == 0 ? "/black_1.jpg" : "/black_2.jpg") : i % 2 == 0 ? "/white_1.jpg" : "/white_2.jpg"})`,
+              }}
+            >
+              <span className="font-serif italic    ">{u.name}</span>
+            </div>
             ))}
           </div>
         ) : null}

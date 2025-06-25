@@ -10,10 +10,12 @@ function GroupCountDown({
   room,
   userId,
   lastSeshRated,
-  SettingWithProps
+  SettingWithProps,
+  seshId
 }: {
   room: string;
   SettingWithProps: () => React.JSX.Element;
+  seshId: Id<"sessions">| undefined
   
   
 
@@ -64,7 +66,7 @@ function GroupCountDown({
 
     // call convex function. if returns true, start session.
     if (mode == "work") {
-      if (lastSeshRated === true || lastSeshRated === undefined) {
+      if ((lastSeshRated === true || (lastSeshRated === undefined&& seshId===undefined))) {
         const result = roomInfo.duration
           ? await startSesh({
               duration: roomInfo.duration,
@@ -73,7 +75,7 @@ function GroupCountDown({
           : null;
 
        ownerSesh && await startGroupSesh({ roomId });
-       setGoalOpen(true)
+        setGoalOpen(true)
       } else {
         onOpen();
         if (!participant) {
@@ -152,7 +154,7 @@ if(ownerSesh){
         showExitBtn={  participant }
         onSeshStart={onSeshStart}
         onSeshReset={onSeshReset}
-          
+          ownerSesh={ownerSesh}
           />
   </div>;
 }

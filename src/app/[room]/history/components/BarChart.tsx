@@ -29,7 +29,6 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useEffect } from "react";
 
-export const description = "A bar chart with a label";
 
 const chartData = [
   { day: "Mon", total: 186, label: "3hr 6m" },
@@ -84,7 +83,7 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
 
 
   return (
-    <Card className="max-w-[350px] flex ">
+    <Card className="w-full flex ">
       <CardHeader>
         <CardTitle>Weekly Total Study Time </CardTitle>
         <CardDescription>{weekStart.getDate()} {startMonth === endMonth? null:startMonth} 
@@ -148,8 +147,10 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
               dataKey="total"
               activeIndex={2}
               minPointSize={1}
+className="w-2"
+              width={2}
               fill="var(--chart-2)"
-              radius={8}
+              radius={4}
             >
               <LabelList
                 position="top"
@@ -163,7 +164,7 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
         </ChartContainer>
         {/* </ResponsiveContainer> */}
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col gap-2 text-sm mt-auto">
         <div className="flex items-center gap-2 leading-none font-medium">
           Total: {Math.floor(totalDuration / 60)}h{" "}
           {totalDuration % 60}m
@@ -176,3 +177,14 @@ const endYear = weekEnd.toLocaleString('default', { year: 'numeric' });
     </Card>
   );
 }
+
+
+
+// performing full reload
+
+// Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+// You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+// Consider migrating the non-React component export to a separate file and importing it into both files.
+
+// It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+// Fast Refresh requires at least one parent function component in your React tree.

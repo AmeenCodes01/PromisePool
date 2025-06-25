@@ -5,14 +5,16 @@ import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import useGroupCountdown from '@/hooks/useGroupCountdown';
+import { Id } from '../../../../../convex/_generated/dataModel';
 
-export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,
+export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,seshId
 
 }:{
 
 
 lastSeshRated: boolean|undefined;
 roomName:string;
+  seshId: Id<"sessions">| undefined,
 SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
@@ -25,7 +27,7 @@ const resetSesh = useMutation(api.sessions.reset);
  const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin * 60) {
-      if (lastSeshRated === true || lastSeshRated === undefined) {
+      if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {
         const result = await startSesh({
           duration: workMin,
           room: roomName,

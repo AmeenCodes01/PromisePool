@@ -14,95 +14,102 @@ import { Input } from "@/components/ui/input";
 import calcRewards from "@/lib/calcReward";
 
 function Reward() {
-  
-    const [hours, setHours] = useState(0);
-    const [rating, setRating] = useState(7);
-    const [showPrice,setShowPrice]=useState(false)
+  const [hours, setHours] = useState(0);
+  const [rating, setRating] = useState(7);
+  const [showPrice, setShowPrice] = useState(false);
   const user = useQuery(api.users.current);
-  const rewards = useQuery(api.rewards.get)
+  const rewards = useQuery(api.rewards.get);
   const create = useMutation(api.rewards.create);
-  
+
   const createReward = (title: string, price: number) => {
-    create({ title,  price});
+    create({ title, price });
   };
   return (
     <div className=" ">
-        <div className=" ml-auto w-fit flex z-[1000]">
-      
-            <InfoDialog title="Welcome to Shop's Rewards section"
-            
-            desc={
-              <>
+      <div className=" ml-auto w-fit flex z-[1000]">
+        <InfoDialog
+          title="Welcome to Shop's Rewards section"
+          desc={
+            <>
               <p className="italic">
-      🎉 Rewards — Stuff You Actually Want <br/>
-This is your little stash of things to look forward to. <br/>
-Add whatever you love — a K-drama episode, a gaming session, a snack run, or even just a nap. Set a coin price for it, and when you’ve earned enough coins (by studying, working, or smashing your tasks), you unlock it. <br/><br/>
-
-Simple. Fun. A good excuse to treat yourself only when you’ve earned it. <br/> <br/>
-<span className="text-green-400 text-sm">Even if you don't use this timer, you can get coins by submitting offline hours + rating by
-  the "Submit offline hours" button bottom-right".
-</span>
-
-
+                🎉 Rewards — Stuff You Actually Want <br />
+                This is your little stash of things to look forward to. <br />
+                Add whatever you love — a K-drama episode, a gaming session, a
+                snack run, or even just a nap. Set a coin price for it, and when
+                you’ve earned enough coins (by studying, working, or smashing
+                your tasks), you unlock it. <br />
+                <br />
+                Simple. Fun. A good excuse to treat yourself only when you’ve
+                earned it. <br /> <br />
+                <span className="text-green-400 text-sm">
+                  Even if you don't use this timer, you can get coins by
+                  submitting offline hours + rating by the "Submit offline
+                  hours" button bottom-right".
+                </span>
               </p>
-              </>
-            }
-            />
-            </div>
+            </>
+          }
+        />
+      </div>
       <div className="w-full flex flex-row p-2 justify-between   ">
         <div className="self-center my-auto">
-          <PromiseDialog 
+          <PromiseDialog
             maxCoins={user?.wCoins as number}
             icon={
-           <Button className="text-sm">
-            <Plus />
-            Create
-            </Button>
-           
-          }
+              <Button className="text-sm">
+                <Plus />
+                Create
+              </Button>
+            }
             header={"Create new reward"}
             btnTitle="Create"
             onClick={createReward}
           >
             <PromiseDialog.NameInput />
 
-                   <div className="my-2">
-                          <span className="font-lightbold text-sm">Total Hours studied</span>
-                
-                          <Input
-                            value={hours}
-                            onChange={(e) =>
-                              setHours(e.target.value ? parseFloat(e.target.value) : 0)
-                            }
-                            />
-                        </div>
-                        <div className="my-2 mb-3">
-                          <span className="font-lightbold text-sm">
-                            Average Rating ( out of 10 )
-                          </span>
-                
-                          <Input
-                            min={1}
-                            max={10}
-                            value={rating}
-                            onChange={(e) =>
-                              setRating(e.target.value ? parseFloat(e.target.value) : 0)
-                            }
-                            />
-                        </div>
-                    
-                     <span className="text-sm opacity-80">
-                      Price (coins required): {calcRewards(hours*60, rating as number)}
-                    </span>
-          <PromiseDialog.Btn 
-          wCoins={calcRewards(hours*60, rating as number)}
-          />
-          
+            <div className="my-2">
+              <span className="font-lightbold text-sm">
+                Total Hours studied
+              </span>
+
+              <Input
+                value={hours}
+                onChange={(e) =>
+                  setHours(e.target.value ? parseFloat(e.target.value) : 0)
+                }
+              />
+            </div>
+            <div className="my-2 mb-3">
+              <span className="font-lightbold text-sm">
+                Average Rating ( out of 10 )
+              </span>
+
+              <Input
+                min={1}
+                max={10}
+                value={rating}
+                onChange={(e) =>
+                  setRating(e.target.value ? parseFloat(e.target.value) : 0)
+                }
+              />
+            </div>
+
+            <span className="text-sm opacity-80">
+              Price (coins required):{" "}
+              {calcRewards(hours * 60, rating as number)}
+            </span>
+            <PromiseDialog.Btn
+              wCoins={calcRewards(hours * 60, rating as number)}
+            />
           </PromiseDialog>
         </div>
         <CoinBar coins={user?.wCoins} />
       </div>
-        <CardList coins={user?.wCoins ?? 0} data={rewards as Doc<"rewards">[]} type="rewards"/>
+      <CardList
+        coins={user?.wCoins ?? 0}
+        data={rewards as Doc<"rewards">[]}
+        type="rewards"
+      />
     </div>
   );
 }

@@ -21,9 +21,9 @@ import { set } from "react-hook-form";
 
 function GoalDialog() {
 
-  const [goal, setGoaltxt]=useState("")  
+  const {workMin,onChangeMode, goalOpen, setGoalOpen,setGoal, goal:goalprev } = usePromiseStore((state) => state);
+  const [goal, setGoaltxt]=useState(goalprev)  
 
-  const {workMin,onChangeMode, goalOpen, setGoalOpen,setGoal } = usePromiseStore((state) => state);
 
 
 

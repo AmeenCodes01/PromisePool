@@ -16,7 +16,7 @@ export const getWeekly = query({
     const weekStart = new Date(now);
     const todayDay = weekStart.getDay(); // 0 (Sun) - 6 (Sat)
     const diffToMonday = todayDay === 0 ? -6 : 1 - todayDay;
-    weekStart.setDate(weekStart.getDate() + diffToMonday - 7); // previous Monday
+    weekStart.setDate(weekStart.getDate() + diffToMonday ); // previous Monday
     weekStart.setHours(0, 0, 0, 0);
 
     const baseDateNumber = weekStart.getDate(); // cache this safely once

@@ -60,7 +60,9 @@ export const stop =  mutation({
       totalDuration: (user.totalDuration??0) + args.duration
     })
 // patch session rating
-    user.lastSeshId &&  await ctx.db.patch(user.lastSeshId,{rating:args.rating, goal:args.goal})
+    user.lastSeshId &&  await ctx.db.patch(user.lastSeshId,{rating:args.rating, goal:args.goal,
+      pCoins:args.pCoins, wCoins:args.wCoins
+    })
   
   },
 });

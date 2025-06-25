@@ -15,8 +15,11 @@ export const get = query({
     const user = await getCurrentUserOrThrow(ctx);
     const publicRooms = await getManyFrom(ctx.db, "rooms", "type", "public");
     const groups = user.roomIds ? await getAll(ctx.db, user.roomIds) : [];
+    
+    const priv = groups.filter(g=>g?.name === user.email)
+    const privGroups = groups.filter(g=>g?.name !== user.email)
 
-    return { public: publicRooms, groups: groups };
+    return { public: publicRooms, groups: privGroups, private:priv };
   },
 });
 
