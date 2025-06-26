@@ -35,7 +35,7 @@ function GoalDialog() {
 
           <Input
             className=""
-            
+            value={goal}
             onChange={(e) =>
              setGoaltxt(e.target.value)
             }

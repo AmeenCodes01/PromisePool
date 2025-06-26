@@ -38,7 +38,9 @@ decrement();
   };
   const onReset = () => {
     setSecLeft(sec);
+      pauseRef.current = true;
     setPause(true);
+
   };
 
   useEffect(() => {

@@ -63,7 +63,8 @@ function GroupCountDown({
   };
 
   const onSeshStart = async () => {
-
+    console.log("runnig")
+    if(!pause)return;
     // call convex function. if returns true, start session.
     if (mode == "work") {
       if ((lastSeshRated === true || (lastSeshRated === undefined&& seshId===undefined))) {
@@ -74,7 +75,7 @@ function GroupCountDown({
             })
           : null;
 
-       ownerSesh && await startGroupSesh({ roomId });
+       ownerSesh &&  await startGroupSesh({ roomId });
         setGoalOpen(true)
       } else {
         onOpen();
@@ -121,8 +122,9 @@ if(ownerSesh){
     if (!roomInfo || !participant ) {
     } else {
       if (status === "running") {
+        console.log("running useEffect")
         setMode("work");
-     !ownerSesh &&   onSeshStart();
+     !ownerSesh &&  onSeshStart();
         onPlay(roomInfo?.endTime as number)
       }
 
@@ -130,13 +132,16 @@ if(ownerSesh){
         setSecLeft(0);
         onChangeMode("break",onPause );
 
-        setGroupSesh(false)
       }
     }
 
     if (status === "not started") {
       setGroupSesh(true);
     }
+if(roomInfo && status =="ended"){
+          setGroupSesh(false)
+
+}
 
     if (status === undefined  && roomInfo && !ownerSesh) {
       onSeshReset();

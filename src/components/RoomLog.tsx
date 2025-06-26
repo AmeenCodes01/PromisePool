@@ -10,7 +10,6 @@ const heartbeat = useMutation(api.roomUsers.heartbeat)
 
 useEffect(()=>{
     const onJoin = async()=> await join({name})
-    console.log("join useEffect")
     onJoin()
 },[])
 

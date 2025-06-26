@@ -52,6 +52,7 @@ export default function useGroupCountdown() {
       intervalRef.current = null;
     }
     setPause(true);
+    
   };
 
   const onPause = () => {

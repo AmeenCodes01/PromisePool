@@ -41,11 +41,8 @@ const formSchema = z.object({
         },
       })
      const router = useRouter()
-      // 2. Define a submit handler.
       async function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        try{
+         try{
 
           await createRoom({type:"group", name: values.name, password:values.password })
           onCreated()

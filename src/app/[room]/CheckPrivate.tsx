@@ -1,7 +1,7 @@
 "use client"
 import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import {
   AlertDialog,
@@ -67,13 +67,6 @@ function CheckPrivate({room}:{room:string}) {
     setVerified(true)
     roomInfo ? addRoom({id:roomInfo?._id}) : null
   }
-if(!roomInfo){
-  return <> <div className="w-full h-full">
-  <h1>404 - Page Not Found</h1>
-  <p>The page you are looking for does not exist.</p>
-</div>
-  </>
-}
 
   if(roomInfo?.type ==="private"){
     if(user?.name !== room){

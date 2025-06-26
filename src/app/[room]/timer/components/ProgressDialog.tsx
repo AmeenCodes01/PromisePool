@@ -19,7 +19,7 @@ import useGroupCountdown from "@/hooks/useGroupCountdown";
 
 function ProgressDialog() {
   const [rated, setRated] = useState(false);
-  const [rating, setRating] = useState<number | null>(null);
+  const [rating, setRating] = useState<number | string>("");
 
 
   const { isOpen, onClose,workMin,onChangeMode,goal } = usePromiseStore((state) => state);
@@ -40,8 +40,6 @@ function ProgressDialog() {
     return calcReward(workMin, rating as number);
   }, [rating, workMin]);
 
-  console.log(rating,rated,  " rating")
-
   return (
     <div>
       <AlertDialog open={isOpen} defaultOpen={isOpen}
@@ -54,16 +52,25 @@ function ProgressDialog() {
       >
         <AlertDialogContent>
           <AlertDialogTitle>Rate your session</AlertDialogTitle>
-
+<span className="text-sm italic text-muted-foreground">If this appears before starting session, kindly rate previous session.</span>
           <Input
             className=""
+            value={rating}
             type="number"
             min={1}
             max={10}
             disabled={rated}
-            onChange={(e) =>
-             parseFloat(e.target.value) < 10 && setRating(e.target.value ? parseFloat(e.target.value) : 0)
-            }
+             onChange={(e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setRating(""); // let empty value for now
+      return;
+    }
+    const num = parseFloat(value);
+    if (!isNaN(num) && num < 10) {
+      setRating(num);
+    }
+  }}
           />
           <span className="italic text-sm ">rate out of 10</span>
           {rated ? (
@@ -98,18 +105,18 @@ function ProgressDialog() {
     setRated(true);
     setTimeout(() => {
       setRated(false)
-        setRating(null)
+        setRating("")
       onClose()
     console.log("r")
     }, 0);
   } else {
     setRated(false)
-        setRating(null)
+        setRating("")
     onClose();
   }
 }}
 
-              disabled={rating ? false : true}
+              disabled={rating !== "" ? false : true}
             >
               {rated ? "Close" : "Rate"}
             </Button>

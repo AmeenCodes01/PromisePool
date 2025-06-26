@@ -54,3 +54,10 @@ list of sessions done today (A list. )
 so I should get total sessionDatas. then derive datas for pie & bar chart eh. 
 
 I should ponder on how offline sessions are added
+
+
+
+
+----bugs---- 
+[] roomdropdown phone responsiveness issue 
+[] secLeft show same in each room, make secLeft a object in zustand store. 

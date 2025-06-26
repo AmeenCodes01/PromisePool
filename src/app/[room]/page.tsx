@@ -2,6 +2,9 @@ import { Flower } from "lucide-react";
 import React from "react";
 import InfoDialog from "./InfoDialog";
 import RoomLog from "@/components/RoomLog";
+import CheckPrivate from "./CheckPrivate";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
 
 async function Page({
   params,
@@ -16,6 +19,7 @@ async function Page({
 
 
   return <div className="w-full relative h-full justify-center items-center flex">
+    <CheckPrivate room={p.room}/>
     <div className="absolute top-3 right-3">
     <InfoDialog title="Welcome to Your Private Room!"
     desc={

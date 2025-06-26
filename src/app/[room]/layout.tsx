@@ -7,10 +7,20 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import PromiseCircle from "./PromiseCircle";
 import RoomLog from "@/components/RoomLog";
+import { notFound } from "next/navigation";
 
 export default async function layout({children, params}: {children: React.ReactNode,params: Promise<{ room: string }>}) {
   const p =  await params
   console.log(p.room, " room")
+  const roomInfo = await fetchQuery(api.rooms.getOne,{name:p.room})
+console.log(roomInfo, " roomInfo")
+
+if(!roomInfo){
+  console.log("inside")
+   notFound()
+
+}
+
   return <div className="w-full h-full flex flex-1 pr-0 sm:pr-7 relative">
 <RoomLog name={p.room}/>
 
