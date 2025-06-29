@@ -64,14 +64,14 @@ export default function TimerDisplay({
             className="text-xs  border-[2px]"
             disabled={playing}
             variant={mode == "work" ? "outline" : "default"}
-            onClick={() => onChangeMode("break")}
+            onClick={() => onChangeMode("break",room)}
           >
             Break
           </Button>
           <Button
             className="text-xs border-[2px]  "
             variant={mode == "break" ? "outline" : "default"}
-            onClick={() => onChangeMode("work")}
+            onClick={() => onChangeMode("work",room)}
             disabled={playing}
           >
             Work
