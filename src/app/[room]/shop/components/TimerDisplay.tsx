@@ -60,10 +60,12 @@ console.log(secLeft, " secLeft")
       : Math.floor(secLeft / 60);
 console.log(minutes," minutes")
   const seconds = Math.floor(secLeft % 60);
-
+  
   return (
-    <div className="items-center gap-8 ml-6 border-dashed border-[2px] p-2 rounded-md flex flex-col justify-end py-6 flex-1  ">
-      <div className="flex flex-row  gap-2 ml-6 ">
+    <>
+    <div className="items-center justify-center gap-10   border-dashed 
+    border-[2px] p-2 rounded-md flex flex-col sm:flex-row  py-6   ">
+      <div className="flex flex-row sm:flex-col-reverse  items-center  gap-2  ">
         <Button
           className="text-xs border-[2px]  "
           variant={mode == "break" ? "outline" : "default"}
@@ -83,23 +85,23 @@ console.log(minutes," minutes")
 
         <SettingWithProps />
       </div>
-      <div className="flex flex-row  relative ">
-        <div className="shrink-0 flex">
+      <div className="flex flex-row  ">
+        <div className=" flex ">
           {hours !== 0 && (
-            <span className="text-8xl font-mono">
+            <span className="md:text-8xl text-6xl font-mono">
               {hours < 10 ? "0" + hours : hours}:
             </span>
           )}
-          <span className="text-8xl font-mono">
+          <span className="md:text-8xl text-6xl font-mono">
             {minutes < 10 ? "0" + minutes : minutes}:
           </span>
-          <span className="text-6xl font-mono">
+          <span className="md:text-6xl text-4xl font-mono">
             {seconds < 10 ? "0" + seconds : seconds}
           </span>
         </div>
         <div className=" pl-2 "></div>
       </div>
-      <div className="flex flex-row gap-4 ml-8   ">
+      <div className="flex flex-row   sm:flex-col items-center gap-4   ">
         {pause ? (
           ownerSesh !== undefined ? (
             ownerSesh ? (
@@ -140,7 +142,8 @@ console.log(minutes," minutes")
           </button>
         )}
       </div>
-      <GoalDialog />
     </div>
+      <GoalDialog />
+      </>
   );
 }

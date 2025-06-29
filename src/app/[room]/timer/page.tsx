@@ -9,11 +9,11 @@ export default async function Page({ params}: {params: Promise<{ room: string }>
   const p = await params
  
   return (
-    <div className="w-full  h-full  pb-2 flex flex-col-reverse sm:flex-row justify-center items-center sm:p-0 pt-8  *:
-    relative
+    <div className="w-full  h-full  overflow-auto pb-2 flex flex-col  justify-center items-center sm:p-0 pt-8  *:
+    relative 
     
     ">
-<div className="absolute flex justify-center gap-3 top-3 right-3">
+<div className=" flex ml-auto gap-4 p-2 px-4 ">
 
       <RoomUsers name={p.room}/>
       <InfoDialog title="It’s Timer Time! ⏳"
@@ -44,17 +44,17 @@ All the best!
       {/* Timer */}
       <div className="flex flex-1  w-full h-full   sm:justify-center items-center    ">
 
-      <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col">
+      {/* <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col"> */}
    {/* <TabsList className="  w-fit mx-auto justify-self-center justify-center ">
     <TabsTrigger value="pomodoro" className="">Pomodoro</TabsTrigger>
      <TabsTrigger value="record">Record</TabsTrigger> 
   </TabsList> */}
   {/* <TabsContent value="record">Make changes to your account here.</TabsContent> */}
-  <TabsContent value="pomodoro" className="w-full flex-1 ">
+  {/* <TabsContent value="pomodoro" className="w-full flex-1 "> */}
 
       <SessionTimer room={p.room}/>
-  </TabsContent>
-</Tabs>
+  {/* </TabsContent>
+</Tabs> */}
       </div>
 
    

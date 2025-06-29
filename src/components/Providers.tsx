@@ -24,14 +24,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
       {/* Render children for authenticated users */}
       <Authenticated>
-        <div className="w-full h-full flex flex-1 pr-7">
+        <div className="w-full h-full flex flex-row flex-1 pr-0 sm:pr-7 ">
           <SidebarProvider>
             <AppSidebar />
             <main
-              className="flex flex-1 w-full h-full 
+              className="flex flex-col flex-1 w-full h-full 
               "
             >
-              <SidebarTrigger />
+              <SidebarTrigger className="" />
               {children}
             </main>
           </SidebarProvider>
