@@ -73,8 +73,8 @@ function SessionTimer({ room }: { room: string }) {
   const onGroupSesh = (start: boolean) => {
     setGroupSesh(start);
     // setOwnerSesh(start);
-
     if (start) {
+      console.log("hit",start)
       createGroupSesh({
         duration: workMin,
         roomId: roomInfo._id as Id<"rooms">,
@@ -98,6 +98,7 @@ function SessionTimer({ room }: { room: string }) {
   //change mode
 
   useEffect(() => {
+  console.log("boop")
     const status = roomInfo?.timerStatus;
     if (!roomInfo) {
     } else {

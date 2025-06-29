@@ -65,7 +65,6 @@ function GroupCountDown({
   };
 
   const onSeshStart = async () => {
-    console.log("runnig")
     if(!pause)return;
     // call convex function. if returns true, start session.
     if (mode == "work") {
@@ -103,7 +102,8 @@ if(ownerSesh){
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-        onChangeMode("break",onPause);
+        console.log("change Mode")
+        onChangeMode("break",room,onPause);
       } else {
         setWorkMin(workMin * 60);
       }
@@ -132,7 +132,7 @@ if(ownerSesh){
 
       if (status === "ended") {
         setSecLeft(room,0);
-        onChangeMode("break",onPause );
+        onChangeMode("break",room,onPause );
 
       }
     }

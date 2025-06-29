@@ -32,7 +32,6 @@ function RewardCard({
   const onDel = () => del({ rId: reward._id });
 
   const onUnlock = () => {
-    console.log(coins, "unlock");
     if (coins >= reward.price) {
       unlock({ rId: reward._id });
     } else {

@@ -43,7 +43,6 @@ export default function TimerDisplay({
 
   //  const secLeft = usePromiseStore(state=> state.timers[room]?.secLeft)
 
-  console.log(secLeft, " secLeft");
   const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
   const hours = Math.floor(Math.floor(secLeft / 60) / 60);
@@ -52,7 +51,6 @@ export default function TimerDisplay({
     hours > 0
       ? Math.floor(secLeft / 60 - hours * 60)
       : Math.floor(secLeft / 60);
-  console.log(minutes, " minutes");
   const seconds = Math.floor(secLeft % 60);
 
   return (

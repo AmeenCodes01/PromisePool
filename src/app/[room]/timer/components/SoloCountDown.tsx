@@ -19,7 +19,7 @@ SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
 
-const {workMin,onOpen,mode,breakMin,setGoalOpen,onChangeMode} = usePromiseStore((state) =>state);
+const {workMin,onOpen,mode,breakMin,setGoalOpen,onChangeMode,onSoloReset} = usePromiseStore((state) =>state);
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
@@ -52,10 +52,10 @@ const resetSesh = useMutation(api.sessions.reset);
       secLeft !== workMin * 60 ? await resetSesh() : null;
     }
     onPauseGroup();
-    onReset();
+    onSoloReset(roomName)
   };
 
-  const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
+  const { onPause, onPlay, secLeft, setSecLeft, pause } = useCountdown(
     {
       sec: mode == "work" ? workMin * 60 : breakMin * 60,
     room:roomName
@@ -70,10 +70,9 @@ const resetSesh = useMutation(api.sessions.reset);
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-        console.log("person ran")
-        onChangeMode("break",onPause);
+        onChangeMode("break",roomName,onPause);
       } else {
-        onChangeMode("work",onPause);
+        onChangeMode("work",roomName,onPause);
          }
 
       const bell = new Audio("/bell.wav");
@@ -85,7 +84,7 @@ const resetSesh = useMutation(api.sessions.reset);
 
   const onBothCountDownPause= ()=>{
     onPause()
-    onPauseGroup()
+  //  onPauseGroup()
   }
     return (
     <div>

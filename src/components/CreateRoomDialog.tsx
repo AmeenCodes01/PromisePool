@@ -51,10 +51,8 @@ const formSchema = z.object({
           ? (error.data as { message: string }).message
           : "Unexpected error occurred";
           
-          console.log(error, errorMessage)
           form.setError("name", {message:errorMessage})
         }
-        console.log(values)
       }
 
   return (

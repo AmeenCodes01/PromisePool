@@ -15,14 +15,12 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
   const tickRef = useRef(() => {});
 
   tickRef.current = () => {
-    console.log("run")
     if (pause) return;
 
     if (secLeft <= 1) {
       setPause(true);
       setSecLeft(room, 0);
     } else {
-      console.log(room, " decrement room");
       decrement(room);
     }
   };
@@ -35,40 +33,38 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
     setPause(false);
   };
 
-  const onReset = () => {
-    setSecLeft(room, sec);
-    setPause(true);
-  };
+  
 
-  // Handle interval based on pause & room
-  useEffect(() => {
-    // If paused, clear existing interval
-    if (pause) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      return;
+useEffect(() => {
+  if (pause) {
+    // If paused, clear the interval if it's running
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
+    return;
+  }
 
-    // If not paused, start ticking
+  // Only start a new interval if one doesn't exist
+  if (!intervalRef.current) {
+    console.log("Interval created");
     intervalRef.current = setInterval(() => {
       tickRef.current();
     }, 1000);
+  }
 
-    // Cleanup when room changes or on unmount
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [pause, room]);
+  // Cleanup function — clears interval on unmount or dependency change
+  return () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+}, [pause]);
 
   return {
     pause,
     onPause,
-    onReset,
     onPlay,
     secLeft,
     setSecLeft,

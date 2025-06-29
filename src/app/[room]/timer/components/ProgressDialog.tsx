@@ -22,15 +22,14 @@ function ProgressDialog({room}:{room:string}) {
   const [rating, setRating] = useState<number | string>("");
 
 
-  const { isOpen, onClose,workMin,onChangeMode,goal } = usePromiseStore((state) => state);
+  const { isOpen, onClose,workMin,onChangeMode,goal,onSoloReset } = usePromiseStore((state) => state);
 
-  const { onReset: onSoloReset } = useCountdown({room, sec: workMin * 60 });
   const { onReset: onGroupReset } = useGroupCountdown(room);
 
   const onReset = () => {
-    onSoloReset();
+    onSoloReset(room);
     onGroupReset();
-    onChangeMode("work")
+    onChangeMode("work",room)
   };
 
   const endSesh = useMutation(api.sessions.stop);

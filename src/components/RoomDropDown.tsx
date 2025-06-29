@@ -54,7 +54,7 @@ function RoomDropDown({
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DropdownMenu modal={true}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton>
               Selected Room : {inRoom}
@@ -123,7 +123,7 @@ function RoomDropDown({
       </Dialog>
 
       {/* Centralized Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} modal={true} onOpenChange={setDialogOpen}>
         <DialogContent>
           <ConfirmDialog
             title="Timer running"

@@ -11,7 +11,7 @@ interface DialogProps {
   setBreakMin: (num: number) => void;
   workMin: number;
   breakMin: number;
-  onChangeMode: (md: "work" | "break", fn?: any) => void;
+  onChangeMode: (md: "work" | "break", room:string,fn?: any) => void;
   timers: {
     [roomId: string]: {
       secLeft: number;
@@ -25,9 +25,11 @@ interface DialogProps {
   setGoalOpen: (state: boolean) => void;
   goal: string;
   setGoal: (goal: string) => void;
+  onSoloReset: (goal: string) => void;
   getOrCreateTimer: (room:string) => {secLeft:number};  
   pause: boolean;
   setPause: (state:boolean)=>void;
+
   // data:any;
   // setData(data:any):void;
 }
@@ -77,6 +79,8 @@ timers:{
         }));
       },
 
+
+
       decrement: (room) => {
         const timer = get().getOrCreateTimer(room);
         set((state) => ({
@@ -90,11 +94,16 @@ timers:{
       },
       groupSesh: false,
       setGroupSesh: (state) => set({ groupSesh: state }),
-      onChangeMode: (md, fn) => {
-        console.log("set why")
+      onChangeMode: (md, room,fn) => {
+        console.log("onchangefuckingmode", )
         set((state) => ({
           mode: md,
-          secLeft: md === "break" ? state.breakMin * 60 : state.workMin * 60,
+           timers: {
+      ...state.timers,
+      [room]: {
+        secLeft: md === "break" ? state.breakMin * 60 : state.workMin * 60,
+          },
+    },
         }));
         fn ? fn() : null;
         // set({mode:md})
@@ -103,6 +112,21 @@ timers:{
       setGoalOpen: (state) => set({ goalOpen: state }),
       goal: "",
       setGoal: (goal) => set({ goal: goal }),
+      
+    
+onSoloReset: (room) => {
+  const { workMin } = get();
+  set((state) => ({
+    pause: true,
+    timers: {
+      ...state.timers,
+      [room]: {
+        secLeft: workMin * 60,
+      },
+    },
+  }));
+},
+    
     }),
     {
       name: "promise-pool",

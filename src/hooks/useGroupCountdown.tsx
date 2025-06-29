@@ -3,11 +3,10 @@ import usePersistState from './usePersistState';
 import { usePromiseStore } from './usePromiseStore';
 
 export default function useGroupCountdown(room:string) {
-  const { getOrCreateTimer, setSecLeft, workMin } = usePromiseStore(state => state);
+  const { getOrCreateTimer, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
 
   const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
 
-  const [pause, setPause] = usePersistState(true, "groupPause");
   const [endTime, setEndTime] = usePersistState(Date.now(), "endTime");
 
 
@@ -17,6 +16,7 @@ export default function useGroupCountdown(room:string) {
   endTimeRef.current = endTime;
 
   const startTimer = () => {
+    console.log("srart timer interval")
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
