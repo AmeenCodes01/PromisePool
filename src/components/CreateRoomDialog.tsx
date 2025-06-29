@@ -21,15 +21,14 @@ import { useMutation } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { ConvexError } from "convex/values"
 
-
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string().min(6,{
-    message:"Password must be at least 6 characters"
-  })
-})
+  name: z.string()
+    .min(5, { message: "Name must be at least 5 characters & no spaces" })
+    .regex(/^[^\s]+$/, { message: "No spaces allowed." }),
+  password: z.string()
+    .min(6, { message: "Password must be at least 6 characters" })
+});
+
 
  function CreateRoomDialog({onCreated}:{onCreated:()=>void}) {
     const createRoom = useMutation(api.rooms.create)

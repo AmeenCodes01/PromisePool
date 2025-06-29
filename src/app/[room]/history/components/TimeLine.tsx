@@ -18,11 +18,13 @@ export function TimeLine({data}:{data:Doc<"sessions">[]}){
         <Card className=" w-[300px]  pr-4 "> 
             <CardHeader>
                 <CardTitle>Timeline</CardTitle>
-                <CardDescription>Timeline of today</CardDescription>
+                <CardDescription>Today's sessions timeline</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
                 <div className="flex flex-col gap-2 ">
-                    {data.map((session, index) => 
+                    {
+                        data.length> 0 ?
+                    data.map((session, index) => 
                     {
                         const startTime = new Date(session._creationTime);
                         const endTime = new Date(session._creationTime + session.duration * 60000);
@@ -43,7 +45,9 @@ export function TimeLine({data}:{data:Doc<"sessions">[]}){
                         </div>
                     )
                     }
-                    )}
+                    )
+                : <span className="text-muted-foreground self-center text-sm ">No sessions today</span>
+                }
                 </div>
             </CardContent>
         </Card>

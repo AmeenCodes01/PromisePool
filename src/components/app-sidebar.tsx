@@ -40,11 +40,11 @@ import { useAuthActions } from "@convex-dev/auth/react";
 
 // Menu items.
 const items = [
-  {
-    title: "Map",
-    url: "/map",
-    icon: Inbox,
-  },
+  // {
+  //   title: "Map",
+  //   url: "/map",
+  //   icon: Inbox,
+  // },
   {
     title: "Timer",
     url: "/timer",

@@ -235,10 +235,11 @@ function SessionTimer({ room }: { room: string }) {
             )
           ) : null}
         </div>
+        {roomInfo?.type !== "private" && participant ? (
+         <>
         <span className="text-md mt-6 font-serif opacity-90 underline  ">
           Participants
         </span>
-        {roomInfo?.type !== "private" && participant ? (
           <div
             className="flex flex-col 
           gap-2 p-3  max-h-[200px]  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary rounded-md  "
@@ -255,6 +256,8 @@ function SessionTimer({ room }: { room: string }) {
               </div>
             ))}
           </div>
+         </>
+        
         ) : null}
       </div>
 

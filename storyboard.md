@@ -82,10 +82,10 @@ I should ponder on how offline sessions are added
 
 
 ----bugs---- 
-[] roomdropdown phone responsiveness issue 
+[X] roomdropdown phone responsiveness issue 
 
-[] secLeft show same in each room, make secLeft a object in zustand store. 
+[X] secLeft show same in each room, make secLeft a object in zustand store. 
 
 [] add dash to empty spaces while creating room
 
-[] styling of goal. 
+[X] styling of goal. 
