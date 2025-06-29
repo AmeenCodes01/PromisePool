@@ -37,6 +37,7 @@ import { useEffect, useState } from "react";
 import RoomDropDown from "./RoomDropDown";
 import { useParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { usePromiseStore } from "@/hooks/usePromiseStore";
 
 // Menu items.
 const items = [
@@ -67,6 +68,14 @@ const items = [
   },
 ];
 
+const timer = [
+  {
+    title: "Timer",
+    url: "/timer",
+    icon: Calendar,
+  },
+]
+
 export function AppSidebar() {
   // if no room is chosen, default is user name. for that, we need user from clerk/convex? 
   const user = useQuery(api.users.current)
@@ -82,6 +91,20 @@ export function AppSidebar() {
       setInRoom(user.name);
     }
   }, [params.room, user?.name]);
+
+   const { pause, workMin } = usePromiseStore((state) => state);
+    const secLeft = usePromiseStore(
+      (state) => state.timers[inRoom as string]?.secLeft
+    ) as number;
+  
+    
+  const data = !pause ||( workMin * 60 !== secLeft && secLeft!==undefined) ? timer:items
+  
+  // const handleRoomClick = (roomName: string) => {
+  //     if (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined)) {
+  //       } else {
+  //         }
+  //   };
   return (
     <Sidebar>
       <SidebarHeader>
@@ -95,7 +118,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {data.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={"/"+inRoom + "/" + item.url}>

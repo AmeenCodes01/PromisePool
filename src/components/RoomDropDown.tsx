@@ -41,9 +41,9 @@ function RoomDropDown({
   ) as number;
 
   const router = useRouter();
-
+console.log(pause, secLeft, " rd")
   const handleRoomClick = (roomName: string) => {
-    if (!pause || workMin * 60 !== secLeft) {
+    if (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined)) {
       setDialogOpen(true);
     } else {
       setInRoom(roomName);
