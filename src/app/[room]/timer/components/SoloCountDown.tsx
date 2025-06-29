@@ -58,11 +58,11 @@ const resetSesh = useMutation(api.sessions.reset);
   const { onPause, onPlay, secLeft, setSecLeft, pause, onReset } = useCountdown(
     {
       sec: mode == "work" ? workMin * 60 : breakMin * 60,
-    
+    room:roomName
     }
   );
 
-  const {onPause:onPauseGroup}= useGroupCountdown()
+  const {onPause:onPauseGroup}= useGroupCountdown(roomName)
 
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const resetSesh = useMutation(api.sessions.reset);
     onPause={onBothCountDownPause}
     onSeshStart={onSeshStart}
     onSeshReset={onSeshReset}
-      
+      room={roomName}
       />
     </div>
   )

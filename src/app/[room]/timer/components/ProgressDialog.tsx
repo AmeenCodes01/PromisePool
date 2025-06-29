@@ -17,15 +17,15 @@ import { useCallback, useEffect, useState } from "react";
 import useCountdown from "./useCountdown";
 import useGroupCountdown from "@/hooks/useGroupCountdown";
 
-function ProgressDialog() {
+function ProgressDialog({room}:{room:string}) {
   const [rated, setRated] = useState(false);
   const [rating, setRating] = useState<number | string>("");
 
 
   const { isOpen, onClose,workMin,onChangeMode,goal } = usePromiseStore((state) => state);
 
-  const { onReset: onSoloReset } = useCountdown({ sec: workMin * 60 });
-  const { onReset: onGroupReset } = useGroupCountdown();
+  const { onReset: onSoloReset } = useCountdown({room, sec: workMin * 60 });
+  const { onReset: onGroupReset } = useGroupCountdown(room);
 
   const onReset = () => {
     onSoloReset();
@@ -95,6 +95,7 @@ function ProgressDialog() {
               className="justify-end w-fit "
              onClick={() => {
   if (!rated) {
+    //means it's now rated. 
     endSesh({
       rating: rating as number,
       pCoins: getReward(),
@@ -103,12 +104,7 @@ function ProgressDialog() {
       goal
     });
     setRated(true);
-    setTimeout(() => {
-      setRated(false)
-        setRating("")
-      onClose()
-    console.log("r")
-    }, 0);
+    
   } else {
     setRated(false)
         setRating("")

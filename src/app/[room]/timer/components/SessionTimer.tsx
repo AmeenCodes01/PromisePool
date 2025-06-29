@@ -24,18 +24,31 @@ function SessionTimer({ room }: { room: string }) {
   const {
     workMin,
     setWorkMin,
-    secLeft,
+    getOrCreateTimer,
     setBreakMin,
     mode,
     groupSesh,
     setGroupSesh,
     goal,
     setSecLeft,
-    setGoalOpen
+    setGoalOpen,
+    timers
   } = usePromiseStore((state) => state);
   useEffect(() => {
     usePromiseStore.persist.rehydrate();
   }, []);
+
+  
+
+ useEffect(()=>{
+if(room !==undefined){
+
+  getOrCreateTimer(room)
+}
+   
+  },[room])
+const  secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
+
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const participant = roomInfo?.participants?.find((p) => p.id === user?._id)
@@ -57,10 +70,10 @@ function SessionTimer({ room }: { room: string }) {
   const onChangeSec = (min: number, type?: "work" | "break") => {
     if (type === "break") {
       setBreakMin(min);
-      mode == "break" && setSecLeft(min * 60);
+      mode == "break" && setSecLeft(room, min * 60);
     } else {
       setWorkMin(min);
-      mode == "work" && setSecLeft(min * 60);
+      mode == "work" && setSecLeft(room, min * 60);
     }
   };
 
@@ -249,7 +262,7 @@ joinGroupSesh({
         ) : null}
       </div>
 
-      <ProgressDialog  />
+      <ProgressDialog  room={room} />
     </div>
   );
 }

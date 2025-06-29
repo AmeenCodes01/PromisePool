@@ -1,52 +1,69 @@
 "use client";
 
-import usePersistState from "@/hooks/usePersistState";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
 import { useEffect, useRef } from "react";
 import { clearInterval, setInterval } from "worker-timers";
 
-function useCountdown({ sec }: { sec: number }) {
-  const [pause, setPause] = usePersistState(true, "pause");
-  const { secLeft, setSecLeft, decrement, } = usePromiseStore((state) => state);
+function useCountdown({ sec, room }: { sec: number; room: string }) {
+  const { setSecLeft, decrement, pause, setPause } = usePromiseStore((state) => state);
 
-  const secLeftRef = useRef(secLeft);
-  const pauseRef = useRef(pause);
-  pauseRef.current = pause;
+  const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
 
-  useEffect(() => {
-    secLeftRef.current = secLeft;
-  }, [secLeft]);
+  const intervalRef = useRef<number | null>(null);
 
+  // keep tick in a ref to avoid stale closures
+  const tickRef = useRef(() => {});
 
-  function tick() {
-    if (pauseRef.current) return;
-    if (secLeftRef.current <= 1) {
+  tickRef.current = () => {
+    console.log("run")
+    if (pause) return;
+
+    if (secLeft <= 1) {
       setPause(true);
-      setSecLeft(0);
+      setSecLeft(room, 0);
     } else {
-decrement();
+      console.log(room, " decrement room");
+      decrement(room);
     }
-  }
+  };
 
   const onPause = () => {
-    pauseRef.current = true;
     setPause(true);
   };
+
   const onPlay = () => {
-    pauseRef.current = false;
     setPause(false);
   };
-  const onReset = () => {
-    setSecLeft(sec);
-      pauseRef.current = true;
-    setPause(true);
 
+  const onReset = () => {
+    setSecLeft(room, sec);
+    setPause(true);
   };
 
+  // Handle interval based on pause & room
   useEffect(() => {
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    // If paused, clear existing interval
+    if (pause) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
+    // If not paused, start ticking
+    intervalRef.current = setInterval(() => {
+      tickRef.current();
+    }, 1000);
+
+    // Cleanup when room changes or on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [pause, room]);
 
   return {
     pause,

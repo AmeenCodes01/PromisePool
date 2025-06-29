@@ -2,8 +2,11 @@ import React, { useRef } from 'react'
 import usePersistState from './usePersistState';
 import { usePromiseStore } from './usePromiseStore';
 
-export default function useGroupCountdown() {
-  const { secLeft, setSecLeft, workMin } = usePromiseStore(state => state);
+export default function useGroupCountdown(room:string) {
+  const { getOrCreateTimer, setSecLeft, workMin } = usePromiseStore(state => state);
+
+  const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
+
   const [pause, setPause] = usePersistState(true, "groupPause");
   const [endTime, setEndTime] = usePersistState(Date.now(), "endTime");
 
@@ -22,7 +25,7 @@ export default function useGroupCountdown() {
       const remainingTime = endTimeRef.current - Date.now();
       const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
 
-      setSecLeft(remainingSec);
+      setSecLeft(room,remainingSec);
 
       if (remainingSec <= 0) {
         clearInterval(intervalRef.current!);
@@ -36,7 +39,7 @@ export default function useGroupCountdown() {
     console.log("Played", newEndTime);
     const remainingTime = newEndTime - Date.now();
     const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
-    setSecLeft(remainingSec);
+    setSecLeft(room,remainingSec);
     setEndTime(newEndTime);
     endTimeRef.current = newEndTime;  // Update ref immediately
     setPause(false);
@@ -46,7 +49,7 @@ export default function useGroupCountdown() {
 
   const onReset = () => {
     console.log("Resetting");
-    setSecLeft(workMin * 60);
+    setSecLeft(room, workMin * 60);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;

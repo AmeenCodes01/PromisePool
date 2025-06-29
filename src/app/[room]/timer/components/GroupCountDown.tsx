@@ -22,7 +22,7 @@ function GroupCountDown({
   lastSeshRated: boolean | undefined;
   userId: Id<"users">;
 }) {
-  const {onOpen,workMin,setWorkMin,mode,setMode,setGroupSesh,onChangeMode,setGoalOpen} = usePromiseStore((state) => state);
+  const {onOpen,workMin,setWorkMin,mode,setMode,setGroupSesh,onChangeMode,setGoalOpen,getOrCreateTimer, setSecLeft,} = usePromiseStore((state) => state);
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
@@ -40,8 +40,10 @@ function GroupCountDown({
   const cancelGroupSesh = useMutation(api.rooms.cancelSesh);
   const leaveGroupSesh = useMutation(api.rooms.leaveSesh)
 
-  const { secLeft, setSecLeft, onPlay, pause, onReset,onPause } = useGroupCountdown();
-  
+  const {   onPlay, pause, onReset,onPause } = useGroupCountdown(room);
+
+    const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
+
   // there should be option to exit group timer. 
 
   
@@ -129,7 +131,7 @@ if(ownerSesh){
       }
 
       if (status === "ended") {
-        setSecLeft(0);
+        setSecLeft(room,0);
         onChangeMode("break",onPause );
 
       }
@@ -160,6 +162,7 @@ if(roomInfo && status =="ended"){
         onSeshStart={onSeshStart}
         onSeshReset={onSeshReset}
           ownerSesh={ownerSesh}
+          room={room}
           />
   </div>;
 }

@@ -12,15 +12,22 @@ interface DialogProps {
   workMin: number;
   breakMin: number;
   onChangeMode: (md: "work" | "break", fn?: any) => void;
-  secLeft: number;
-  setSecLeft: (num: number) => void;
+  timers: {
+    [roomId: string]: {
+      secLeft: number;
+    };
+  };
   groupSesh: boolean;
+  setSecLeft: (room: string, num: number) => void;
   setGroupSesh: (state: boolean) => void;
-  decrement: () => void;
-  goalOpen:boolean;
-  setGoalOpen:(state:boolean)=> void;  
-  goal:string;
-  setGoal: (goal:string)=>void
+  decrement: (room: string) => void;
+  goalOpen: boolean;
+  setGoalOpen: (state: boolean) => void;
+  goal: string;
+  setGoal: (goal: string) => void;
+  getOrCreateTimer: (room:string) => {secLeft:number};  
+  pause: boolean;
+  setPause: (state:boolean)=>void;
   // data:any;
   // setData(data:any):void;
 }
@@ -31,29 +38,71 @@ export const usePromiseStore = create<DialogProps>()(
       isOpen: false,
       onOpen: () => set({ isOpen: true }),
       onClose: () => set({ isOpen: false }),
+      pause: true,
+    setPause: (state) => set({ pause: state }),
       mode: "work",
       setMode: (mode) => set({ mode: mode }),
       workMin: 50,
       setWorkMin: (num) => set({ workMin: num }),
       breakMin: 10,
       setBreakMin: (num) => set({ breakMin: num }),
-      secLeft: 50 * 60,
-      setSecLeft: (num) => set({ secLeft: num }),
-      decrement: () => set((state) => ({ secLeft: state.secLeft - 1 })),
+timers:{
+
+},
+ getOrCreateTimer: (room:string) => {
+        const state = get();
+        if (!state.timers[room]) {
+          set({
+            timers: {
+              ...state.timers,
+              [room]: {
+                secLeft: 50 * 60, // default value
+              },
+            },
+          });
+        }
+        return get().timers[room];
+      },
+
+       setSecLeft: (room, num) => {
+        const timer = get().getOrCreateTimer(room);
+        set((state) => ({
+          timers: {
+            ...state.timers,
+            [room]: {
+              
+              secLeft: num,
+            },
+          },
+        }));
+      },
+
+      decrement: (room) => {
+        const timer = get().getOrCreateTimer(room);
+        set((state) => ({
+          timers: {
+            ...state.timers,
+            [room]: {
+              secLeft: timer.secLeft - 1,
+            },
+          },
+        }));
+      },
       groupSesh: false,
       setGroupSesh: (state) => set({ groupSesh: state }),
       onChangeMode: (md, fn) => {
-          set((state) => ({
-              mode: md,
-              secLeft:   md === "break" ? state.breakMin * 60 :  state.workMin * 60,
-            }));
-            fn ? fn() : null;
+        console.log("set why")
+        set((state) => ({
+          mode: md,
+          secLeft: md === "break" ? state.breakMin * 60 : state.workMin * 60,
+        }));
+        fn ? fn() : null;
         // set({mode:md})
       },
-          goalOpen:false,
-          setGoalOpen: (state)=>set({goalOpen:state}),
-          goal:"",
-          setGoal:(goal)=>set({goal:goal})
+      goalOpen: false,
+      setGoalOpen: (state) => set({ goalOpen: state }),
+      goal: "",
+      setGoal: (goal) => set({ goal: goal }),
     }),
     {
       name: "promise-pool",

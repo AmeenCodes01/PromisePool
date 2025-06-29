@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import Setting from "../../timer/components/Setting";
 import { Play, Pause, TimerReset } from "lucide-react";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
@@ -7,6 +7,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import GoalDialog from "../../timer/components/GoalDialog";
+import { useShallow } from 'zustand/react/shallow'
 
 export default function TimerDisplay({
   SettingWithProps,
@@ -16,6 +17,7 @@ export default function TimerDisplay({
   onSeshStart,
   onSeshReset,
   ownerSesh,
+  room
 }: {
   pause: boolean;
   showExitBtn: boolean;
@@ -24,19 +26,39 @@ export default function TimerDisplay({
   onSeshReset: () => void;
   SettingWithProps: () => React.JSX.Element;
   ownerSesh?: boolean;
+room:string;
 }) {
-  const { secLeft, workMin, mode, onChangeMode, groupSesh, goal } =
-    usePromiseStore((state) => state);
 
+const {  workMin, mode, onChangeMode, groupSesh ,secLeft} =
+    usePromiseStore(
+      useShallow((state) => {
+      return {
+        getOrCreateTimer: state.getOrCreateTimer,
+        workMin: state.workMin, 
+      mode:state.mode, 
+        onChangeMode: state.onChangeMode, 
+        groupSesh:state.groupSesh, 
+        secLeft: state.timers[room]
+        ?.secLeft
+      }
+    } 
+      
+      
+   ));
+    
+//  const secLeft = usePromiseStore(state=> state.timers[room]?.secLeft)
+
+console.log(secLeft, " secLeft")
   const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
   const hours = Math.floor(Math.floor(secLeft / 60) / 60);
 
+  
   const minutes =
-    Math.floor(secLeft / 60) >= 60
-      ? hours * 60 - Math.floor(secLeft / 60)
+    hours > 0 ?
+        Math.floor(  (secLeft / 60)- hours * 60)
       : Math.floor(secLeft / 60);
-
+console.log(minutes," minutes")
   const seconds = Math.floor(secLeft % 60);
 
   return (

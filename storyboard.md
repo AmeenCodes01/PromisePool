@@ -9,16 +9,39 @@
 [X] unique room name
 [X] enter room by giving room name, then password. 
 [X] room shows in list of owner only. 
+[X] shows user in rooms.
 [ ] shareable link
+[ ] enter group name in dropdown to enter. 
 
 
 -- timer -- 
 [X] group timer start 
 [X] session status updates 
+[X] group timer end & shows participants
 [] diamond animation
 [] turn animation on/off
 [] stopwatch
+[] timer overlay
  
+
+-- history --
+[X] show weekly total time per day
+[X] show timeline of current day
+[X] show  pie chart ratings of sessions  
+
+
+-- leaderboard --
+[X] global leaderboard of all rooms, since start. 
+
+
+-- additional features --
+[] pixel cam
+[] breathers 
+[] build animation
+
+
+
+
  // thinking
  user1: starts session 
  user2: recieves session duration + option to join in
@@ -60,4 +83,9 @@ I should ponder on how offline sessions are added
 
 ----bugs---- 
 [] roomdropdown phone responsiveness issue 
+
 [] secLeft show same in each room, make secLeft a object in zustand store. 
+
+[] add dash to empty spaces while creating room
+
+[] styling of goal. 
