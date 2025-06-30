@@ -41,10 +41,10 @@ function RoomDropDown({
   ) as number;
 
   const router = useRouter();
-console.log(pause, secLeft, " rd")
   const handleRoomClick = (roomName: string) => {
-    if (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined)) {
-      setDialogOpen(true);
+    if (!pause || (workMin * 60 !== secLeft && secLeft !== undefined)) {
+     // setDialogOpen(true);
+     alert("Please stop/reset any timers playing")
     } else {
       setInRoom(roomName);
       router.push(`/${roomName}/timer`);
@@ -123,7 +123,7 @@ console.log(pause, secLeft, " rd")
       </Dialog>
 
       {/* Centralized Dialog */}
-      <Dialog open={dialogOpen} modal={true} onOpenChange={setDialogOpen}>
+      {/* <Dialog open={dialogOpen} modal={true} onOpenChange={setDialogOpen}>
         <DialogContent>
           <ConfirmDialog
             title="Timer running"
@@ -134,7 +134,7 @@ console.log(pause, secLeft, " rd")
             }}
           />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

@@ -96,11 +96,11 @@ export const startSesh = mutation({
   handler: async (ctx, args) => {
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
-  
+      const user = await getCurrentUserOrThrow(ctx);
+
     if (room) {
       const startTime = Date.now();
       const endTime = startTime + (room?.duration as number) * 60000; // Convert minutes to milliseconds
-console.log("inside room if")
       await ctx.db.patch(roomId, {
         timerStatus: "running",
         startTime,
@@ -155,6 +155,7 @@ export const cancelSesh = mutation({
     roomId: v.id("rooms"),
   },
   handler: async (ctx, args) => {
+    console.log("cancelgroupsesh")
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
     // don't start if one already started.
@@ -164,7 +165,8 @@ export const cancelSesh = mutation({
         participants: undefined,
         duration: undefined,
         startTime:undefined,
-        endTime:undefined
+        endTime:undefined,
+        session_ownerId:undefined
       });
     }
   },
@@ -178,6 +180,7 @@ export const leaveSesh =mutation({
   },
   handler: async (ctx, args) => {
     const { roomId,userId } = args;
+    console.log("levegroupsesh")
     const room = await ctx.db.get(roomId);
     // don't start if one already started.
     if (room) {

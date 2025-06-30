@@ -13,7 +13,6 @@ export default async function layout({children, params}: {children: React.ReactN
   const p =  await params
   console.log(p.room, " room")
   const roomInfo = await fetchQuery(api.rooms.getOne,{name:p.room})
-console.log(roomInfo, " roomInfo")
 
 if(!roomInfo){
   console.log("inside")

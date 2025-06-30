@@ -21,6 +21,8 @@ import { useTheme } from "next-themes";
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
 
+  const [ownerSesh,setOwnerSesh]=usePersistState<boolean>(false,`${room}-seshOwner`)
+  const [localTimerStatus,setLocalTimerStatus]=usePersistState<null|string>(null,`${room}-timerStatus`)
   const {
     workMin,
     setWorkMin,
@@ -49,7 +51,7 @@ function SessionTimer({ room }: { room: string }) {
   const participant = roomInfo?.participants?.find((p) => p.id === user?._id)
     ? true
     : false;
-  const ownerSesh = roomInfo?.session_ownerId === user?._id;
+  //const ownerSesh = roomInfo?.session_ownerId === user?._id;
 
   const createGroupSesh = useMutation(api.rooms.createSesh);
 
@@ -72,9 +74,10 @@ function SessionTimer({ room }: { room: string }) {
 
   const onGroupSesh = (start: boolean) => {
     setGroupSesh(start);
-    // setOwnerSesh(start);
     if (start) {
       console.log("hit",start)
+      setOwnerSesh(true);
+      setLocalTimerStatus("not started")
       createGroupSesh({
         duration: workMin,
         roomId: roomInfo._id as Id<"rooms">,
@@ -82,6 +85,8 @@ function SessionTimer({ room }: { room: string }) {
     } else {
       cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
       onSeshReset();
+      setOwnerSesh(false)
+      setLocalTimerStatus(null)
     }
   };
 
@@ -94,11 +99,10 @@ function SessionTimer({ room }: { room: string }) {
 
     //onReset();
   };
-
+console.log(ownerSesh," ownerSesh ",localTimerStatus)
   //change mode
 
   useEffect(() => {
-  console.log("boop")
     const status = roomInfo?.timerStatus;
     if (!roomInfo) {
     } else {
@@ -119,6 +123,8 @@ function SessionTimer({ room }: { room: string }) {
     });
     roomInfo.duration && onChangeSec(roomInfo.duration, "work");
   };
+
+
   return (
     <div className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md    ">
      
@@ -136,6 +142,10 @@ function SessionTimer({ room }: { room: string }) {
             userId={user?._id}
             SettingWithProps={SettingWithProps}
             seshId={user?.lastSeshId}
+            ownerSesh={ownerSesh}
+            setOwnerSesh={setOwnerSesh}
+            localTimerStatus={localTimerStatus}
+            setLocalTimerStatus={setLocalTimerStatus}
           />
         ) : (
           <SoloCountDown
@@ -231,7 +241,7 @@ function SessionTimer({ room }: { room: string }) {
               </>
             ) : (
               <>
-                <span>session {roomInfo?.timerStatus}</span>
+                {/* <span>session {roomInfo?.timerStatus}</span> */}
               </>
             )
           ) : null}

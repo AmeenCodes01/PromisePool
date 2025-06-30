@@ -58,7 +58,7 @@ timers:{
             timers: {
               ...state.timers,
               [room]: {
-                secLeft: 50 * 60, // default value
+                secLeft:state.workMin * 60, // default value
               },
             },
           });

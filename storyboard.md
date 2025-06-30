@@ -89,3 +89,7 @@ I should ponder on how offline sessions are added
 [] add dash to empty spaces while creating room
 
 [X] styling of goal. 
+
+[] user starts a sesh & leaves room. then others won't be able to start sesh. keep a time limit or del sesh if user leaves room.
+
+[] dropdown issue
