@@ -86,10 +86,14 @@ I should ponder on how offline sessions are added
 
 [X] secLeft show same in each room, make secLeft a object in zustand store. 
 
-[] add dash to empty spaces while creating room
+[X] add dash to empty spaces while creating room
 
 [X] styling of goal. 
 
-[] user starts a sesh & leaves room. then others won't be able to start sesh. keep a time limit or del sesh if user leaves room.
+[X] user starts a sesh & leaves room. then others won't be able to start sesh. keep a time limit or del sesh if user leaves room.
 
-[] dropdown issue
+[X] dropdown issue
+
+[X] if group timer played after timer playing, it doesn't work. 
+
+[X] Timeline

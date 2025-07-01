@@ -34,7 +34,7 @@ function SessionTimer({ room }: { room: string }) {
     goal,
     setSecLeft,
     setGoalOpen,
-    timers,
+    onSoloReset,
   } = usePromiseStore((state) => state);
   useEffect(() => {
     usePromiseStore.persist.rehydrate();
@@ -73,8 +73,15 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   const onGroupSesh = (start: boolean) => {
+
+    //check if timer playing, ask user to reset it. 
+    
     setGroupSesh(start);
     if (start) {
+
+      if( workMin * 60 !== secLeft ){
+onSoloReset(room)
+      }
       console.log("hit",start)
       setOwnerSesh(true);
       setLocalTimerStatus("not started")

@@ -93,7 +93,7 @@ return (
     {/* Charts Row */}
 <div className="w-full  grid gap-y-6 gap-x-2   auto-rows-max grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
         <div className=" flex  overflow-auto overflow-x-hidden max-h-[500px]">
-      <TimeLine data={weekly[2].data.reverse()} />
+      <TimeLine data={weekly[index].data.reverse()} />
     </div>
       <div className=" flex w-[300px]  ">
         <ChartBarLabel data={dayTotals} />
