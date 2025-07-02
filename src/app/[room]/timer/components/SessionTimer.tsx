@@ -106,7 +106,6 @@ onSoloReset(room)
 
     //onReset();
   };
-console.log(ownerSesh," ownerSesh ",localTimerStatus)
   //change mode
 
   useEffect(() => {

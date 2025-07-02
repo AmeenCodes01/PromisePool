@@ -29,9 +29,8 @@ interface DialogProps {
   getOrCreateTimer: (room:string) => {secLeft:number};  
   pause: boolean;
   setPause: (state:boolean)=>void;
-
-  // data:any;
-  // setData(data:any):void;
+seshCount: number, 
+setSeshCount: (num:number)=>void;
 }
 
 export const usePromiseStore = create<DialogProps>()(
@@ -115,17 +114,19 @@ timers:{
       
     
 onSoloReset: (room) => {
-  const { workMin } = get();
+  const { workMin,mode,breakMin } = get();
   set((state) => ({
     pause: true,
     timers: {
       ...state.timers,
       [room]: {
-        secLeft: workMin * 60,
+        secLeft: mode =="work" ? workMin * 60: breakMin*60 ,
       },
     },
   }));
 },
+seshCount: 0,
+setSeshCount: (num)=>set({seshCount:num})
     
     }),
     {

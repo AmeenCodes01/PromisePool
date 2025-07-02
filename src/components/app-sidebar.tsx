@@ -92,13 +92,13 @@ export function AppSidebar() {
     }
   }, [params.room, user?.name]);
 
-   const { pause, workMin } = usePromiseStore((state) => state);
+   const { pause, workMin , mode} = usePromiseStore((state) => state);
     const secLeft = usePromiseStore(
       (state) => state.timers[inRoom as string]?.secLeft
     ) as number;
   
     
-  const data = !pause ||( workMin * 60 !== secLeft && secLeft!==undefined) ? timer:items
+  const data =  (mode=="work"&& (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined))) ? timer:items
   
   // const handleRoomClick = (roomName: string) => {
   //     if (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined)) {

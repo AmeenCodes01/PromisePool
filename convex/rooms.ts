@@ -121,7 +121,6 @@ export const participate = mutation({
     const room = await ctx.db.get(roomId);
     const user = await getCurrentUserOrThrow(ctx);
     const participant = room?.participants?.find(p=> p.id ===userId)
-    console.log("sleep ", participant)
     if (room && room.timerStatus === "not started"&& !participant) {
       await ctx.db.patch(roomId, {
         participants: [...(room.participants ?? []), {id:userId,name:user.name as string}],

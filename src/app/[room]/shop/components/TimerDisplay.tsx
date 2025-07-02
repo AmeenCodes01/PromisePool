@@ -8,6 +8,7 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import GoalDialog from "../../timer/components/GoalDialog";
 import { useShallow } from "zustand/react/shallow";
+import SeshCount from "../../timer/components/SeshCount";
 
 export default function TimerDisplay({
   SettingWithProps,
@@ -28,7 +29,7 @@ export default function TimerDisplay({
   ownerSesh?: boolean;
   room: string;
 }) {
-  const { workMin, mode, onChangeMode, groupSesh, secLeft } = usePromiseStore(
+  const { workMin, mode, onChangeMode, groupSesh, secLeft,seshCount } = usePromiseStore(
     useShallow((state) => {
       return {
         getOrCreateTimer: state.getOrCreateTimer,
@@ -37,6 +38,7 @@ export default function TimerDisplay({
         onChangeMode: state.onChangeMode,
         groupSesh: state.groupSesh,
         secLeft: state.timers[room]?.secLeft,
+        seshCount:state.seshCount
       };
     })
   );
@@ -85,7 +87,7 @@ export default function TimerDisplay({
                 {hours < 10 ? "0" + hours : hours}:
               </span>
             )}
-            <span className="md:text-8xl text-6xl font-mono">
+            <span className="md:text-8xl text-6xl font-mono ">
               {minutes < 10 ? "0" + minutes : minutes}:
             </span>
             <span className="md:text-6xl text-4xl font-mono">
@@ -139,6 +141,10 @@ export default function TimerDisplay({
             </button>
           )}
         </div>
+      </div>
+      <div className="mx-auto flex  justify-center mt-4" >
+
+        <SeshCount/>
       </div>
       <GoalDialog />
     </>

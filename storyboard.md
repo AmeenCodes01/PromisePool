@@ -35,10 +35,10 @@
 
 
 -- additional features --
+[X] show session numbers
 [] pixel cam
 [] breathers 
 [] build animation
-
 
 
 
@@ -97,3 +97,10 @@ I should ponder on how offline sessions are added
 [X] if group timer played after timer playing, it doesn't work. 
 
 [X] Timeline
+
+[X] Show sidebar other options in break mode
+
+
+
+----optimisation--
+[] useShallow 
