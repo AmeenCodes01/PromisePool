@@ -17,6 +17,7 @@ import ProgressDialog from "./ProgressDialog";
 import BuildAnimation from "./Animation";
 import { Edit } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useShallow } from "zustand/react/shallow";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
@@ -24,18 +25,33 @@ function SessionTimer({ room }: { room: string }) {
   const [ownerSesh,setOwnerSesh]=usePersistState<boolean>(false,`${room}-seshOwner`)
   const [localTimerStatus,setLocalTimerStatus]=usePersistState<null|string>(null,`${room}-timerStatus`)
   const {
-    workMin,
-    setWorkMin,
-    getOrCreateTimer,
-    setBreakMin,
-    mode,
-    groupSesh,
-    setGroupSesh,
-    goal,
-    setSecLeft,
-    setGoalOpen,
-    onSoloReset,
-  } = usePromiseStore((state) => state);
+  workMin,
+  setWorkMin,
+  getOrCreateTimer,
+  setBreakMin,
+  mode,
+  groupSesh,
+  setGroupSesh,
+  goal,
+  setSecLeft,
+  setGoalOpen,
+  onSoloReset,
+} = usePromiseStore(
+  useShallow(
+  (state) => ({
+    workMin: state.workMin,
+    setWorkMin: state.setWorkMin,
+    getOrCreateTimer: state.getOrCreateTimer,
+    setBreakMin: state.setBreakMin,
+    mode: state.mode,
+    groupSesh: state.groupSesh,
+    setGroupSesh: state.setGroupSesh,
+    goal: state.goal,
+    setSecLeft: state.setSecLeft,
+    setGoalOpen: state.setGoalOpen,
+    onSoloReset: state.onSoloReset,
+  })));
+
   useEffect(() => {
     usePromiseStore.persist.rehydrate();
   }, []);

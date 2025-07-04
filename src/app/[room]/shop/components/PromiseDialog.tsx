@@ -29,8 +29,7 @@ type CommonProps = {
   btnTitle: string;
   onClick: 
    |((title: string, coins: number) => void) // Requires both
-  | ((title: string) => void) // Requires only title
-  | ((coins: number) => void) // Requires only coins
+  
   | (()=>void);
   maxCoins?: number;
   
@@ -170,12 +169,10 @@ PromiseDialog.Btn = function DialogBtn({
           } else {
             if (isTitleAndCoinsFunc(onClick)) {
               console.log("wef ",wCoins)
-              onClick(title, wCoins as number);
-            } else if (isTitleFunc(onClick)) {
-              onClick(title);
-            } else if (isCoinsFunc(onClick)) {
-              onClick(coins);
-            } else if (isVoidFunc(onClick)) {
+              onClick(title, wCoins ?wCoins:coins);
+            }  else if (isVoidFunc(onClick)) {
+                            console.log("void ",)
+
               const voidClick = onClick as ()=>void
               voidClick() 
             }

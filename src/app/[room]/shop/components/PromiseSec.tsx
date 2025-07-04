@@ -11,7 +11,7 @@ import { Doc } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import InfoDialog from "../../InfoDialog";
 
-function Promise() {
+function PromiseSec() {
     const user = useQuery(api.users.current);
     const promises = useQuery(api.promises.get);
 
@@ -76,11 +76,11 @@ It’s not a donation platform — it’s a promise to yourself that you’ll fo
             <div className='border-2 p-2 w-fit h-fit'>{user?.wCoins}</div> */}
       </div>
       {/* Promises */}
-      <CardList data={promises as Doc<"promises">[]} type="promise"/>
+      <CardList data={promises as Doc<"promises">[]} coins={user?.pCoins ?? 0} type="promise"/>
 
 
     </div>
   )
 }
 
-export default Promise
+export default PromiseSec

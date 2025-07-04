@@ -11,7 +11,7 @@ function CardList({
 }: {
     data: Doc<"promises">[] | Doc<"rewards">[];
     type:string;
-    coins?:number
+    coins:number
 
 }) {
   return (

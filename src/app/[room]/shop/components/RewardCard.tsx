@@ -20,13 +20,15 @@ function RewardCard({
   coins: number;
 }) {
   const [finished, setFinished] = useState(reward.finished);
+  const [hours, setHours] = useState(reward.hours);
+  const [rating, setRating] = useState(reward.rating);
   const edit = useMutation(api.rewards.edit);
   const del = useMutation(api.rewards.del);
   const unlock = useMutation(api.rewards.unlock);
 
   const onEdit = (title: string, coins: number) => {
     console.log(coins);
-    edit({ title, price: coins, finished, rId: reward._id });
+    edit({ title, price: coins, finished, rId: reward._id ,hours,rating});
     //  edit({title, rId:reward._id})
   };
   const onDel = () => del({ rId: reward._id });
@@ -35,7 +37,7 @@ function RewardCard({
     if (coins >= reward.price) {
       unlock({ rId: reward._id });
     } else {
-   toast.error("not enough reward coins");
+      toast.error("not enough reward coins");
     }
   };
   return (
@@ -52,10 +54,39 @@ function RewardCard({
           editCoins={reward.price}
         >
           <PromiseDialog.NameInput />
-      
-          <PromiseDialog.CoinsInput title="Price"  />
 
-          
+          <div className="my-2">
+            <span className="font-lightbold text-sm">Total Hours studied</span>
+
+            <Input
+              value={hours}
+              type="number"
+              onBlur={(e) => {
+                const clean = e.target.value.replace(/^0+(?=\d)/, "");
+                setHours(Number(clean));
+              }}
+              onChange={(e) => setHours(Number(e.target.value) || 0)}
+            />
+          </div>
+          <div className="my-2 mb-3">
+            <span className="font-lightbold text-sm">
+              Average Rating ( out of 10 )
+            </span>
+
+            <Input
+              min={1}
+              max={10}
+              value={rating}
+              onChange={(e) =>
+                setRating(e.target.value ? parseFloat(e.target.value) : 0)
+              }
+            />
+          </div>
+
+          <span className="text-sm opacity-80">
+            Price (coins required): {calcRewards(hours * 60, rating as number)}
+          </span>
+
           {/* <div className="flex flex-row gap-2 items-center text-sm">
             Finished :
           <Switch onClick={() => setFinished((prev) => !prev)}>
@@ -65,7 +96,9 @@ function RewardCard({
 
           </div> */}
           <div className="flex flex-row gap-2 justify-end">
-            <PromiseDialog.Btn />
+            <PromiseDialog.Btn
+              wCoins={calcRewards(hours * 60, rating as number)}
+            />{" "}
             <PromiseDialog.Btn
               customBtnTitle={"Delete"}
               customOnClick={onDel}
@@ -75,14 +108,15 @@ function RewardCard({
         <div className=" items-center justify-center p-[10px] h-[90%] flex flex-col text-md   ">
           <span className="text-center flex flex-col text-accent-content tracking-wide">
             <span className="italic">{reward.title}</span>
-           
-            <span className="flex flex-row items-center gap-2"> <Unlock size={14}/> {reward.partsUnlocked}</span>
+
+            <span className="flex flex-row items-center gap-2">
+              {" "}
+              <Unlock size={14} /> {reward.partsUnlocked}
+            </span>
           </span>
         </div>
         <div className=" w-[100%] p-[5px] flex  flex-row gap-[10px] items-center justify-between bg-neutral text-white ">
-         <span className="text-yellow-600">
-           {reward.price}
-          </span>
+          <span className="text-yellow-600">{reward.price}</span>
           <PromiseDialog
             icon={<ShoppingCart size={18} />}
             header="Unlock"

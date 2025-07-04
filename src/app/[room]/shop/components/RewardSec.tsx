@@ -13,7 +13,7 @@ import InfoDialog from "../../InfoDialog";
 import { Input } from "@/components/ui/input";
 import calcRewards from "@/lib/calcReward";
 
-function Reward() {
+function RewardSec() {
   const [hours, setHours] = useState(0);
   const [rating, setRating] = useState(7);
   const [showPrice, setShowPrice] = useState(false);
@@ -22,7 +22,7 @@ function Reward() {
   const create = useMutation(api.rewards.create);
 
   const createReward = (title: string, price: number) => {
-    create({ title, price });
+    create({ title, price ,hours,rating});
   };
   return (
     <div className=" ">
@@ -73,11 +73,14 @@ function Reward() {
               </span>
 
               <Input
-                value={hours}
-                onChange={(e) =>
-                  setHours(e.target.value ? parseFloat(e.target.value) : 0)
-                }
-              />
+                           value={hours}
+                           type="number"
+                           onBlur={(e) => {
+                             const clean = e.target.value.replace(/^0+(?=\d)/, "");
+                             setHours(Number(clean));
+                           }}
+                           onChange={(e) => setHours(Number(e.target.value) || 0)}
+                         />
             </div>
             <div className="my-2 mb-3">
               <span className="font-lightbold text-sm">
@@ -114,6 +117,6 @@ function Reward() {
   );
 }
 
-export default Reward;
+export default RewardSec;
 
 // reward has unlock part feature. user specifies as lock/unlock.

@@ -22,7 +22,7 @@ function ProgressDialog({room}:{room:string}) {
   const [rating, setRating] = useState<number | string>("");
 
 
-  const { isOpen, onClose,workMin,onChangeMode,goal,onSoloReset } = usePromiseStore((state) => state);
+  const { isOpen, onClose,workMin,onChangeMode,goal,onSoloReset,incSeshCount } = usePromiseStore((state) => state);
 
   const { onReset: onGroupReset } = useGroupCountdown(room);
 
@@ -103,7 +103,7 @@ function ProgressDialog({room}:{room:string}) {
       goal
     });
     setRated(true);
-    
+    incSeshCount()
   } else {
     setRated(false)
         setRating("")

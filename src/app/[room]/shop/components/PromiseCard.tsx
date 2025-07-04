@@ -15,14 +15,16 @@ function PromiseCard({ promise ,coins}: { promise: Doc<"promises">  ;coins: numb
   const edit = useMutation(api.promises.edit);
   const del = useMutation(api.promises.del);
   const invest = useMutation(api.promises.invest);
-
-  const onEdit = (title: string) => {
+console.log("coins ",coins)
+  const onEdit = (title: string,coins?:number) => {
     edit({ title, pId: promise._id });
   };
   const onDel = () => del({ pId: promise._id });
 
-  const onInvest = (title: string, pcoins: number) =>
-    pcoins <= coins ?invest({ pId: promise._id, coins }):toast.error("Not enough coins");
+  const onInvest = (title:string, inputCoins: number) =>{
+    console.log(inputCoins," pcoins")
+     inputCoins <= coins ?invest({ pId: promise._id,coins: inputCoins }):toast.error("Not enough coins")
+     };
   console.log(promise, " Promise");
   return (
     <div className="border-2 flex flex-col relative size-[200px] ">

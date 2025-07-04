@@ -63,11 +63,14 @@ function OfflineHours() {
           <span className="font-lightbold text-sm">Total Hours studied</span>
 
           <Input
-            value={hours}
-            onChange={(e) =>
-              setHours(e.target.value ? parseFloat(e.target.value) : 0)
-            }
-            />
+                       value={hours}
+                       type="number"
+                       onBlur={(e) => {
+                         const clean = e.target.value.replace(/^0+(?=\d)/, "");
+                         setHours(Number(clean));
+                       }}
+                       onChange={(e) => setHours(Number(e.target.value) || 0)}
+                     />
         </div>
         <div className="my-2 mb-3">
           <span className="font-lightbold text-sm">

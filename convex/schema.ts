@@ -38,6 +38,8 @@ export default defineSchema({
 
   rewards: defineTable({
     title: v.string(),
+    hours:v.number(),
+    rating:v.number(),
     price: v.number(),
     partsUnlocked: v.optional(v.number()),
     finished: v.boolean(),
@@ -67,7 +69,14 @@ export default defineSchema({
   }).index("name",["name"])
   .index("type",["type"]),
 
-   
+   signals:defineTable({
+ roomId: v.id("rooms"),
+  senderId: v.string(),
+  type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
+  data: v.any(),
+  timestamp: v.number(),
+   }).index("roomId",["roomId"]),
+
   
   roomUsers:defineTable({
     userId: v.id("users"),

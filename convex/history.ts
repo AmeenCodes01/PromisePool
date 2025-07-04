@@ -46,21 +46,3 @@ export const getWeekly = query({
   },
 });
 
-
-export const create = mutation({
-  args: {
-    title: v.string(),
-    price: v.optional(v.number()),
-  },
-  handler: async (ctx, { title, price }) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    await ctx.db.insert("rewards", {
-      title: title,
-      price: price ?? 0,
-      partsUnlocked: 0,
-      finished: false,
-      userId: user._id,
-    });
-  },
-});

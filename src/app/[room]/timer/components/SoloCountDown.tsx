@@ -6,6 +6,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import useGroupCountdown from '@/hooks/useGroupCountdown';
 import { Id } from '../../../../../convex/_generated/dataModel';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,seshId
 
@@ -19,11 +20,29 @@ SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
 
-const {workMin,onOpen,mode,breakMin,setGoalOpen,onChangeMode,onSoloReset} = usePromiseStore((state) =>state);
+const {
+  workMin,
+  onOpen,
+  mode,
+  breakMin,
+  setGoalOpen,
+  onChangeMode,
+  onSoloReset,
+} = usePromiseStore(
+ useShallow( (state) => ({
+    workMin: state.workMin,
+    onOpen: state.onOpen,
+    mode: state.mode,
+    breakMin: state.breakMin,
+    setGoalOpen: state.setGoalOpen,
+    onChangeMode: state.onChangeMode,
+    onSoloReset: state.onSoloReset,
+  }))
+);
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
-
+console.log("render timer ")
  const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin * 60) {

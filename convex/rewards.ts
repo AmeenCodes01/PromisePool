@@ -18,8 +18,10 @@ export const create = mutation({
   args: {
     title: v.string(),
     price: v.optional(v.number()),
+     hours:v.number(),
+    rating:v.number()
   },
-  handler: async (ctx, { title, price }) => {
+  handler: async (ctx, { title, price, hours, rating }) => {
     const user = await getCurrentUserOrThrow(ctx);
 
     await ctx.db.insert("rewards", {
@@ -28,6 +30,8 @@ export const create = mutation({
       partsUnlocked: 0,
       finished: false,
       userId: user._id,
+      hours,
+      rating
     });
   },
 });
@@ -53,6 +57,8 @@ export const unlock = mutation({
 export const edit = mutation({
   args: {
     title: v.string(),
+    hours: v.number(),
+    rating: v.number(),
     price: v.number(),
     finished: v.boolean(),
     rId: v.id("rewards"),

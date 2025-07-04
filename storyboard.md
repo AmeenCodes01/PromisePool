@@ -100,6 +100,13 @@ I should ponder on how offline sessions are added
 
 [X] Show sidebar other options in break mode
 
+[X] Timeline styling, overflow. 
+
+[X] Pie chart labels overflow
+
+[X] Sessioncount auto update after each sesh#  (tobetestes)
+
+[X] Shop not enough coins error
 
 
 ----optimisation--
