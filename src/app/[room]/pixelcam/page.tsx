@@ -1,8 +1,13 @@
 import React from 'react'
+import PixelCam from './components/Cam'
+import { Id } from '../../../../convex/_generated/dataModel'
 
-async function Page() {
+async function Page({ params}: {params: Promise<{ room: string }>}) {
+    const p = await params
   return (
-    <div>page</div>
+    <div>
+        <PixelCam room={p.room }/>
+    </div>
   )
 }
 

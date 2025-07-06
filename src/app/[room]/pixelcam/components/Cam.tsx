@@ -94,8 +94,8 @@ export default function PixelVideoRoom({ room }: { room: string }) {
 
   return (
     <div>
-      <video ref={videoRef} style={{ display: "none" }} />
-      <canvas ref={canvasRef} width={640} height={480} />
+      {/* <video ref={videoRef} style={{ display: "none" }} />
+      <canvas ref={canvasRef} width={640} height={480} /> */}
     </div>
   );
 }

@@ -31,6 +31,7 @@ interface DialogProps {
   setPause: (state:boolean)=>void;
 seshCount: number, 
 setSeshCount: (num:number)=>void;
+incSeshCount: () => void
 }
 
 export const usePromiseStore = create<DialogProps>()(
@@ -126,7 +127,10 @@ onSoloReset: (room) => {
   }));
 },
 seshCount: 0,
-setSeshCount: (num)=>set({seshCount:num})
+setSeshCount: (num)=>set({seshCount:num}),
+incSeshCount: ()=> set((state)=>({
+  seshCount: state.seshCount+1
+}))
     
     }),
     {

@@ -14,8 +14,9 @@ import { Coins } from "lucide-react";
 
 export function TimeLine({data}:{data:Doc<"sessions">[]}){
     console.log(data, "timeline data")
+     data = [...data,...data,...data]
     return(
-        <Card className=" w-[300px]  pr-4 "> 
+        <Card className=" w-[300px]  pr-4 overflow-auto overflow-x-hidden max-h-[500px] "> 
             <CardHeader>
                 <CardTitle>Timeline</CardTitle>
                 <CardDescription>Today's sessions timeline</CardDescription>

@@ -2,8 +2,8 @@
 import React from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Promise from "./components/Promise";
-import Reward from "./components/Reward";
+import PromiseSec from "./components/PromiseSec";
+import RewardSec from "./components/RewardSec";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
@@ -18,10 +18,10 @@ function Page() {
           <TabsTrigger value="reward">Rewards</TabsTrigger>
         </TabsList>
         <TabsContent value="promise">
-          <Promise />
+          <PromiseSec />
         </TabsContent>
         <TabsContent value="reward">
-          <Reward />
+          <RewardSec />
         </TabsContent>
       </Tabs>
       {/*Watch coins*/}

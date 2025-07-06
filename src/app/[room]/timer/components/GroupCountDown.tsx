@@ -5,6 +5,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id, Doc } from "../../../../../convex/_generated/dataModel";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
 import TimerDisplay from "../../shop/components/TimerDisplay";
+import { useShallow } from "zustand/react/shallow";
 
 function GroupCountDown({
   room,
@@ -28,18 +29,29 @@ function GroupCountDown({
   ownerSesh:boolean;
   setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const {
-    onOpen,
-    workMin,
-    setWorkMin,
-    mode,
-    setMode,
-    setGroupSesh,
-    onChangeMode,
-    setGoalOpen,
-    getOrCreateTimer,
-    setSecLeft,
-  } = usePromiseStore((state) => state);
+ const {
+  onOpen,
+  workMin,
+  setWorkMin,
+  mode,
+  setMode,
+  setGroupSesh,
+  onChangeMode,
+  setGoalOpen,
+  setSecLeft,
+} = usePromiseStore(
+ useShallow( (state) => ({
+    onOpen: state.onOpen,
+    workMin: state.workMin,
+    setWorkMin: state.setWorkMin,
+    mode: state.mode,
+    setMode: state.setMode,
+    setGroupSesh: state.setGroupSesh,
+    onChangeMode: state.onChangeMode,
+    setGoalOpen: state.setGoalOpen,
+    setSecLeft: state.setSecLeft,
+  }))
+);
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
