@@ -69,13 +69,15 @@ export default defineSchema({
   }).index("name",["name"])
   .index("type",["type"]),
 
-   signals:defineTable({
- roomId: v.id("rooms"),
+ signals: defineTable({
+  roomId: v.id("rooms"),
   senderId: v.string(),
+  receiverId: v.optional(v.string()),  // <-- New
   type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
   data: v.any(),
   timestamp: v.number(),
-   }).index("roomId",["roomId"]),
+}).index("roomId", ["roomId"])
+,
 
   
   roomUsers:defineTable({
