@@ -24,7 +24,6 @@ import type * as roomUsers from "../roomUsers.js";
 import type * as rooms from "../rooms.js";
 import type * as sessions from "../sessions.js";
 import type * as signals from "../signals.js";
-import type * as signals from "../signals.js";
 import type * as users from "../users.js";
 
 /**
@@ -46,7 +45,6 @@ declare const fullApi: ApiFromModules<{
   roomUsers: typeof roomUsers;
   rooms: typeof rooms;
   sessions: typeof sessions;
-  signals: typeof signals;
   signals: typeof signals;
   users: typeof users;
 }>;
