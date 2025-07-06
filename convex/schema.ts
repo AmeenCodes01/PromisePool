@@ -68,6 +68,14 @@ export default defineSchema({
   .index("type",["type"]),
 
    
+   signals:defineTable({
+ roomId: v.id("rooms"),
+  senderId: v.string(),
+  type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
+  data: v.any(),
+  timestamp: v.number(),
+   }).index("roomId",["roomId"]),
+
   
   roomUsers:defineTable({
     userId: v.id("users"),
