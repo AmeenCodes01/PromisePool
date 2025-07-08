@@ -1,9 +1,10 @@
 import React, { useRef } from 'react'
 import usePersistState from './usePersistState';
 import { usePromiseStore } from './usePromiseStore';
+      const tick = new Audio("/Tick.mp3");
 
 export default function useGroupCountdown(room:string) {
-  const { getOrCreateTimer, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
+  const { playTick, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
 
   const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
 
@@ -26,7 +27,7 @@ export default function useGroupCountdown(room:string) {
       const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
 
       setSecLeft(room,remainingSec);
-
+     playTick && tick.play()
       if (remainingSec <= 0) {
         clearInterval(intervalRef.current!);
         intervalRef.current = null;

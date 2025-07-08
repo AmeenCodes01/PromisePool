@@ -55,8 +55,9 @@ async function Page() {
 
   const token = await convexAuthNextjsToken();
 
-  const weekly = await fetchQuery(api.history.getWeekly, {}, { token });
-  
+  const data = await fetchQuery(api.history.getWeekly, {}, { token });
+  const weekly = data.thisWeek
+
   console.log(weekly, " weekly data");
 // get duration for each day and total duration
 
@@ -96,7 +97,7 @@ return (
       <TimeLine data={weekly[index].data.reverse()} />
     </div>
       <div className=" flex w-[300px]  ">
-        <ChartBarLabel data={dayTotals} />
+        <ChartBarLabel data={dayTotals} prevWeekTotal={data.prevWeekTotalMinutes} />
       </div>
       <div className=" flex  w-[300px] ">
         <RatingPie data={weeklyRatings} />

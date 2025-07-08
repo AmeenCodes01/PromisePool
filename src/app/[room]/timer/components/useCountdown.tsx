@@ -4,8 +4,12 @@ import { usePromiseStore } from "@/hooks/usePromiseStore";
 import { useEffect, useRef } from "react";
 import { clearInterval, setInterval } from "worker-timers";
 
+const tick = new Audio("/Tick.mp3");
+
 function useCountdown({ sec, room }: { sec: number; room: string }) {
-  const { setSecLeft, decrement, pause, setPause } = usePromiseStore((state) => state);
+  const { setSecLeft, decrement, pause, setPause, playTick } = usePromiseStore(
+    (state) => state
+  );
 
   const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
 
@@ -21,6 +25,7 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
       setPause(true);
       setSecLeft(room, 0);
     } else {
+     playTick &&  tick.play();
       decrement(room);
     }
   };
@@ -33,34 +38,32 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
     setPause(false);
   };
 
-  
-
-useEffect(() => {
-  if (pause) {
-    // If paused, clear the interval if it's running
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+  useEffect(() => {
+    if (pause) {
+      // If paused, clear the interval if it's running
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
     }
-    return;
-  }
 
-  // Only start a new interval if one doesn't exist
-  if (!intervalRef.current) {
-    console.log("Interval created");
-    intervalRef.current = setInterval(() => {
-      tickRef.current();
-    }, 1000);
-  }
-
-  // Cleanup function — clears interval on unmount or dependency change
-  return () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    // Only start a new interval if one doesn't exist
+    if (!intervalRef.current) {
+      console.log("Interval created");
+      intervalRef.current = setInterval(() => {
+        tickRef.current();
+      }, 1000);
     }
-  };
-}, [pause]);
+
+    // Cleanup function — clears interval on unmount or dependency change
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [pause]);
 
   return {
     pause,

@@ -49,11 +49,12 @@ const chartConfig = {
 
 //min into dec hours.min but label different
 
-export function ChartBarLabel({data}:{
+export function ChartBarLabel({data, prevWeekTotal}:{
   data: {
     day: string;
     total: number;
-}[]
+}[];
+prevWeekTotal:number;
 }) {
  const totalDuration = data.reduce((sum, day) => sum + day.total, 0);
 
@@ -166,10 +167,16 @@ className="w-2"
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-auto">
         <div className="flex items-center gap-2 leading-none font-medium">
-          Total: {Math.floor(totalDuration / 60)}h{" "}
+          This week: {Math.floor(totalDuration / 60)}h{" "}
           {totalDuration % 60}m
           {/* <TrendingUp className="h-4 w-4" /> */}
         </div>
+        <div className="flex items-center gap-2 leading-none font-medium">
+          Prev week: {Math.floor(prevWeekTotal / 60)}h{" "}
+          {prevWeekTotal % 60}m
+          {/* <TrendingUp className="h-4 w-4" /> */}
+        </div>
+
         <div className="text-muted-foreground leading-none">
           Showing total study time for the week
         </div>    

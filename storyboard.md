@@ -39,7 +39,9 @@
 [] pixel cam
 [] breathers 
 [] build animation
-
+[X] ticking sound
+[] Activity
+[]showed prev Week total time
 
 
  // thinking
