@@ -4,7 +4,6 @@ import { usePromiseStore } from "@/hooks/usePromiseStore";
 import { useEffect, useRef } from "react";
 import { clearInterval, setInterval } from "worker-timers";
 
-const tick = new Audio("/Tick.mp3");
 
 function useCountdown({ sec, room }: { sec: number; room: string }) {
   const { setSecLeft, decrement, pause, setPause, playTick } = usePromiseStore(
@@ -25,7 +24,13 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
       setPause(true);
       setSecLeft(room, 0);
     } else {
-     playTick &&  tick.play();
+      const tick = new Audio("/Tick.mp3");
+      playTick &&  tick.play();
+      if (secLeft % (15 * 60) === 0 && playTick) {
+       const min_15 = new Audio("/15min.mp3")
+  
+      min_15.play();
+}
       decrement(room);
     }
   };

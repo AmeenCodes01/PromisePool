@@ -110,6 +110,12 @@ I should ponder on how offline sessions are added
 
 [X] Shop not enough coins error
 
+[X] rating doesn't go up to 10
+
+[] reset rating coins. 
+
+[X] reminder after every 15.
+
 
 ----optimisation--
 [] useShallow 

@@ -57,7 +57,7 @@ function ProgressDialog({room}:{room:string}) {
             value={rating}
             type="number"
             min={1}
-            max={10}
+            max={11}
             disabled={rated}
              onChange={(e) => {
     const value = e.target.value;

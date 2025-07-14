@@ -14,6 +14,7 @@ import { api } from "../../../../../convex/_generated/api";
 import calcRewards from "@/lib/calcReward";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useParams } from "next/navigation";
+import { number } from "zod";
 
 
 export function Coins(){
@@ -23,7 +24,7 @@ export function Coins(){
 
 function OfflineHours() {
   const [hours, setHours] = useState(0);
-  const [rating, setRating] = useState(7);
+  const [rating, setRating] = useState<number|string>(7);
   const [showCoins, setShowCoins]= useState(false);
   const startSesh = useMutation(api.sessions.start);
   const endSesh = useMutation(api.sessions.stop);
@@ -79,20 +80,31 @@ function OfflineHours() {
 
           <Input
             min={1}
-            max={10}
+            max={11}
             value={rating}
-            onChange={(e) =>
-              setRating(e.target.value ? parseFloat(e.target.value) : 0)
-            }
+            onChange={(e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setRating(""); // let empty value for now
+      return;
+    }
+    const num = parseFloat(value);
+    if (!isNaN(num) && num < 10) {
+      setRating(num);
+    }
+  }}
             />
         </div>
           <Button
             className=""
             onClick={async () => {
-              const coins = calcRewards(hours * 60, rating, true);
-              await startSesh({ duration: hours * 60, room: room });
-              await endSesh({wCoins:coins, pCoins:coins, rating,duration:hours*60})
-              setShowCoins(true)
+              if(typeof rating === "number"){
+
+                const coins = calcRewards(hours * 60, rating as number, true);
+                await startSesh({ duration: hours * 60, room: room });
+                await endSesh({wCoins:coins, pCoins:coins, rating:rating as number,duration:hours*60})
+                setShowCoins(true)
+              }
             }}
             >
             Submit

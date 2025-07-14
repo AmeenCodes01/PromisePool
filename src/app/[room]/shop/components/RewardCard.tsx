@@ -75,7 +75,7 @@ function RewardCard({
 
             <Input
               min={1}
-              max={10}
+              max={11}
               value={rating}
               onChange={(e) =>
                 setRating(e.target.value ? parseFloat(e.target.value) : 0)
