@@ -58,7 +58,6 @@ async function Page() {
   const data = await fetchQuery(api.history.getWeekly, {}, { token });
   const weekly = data.thisWeek
 
-  console.log(weekly, " weekly data");
 // get duration for each day and total duration
 
 const dayTotals = weekly.map(day=>{

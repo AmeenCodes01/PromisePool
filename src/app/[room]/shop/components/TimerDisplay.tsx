@@ -120,7 +120,7 @@ export default function TimerDisplay({
           )}
           {groupSesh ? (
             <Dialog>
-              <DialogTrigger>
+              <DialogTrigger asChild>
                 <button>
                   {groupSesh && showExitBtn ? (
                     <Button size={"sm"}>Exit/End</Button>

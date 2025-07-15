@@ -31,7 +31,7 @@ function ConfirmDialog({
       </DialogHeader>
 
       <DialogFooter className="justify-center ">
-        <DialogClose asChild>
+        <DialogClose asChild={true}>
           <Button type="submit" onClick={() => onConfirm(true)}>
             Confirm
           </Button>

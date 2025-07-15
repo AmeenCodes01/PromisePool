@@ -41,8 +41,8 @@
 [] build animation
 [X] ticking sound
 [] Activity
-[]showed prev Week total time
-
+[X]showed prev Week total time
+[ ] Video/lives
 
  // thinking
  user1: starts session 
@@ -112,7 +112,7 @@ I should ponder on how offline sessions are added
 
 [X] rating doesn't go up to 10
 
-[] reset rating coins. 
+[X] reset rating coins. 
 
 [X] reminder after every 15.
 

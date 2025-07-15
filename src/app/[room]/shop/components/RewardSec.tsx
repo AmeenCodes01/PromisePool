@@ -12,17 +12,20 @@ import { Button } from "@/components/ui/button";
 import InfoDialog from "../../InfoDialog";
 import { Input } from "@/components/ui/input";
 import calcRewards from "@/lib/calcReward";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 function RewardSec() {
   const [hours, setHours] = useState(0);
-  const [rating, setRating] = useState(7);
+  const [rating, setRating] = useState<string|number>(7);
   const [showPrice, setShowPrice] = useState(false);
   const user = useQuery(api.users.current);
   const rewards = useQuery(api.rewards.get);
   const create = useMutation(api.rewards.create);
+  const resetCoins = useMutation(api.rewards.resetCoins);
 
   const createReward = (title: string, price: number) => {
-    create({ title, price ,hours,rating});
+   typeof rating =="number" && create({ title, price, hours, rating });
   };
   return (
     <div className=" ">
@@ -73,28 +76,35 @@ function RewardSec() {
               </span>
 
               <Input
-                           value={hours}
-                           type="number"
-                           onBlur={(e) => {
-                             const clean = e.target.value.replace(/^0+(?=\d)/, "");
-                             setHours(Number(clean));
-                           }}
-                           onChange={(e) => setHours(Number(e.target.value) || 0)}
-                         />
+                value={hours}
+                type="number"
+                onBlur={(e) => {
+                  const clean = e.target.value.replace(/^0+(?=\d)/, "");
+                  setHours(Number(clean));
+                }}
+                onChange={(e) => setHours(Number(e.target.value) || 0)}
+              />
             </div>
             <div className="my-2 mb-3">
               <span className="font-lightbold text-sm">
                 Average Rating ( out of 10 )
               </span>
-
-              <Input
-                min={1}
-                max={11}
-                value={rating}
-                onChange={(e) =>
-                  setRating(e.target.value ? parseFloat(e.target.value) : 0)
-                }
-              />
+ <Input
+            min={1}
+            max={11}
+            value={rating}
+            onChange={(e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setRating(""); // let empty value for now
+      return;
+    }
+    const num = parseFloat(value);
+    if (!isNaN(num) && num <= 10) {
+      setRating(num);
+    }
+  }}
+            />
             </div>
 
             <span className="text-sm opacity-80">
@@ -106,7 +116,29 @@ function RewardSec() {
             />
           </PromiseDialog>
         </div>
-        <CoinBar coins={user?.wCoins} />
+        <div className="flex flex-row gap-2 w-fit h-fit">
+          <Dialog >
+            <DialogTrigger className="mt-auto" asChild={true}>
+              <Button
+                className="text-xs "
+                variant={"secondary"}
+                size={"sm"}
+              >
+                Reset Reward Coins
+              </Button>
+
+            </DialogTrigger>
+              <ConfirmDialog
+                title="Reset Reward Coins "
+                onConfirm={() => {
+                  resetCoins()
+                  console.log("executed")
+                }}
+                desc="Reset Reward Coins to 0 ? So you can start from scratch again to earn the next reward. "
+              />
+          </Dialog>
+          <CoinBar coins={user?.wCoins} />
+        </div>
       </div>
       <CardList
         coins={user?.wCoins ?? 0}

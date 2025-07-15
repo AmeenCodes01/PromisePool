@@ -66,7 +66,7 @@ function ProgressDialog({room}:{room:string}) {
       return;
     }
     const num = parseFloat(value);
-    if (!isNaN(num) && num < 10) {
+    if (!isNaN(num) && num <= 10) {
       setRating(num);
     }
   }}

@@ -36,6 +36,21 @@ export const create = mutation({
   },
 });
 
+export const resetCoins = mutation({
+  args: {
+   
+  },
+  handler: async (ctx, { }) => {
+    console.log("Unlock")
+    const user = await getCurrentUserOrThrow(ctx);
+    
+    await ctx.db.patch(user._id, {
+      wCoins: 0,
+    });
+  },  
+});
+
+
 export const unlock = mutation({
   args: {
     rId: v.id("rewards"),

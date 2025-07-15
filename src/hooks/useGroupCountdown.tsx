@@ -49,7 +49,6 @@ export default function useGroupCountdown(room:string) {
   };
 
   const onReset = () => {
-    console.log("Resetting");
     setSecLeft(room, workMin * 60);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);

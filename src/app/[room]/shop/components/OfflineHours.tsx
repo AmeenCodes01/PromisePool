@@ -48,7 +48,7 @@ function OfflineHours() {
     
     }
       >
-              <DialogTrigger>
+              <DialogTrigger asChild={true}>
                 <Button>Submit offline Hours</Button>
               </DialogTrigger>
     <DialogContent className="space-y-4 flex gap-4" >
@@ -89,7 +89,7 @@ function OfflineHours() {
       return;
     }
     const num = parseFloat(value);
-    if (!isNaN(num) && num < 10) {
+    if (!isNaN(num) && num <= 10) {
       setRating(num);
     }
   }}
