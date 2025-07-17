@@ -80,19 +80,22 @@ function GroupCountDown({
       secLeft !== workMin * 60 ? await resetSesh() : null;
       if (ownerSesh) {
         await cancelGroupSesh({ roomId });
-        setGroupSesh(false);
         setOwnerSesh(false)
-        setLocalTimerStatus(null)
       } else {
         await leaveGroupSesh({ userId, roomId });
       }
+      setGroupSesh(false);
+      setLocalTimerStatus(null)
       // we should show session ongoing ig.
     }
   };
 
+
+
   const onSeshStart = async () => {
     if (!pause) return;
     // call convex function. if returns true, start session.
+    
     if (mode == "work") {
       if (
         lastSeshRated === true ||
@@ -153,10 +156,15 @@ if(ownerSesh){
     }
   }, [secLeft]);
 
+
+
+
   useEffect(() => {
+
     const status = ownerSesh ? localTimerStatus: roomInfo?.timerStatus;
     console.log(status, " status", roomInfo);
     if (!roomInfo || !participant) {
+
     } else {
       if (status === "running") {
         console.log("running useEffect");
@@ -169,6 +177,7 @@ if(ownerSesh){
         setSecLeft(room, 0);
         onChangeMode("break", room, onPause);
       }
+
     }
 
     if (status === "not started") {
@@ -180,13 +189,18 @@ if(ownerSesh){
       setOwnerSesh(false)
     }
 
+    console.log(status," status")
+
     if (status === undefined && roomInfo && !ownerSesh) {
       console.log("Undefined sesh")
       onSeshReset();
       setGroupSesh(false);
       //!ownerSesh && setOwnerSesh(false);
     }
-  }, [roomInfo]);
+  
+  
+  },
+   [roomInfo]);
 
   return (
     <div>

@@ -76,13 +76,17 @@ export const reset =  mutation({
     //need to check if prev session
     const user = await getCurrentUserOrThrow(ctx)
     if(user.lastSeshId){
+//get that session and check if rated. If already rated, then don't delete
+const Currentsession = await getOneFrom(ctx.db,"sessions","by_id",user.lastSeshId,"_id")
 
-      await ctx.db.delete(user.lastSeshId as Id<"sessions">)
-    }
-    const session = await ctx.db.query("sessions").withIndex("userId", q=> q.eq("userId", user._id)).order("desc").first()
-    console.log(session)
-    await ctx.db.patch(user._id, {lastSeshId: session?._id ?? undefined, lastSeshRated:true })
-   
+if(!Currentsession?.rating){
+console.log("sesison reset & deleted")
+  await ctx.db.delete(user.lastSeshId as Id<"sessions">)
+  const session = await ctx.db.query("sessions").withIndex("userId", q=> q.eq("userId", user._id)).order("desc").first()
+  await ctx.db.patch(user._id, {lastSeshId: session?._id ?? undefined, lastSeshRated:true })
+}
+
+}
   
   
   },

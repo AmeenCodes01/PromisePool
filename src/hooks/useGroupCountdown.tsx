@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import usePersistState from './usePersistState';
 import { usePromiseStore } from './usePromiseStore';
-      const tick = new Audio("/Tick.mp3");
+
 
 export default function useGroupCountdown(room:string) {
   const { playTick, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
@@ -9,25 +9,35 @@ export default function useGroupCountdown(room:string) {
   const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
 
   const [endTime, setEndTime] = usePersistState(Date.now(), "endTime");
+  
 
-
+  const lastBellRef = useRef<number>(0); // Store last 15-min bell trigger in seconds
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const endTimeRef = useRef(endTime);
   endTimeRef.current = endTime;
-
+  
   const startTimer = () => {
     console.log("srart timer interval")
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-
+    
     intervalRef.current = setInterval(() => {
       const remainingTime = endTimeRef.current - Date.now();
       const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
-
+      
       setSecLeft(room,remainingSec);
-     playTick && tick.play()
+      const tick = new Audio("/Tick.mp3");
+      playTick && tick.play()
+
+      const elapsed = workMin*60 -  secLeft 
+        if (elapsed - lastBellRef.current >= 15 * 60 && playTick) {
+        lastBellRef.current = elapsed;
+        const bell = new Audio("/15min.mp3");
+        bell.play();
+      }
+
       if (remainingSec <= 0) {
         clearInterval(intervalRef.current!);
         intervalRef.current = null;

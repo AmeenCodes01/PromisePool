@@ -122,10 +122,10 @@ export default function TimerDisplay({
             <Dialog>
               <DialogTrigger asChild>
                 <button>
-                  {groupSesh && showExitBtn ? (
+                  {showExitBtn ? (
                     <Button size={"sm"}>Exit/End</Button>
                   ) : (
-                    <TimerReset color="var(--primary)" />
+                    <TimerReset color="var(--destructive)" />
                   )}{" "}
                 </button>
               </DialogTrigger>

@@ -17,6 +17,9 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
   // keep tick in a ref to avoid stale closures
   const tickRef = useRef(() => {});
 
+
+  const lastBellRef = useRef<number>(0); // Store last 15-min bell trigger in seconds
+
   tickRef.current = () => {
     if (pause) return;
 
@@ -26,11 +29,15 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
     } else {
       const tick = new Audio("/Tick.mp3");
       playTick &&  tick.play();
-      if (secLeft % (15 * 60) === 0 && playTick) {
-       const min_15 = new Audio("/15min.mp3")
-  
-      min_15.play();
-}
+
+      const elapsed = sec - secLeft;
+
+      // Play 15-min bell every 900 seconds (15*60)
+      if (elapsed - lastBellRef.current >= 15 * 60 && playTick) {
+        lastBellRef.current = elapsed;
+        const bell = new Audio("/15min.mp3");
+        bell.play();
+      }
       decrement(room);
     }
   };

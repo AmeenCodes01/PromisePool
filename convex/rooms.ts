@@ -27,7 +27,8 @@ export const add = mutation({
   args: { id: v.id("rooms") },
   handler: async (ctx, { id }) => {
     const user = await getCurrentUserOrThrow(ctx);
-    if (user) {
+    if (user && !user.roomIds?.includes(id)) {
+      
       await ctx.db.patch(user._id, { roomIds: [...(user?.roomIds ?? []), id] });
     }
   },

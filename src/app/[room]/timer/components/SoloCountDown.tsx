@@ -42,8 +42,8 @@ const {
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
-console.log("render timer ")
- const onSeshStart = async () => {
+
+const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin * 60) {
       if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {

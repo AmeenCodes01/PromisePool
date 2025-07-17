@@ -23,6 +23,7 @@ import { usePromiseStore } from "@/hooks/usePromiseStore";
 import ConfirmDialog from "./ConfirmDialog";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
 
 function RoomDropDown({
   inRoom,
@@ -35,14 +36,21 @@ function RoomDropDown({
   const [dialogOpen, setDialogOpen] = useState(false);
   const onCreated = () => setOpen(false);
   const rooms = useQuery(api.rooms.get);
-  const { pause, workMin } = usePromiseStore((state) => state);
+  const { pause, workMin,mode } = usePromiseStore(
+    useShallow((state) => ({
+    
+  pause:  state.pause,
+  workMin: state.workMin,
+  mode: state.mode
+  
+  })));
   const secLeft = usePromiseStore(
     (state) => state.timers[inRoom as string]?.secLeft
   ) as number;
 
   const router = useRouter();
   const handleRoomClick = (roomName: string) => {
-    if (!pause || (workMin * 60 !== secLeft && secLeft !== undefined)) {
+    if (mode=="work" && (!pause || (workMin * 60 !== secLeft && secLeft !== undefined))) {
      // setDialogOpen(true);
      alert("Please stop/reset any timers playing")
     } else {

@@ -116,6 +116,16 @@ I should ponder on how offline sessions are added
 
 [X] reminder after every 15.
 
+[X] leaving mid sesh 
+
+[X] weird behaviour after group sesh ends
+
+[X] timer playing false issue
+
+
+[X] ongoing timer gets paused
+
+[X] joining group timer when session ongoing, weird behaviour. Also need to check seshReset functionality
 
 ----optimisation--
 [] useShallow 

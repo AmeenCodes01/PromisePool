@@ -36,6 +36,7 @@ function SessionTimer({ room }: { room: string }) {
   setSecLeft,
   setGoalOpen,
   onSoloReset,
+  setPause
 } = usePromiseStore(
   useShallow(
   (state) => ({
@@ -49,6 +50,7 @@ function SessionTimer({ room }: { room: string }) {
     goal: state.goal,
     setSecLeft: state.setSecLeft,
     setGoalOpen: state.setGoalOpen,
+    setPause:state.setPause,
     onSoloReset: state.onSoloReset,
   })));
 
@@ -59,6 +61,7 @@ function SessionTimer({ room }: { room: string }) {
   useEffect(() => {
     if (room !== undefined) {
       getOrCreateTimer(room);
+      setGroupSesh(false)
     }
   }, [room]);
   const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
@@ -118,9 +121,10 @@ onSoloReset(room)
       secLeft !== workMin * 60 ? await resetSesh() : null;
       ownerSesh &&
         (await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> }));
-    }
+    setPause(true)
+      }
 
-    //onReset();
+    
   };
   //change mode
 
@@ -131,6 +135,9 @@ onSoloReset(room)
       if (status === "not started") {
         setGroupSesh(true);
       }
+      if(status===undefined){
+        setGroupSesh(false)
+      }
     }
   }, [roomInfo]);
 
@@ -139,6 +146,9 @@ onSoloReset(room)
   );
 
   const onJoinGroupSesh = () => {
+    //check if session ongoing, then do onSeshReset
+
+    onSeshReset();
     joinGroupSesh({
       userId: user?._id as Id<"users">,
       roomId: roomInfo._id as Id<"rooms">,
@@ -157,7 +167,7 @@ onSoloReset(room)
           justifyContent: goal !== "" ? "space-between" : "center",
         }}
       >
-        {groupSesh ? (
+        {groupSesh && (participant)? (
           <GroupCountDown
             room={room as Id<"rooms">}
             lastSeshRated={user?.lastSeshRated}
@@ -219,12 +229,12 @@ onSoloReset(room)
                   />
                 </div>
               ) : (
-                <Dialog>
-                  <DialogTrigger className="flex items-center gap-4">
+                <Dialog >
+                  <DialogTrigger asChild  className="flex items-center gap-4">
                     <span className="text-sm font-lightbold">
                       Group Session:{" "}
-                    </span>
                     <Switch checked={groupSesh} id="groupSesh" />
+                    </span>
                   </DialogTrigger>
                   <ConfirmDialog
                     title={"Start a group session"}
