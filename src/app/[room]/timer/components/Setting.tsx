@@ -81,8 +81,9 @@ function Setting({
         <DialogClose asChild>
           <Button
             onClick={() => {
-              onChangeSec(work, "work");
-              onChangeSec(brk, "break");
+            workMin !== work ?   onChangeSec(work, "work"):null
+            breakMin !== brk ?  onChangeSec(brk, "break"):null
+            
             }}
           >
             Done

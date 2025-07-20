@@ -16,7 +16,8 @@ function GroupCountDown({
   ownerSesh,
   setOwnerSesh,
   localTimerStatus,
-  setLocalTimerStatus
+  setLocalTimerStatus,
+  setParticipant
 }: {
   room: string;
   SettingWithProps: () => React.JSX.Element;
@@ -27,7 +28,9 @@ function GroupCountDown({
   lastSeshRated: boolean | undefined;
   userId: Id<"users">;
   ownerSesh:boolean;
-  setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>
+  setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>;
+  setParticipant: React.Dispatch<React.SetStateAction<boolean>>
+
 }) {
  const {
   onOpen,
@@ -75,6 +78,7 @@ function GroupCountDown({
   // there should be option to exit group timer.
 
   const onSeshReset = async () => {
+    console.log("group sesh timer reset")
     onReset();
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
@@ -84,7 +88,9 @@ function GroupCountDown({
       } else {
         await leaveGroupSesh({ userId, roomId });
       }
-      setGroupSesh(false);
+      
+     // setGroupSesh(false);
+     setParticipant(false)
       setLocalTimerStatus(null)
       // we should show session ongoing ig.
     }
@@ -191,8 +197,8 @@ if(ownerSesh){
 
     console.log(status," status")
 
-    if (status === undefined && roomInfo && !ownerSesh) {
-      console.log("Undefined sesh")
+    if (status === undefined && roomInfo) {
+      console.log("Undefined sesh UNDEFINDE")
       onSeshReset();
       setGroupSesh(false);
       //!ownerSesh && setOwnerSesh(false);

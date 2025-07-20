@@ -78,7 +78,10 @@ export default function TimerDisplay({
           >
             Work
           </Button>
+          <button disabled={!pause} className={`${!pause ? "opacity-50":""}`}>
+
           <SettingWithProps />
+          </button>
         </div>
         <div className="flex flex-row  ">
           <div className=" flex ">

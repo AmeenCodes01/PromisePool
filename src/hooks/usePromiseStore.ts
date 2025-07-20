@@ -19,7 +19,7 @@ interface DialogProps {
     };
   };
   groupSesh: boolean;
-  setSecLeft: (room: string, num: number) => void;
+  setSecLeft: (room: string,     num: number) => void;
   setGroupSesh: (state: boolean) => void;
   decrement: (room: string) => void;
   goalOpen: boolean;

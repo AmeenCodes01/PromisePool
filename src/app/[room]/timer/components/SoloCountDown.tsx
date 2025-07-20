@@ -19,7 +19,7 @@ roomName:string;
 SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
-
+console.log("solo")
 const {
   workMin,
   onOpen,
@@ -42,6 +42,7 @@ const {
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
+
 
 const onSeshStart = async () => {
     // call convex function. if returns true, start session.
@@ -105,6 +106,7 @@ const onSeshStart = async () => {
     onPause()
   //  onPauseGroup()
   }
+  
     return (
     <div>
       <TimerDisplay

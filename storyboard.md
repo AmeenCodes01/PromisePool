@@ -127,5 +127,11 @@ I should ponder on how offline sessions are added
 
 [X] joining group timer when session ongoing, weird behaviour. Also need to check seshReset functionality
 
+[X] disable opening settings during timer play
+
+[] timer resets if anything changed in settings, even when paused
+
+
+
 ----optimisation--
 [] useShallow 
