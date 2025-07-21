@@ -105,7 +105,7 @@ export function RatingPie({
                             className={`  w-3 h-3 rounded-sm inline-block `}
                           />
 
-                          <div className="self-center ">{entry.value}</div>
+                          <div className="self-center ">{Math.round(entry.value * 10) / 10}</div>
                         </div>
                       ))}
                     </div>
