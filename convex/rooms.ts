@@ -84,6 +84,7 @@ export const createSesh = mutation({
         duration,
         session_ownerId: user._id as Id<"users">,
         participants: [{id: user._id, name: user.name as string}],
+        seshCreation: Date.now()
       });
     }
   },
@@ -138,7 +139,7 @@ export const endSesh = mutation({
   handler: async (ctx, args) => {
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
-
+console.log("endsESH")
     if (room) {
      
       await ctx.db.patch(roomId, {

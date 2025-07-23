@@ -18,9 +18,11 @@ import BuildAnimation from "./Animation";
 import { Edit } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
+import FileUploader from "@/components/FileUploader";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
+  const bgImages = useQuery(api.images.list)
 
   const [ownerSesh, setOwnerSesh] = usePersistState<boolean>(
     false,
@@ -30,6 +32,7 @@ function SessionTimer({ room }: { room: string }) {
     null | string
   >(null, `${room}-timerStatus`);
   const [participant, setParticipant] = useState(false);
+  const [bgImage, setbgImage]=usePersistState("","bgImage")
 
   const {
     workMin,
@@ -144,7 +147,7 @@ function SessionTimer({ room }: { room: string }) {
         setOwnerSesh(user._id === roomInfo.session_ownerId);
       }
       if (!ownerSesh && status === undefined) {
-        console.log("hello");
+      
       if(participant){
 
         onSeshReset();
@@ -172,7 +175,13 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   return (
-    <div className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md    ">
+    <div 
+    style={{
+   backgroundImage: bgImage !=="" ? `url('${bgImage}')`: undefined,
+
+    }}
+    
+    className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover  ">
       <div
         className="flex gap-2 p-2 justify-center  flex-col-reverse flex-1 w-full items-center   "
         style={{
@@ -327,7 +336,27 @@ function SessionTimer({ room }: { room: string }) {
           </>
         ) : null}
       </div>
+<div className="flex pb-2 mr-auto">
+  <FileUploader/>
+</div>
+{bgImages && bgImages?.length> 0 &&
+<div className="absolute bottom-4 right-12 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
+  <div className="h-[60px] min-w-[60px] border-[2px] text-xs font-mono text-center flex justify-center items-center" onClick={()=>setbgImage("")}>remove</div>
+  {bgImages.map(i=> {
+    
+    return(
+  <>
+    <img src={i.url as string} className="h-[60px]" onClick={()=>setbgImage(i.url as string)} />
+   
+  </>  
+  
+  
+  )}
+  )
 
+}
+
+</div>}
       <ProgressDialog room={room} />
     </div>
   );

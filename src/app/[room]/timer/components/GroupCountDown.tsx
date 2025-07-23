@@ -149,9 +149,10 @@ if(ownerSesh){
       }
 
       if(ownerSesh){
-
+        console.log("hello")
         endGroupSesh({ roomId });
         setOwnerSesh(false)
+        setParticipant(false)
         setLocalTimerStatus("ended")
       }
       setGroupSesh(false);

@@ -59,6 +59,7 @@ export default defineSchema({
   ),
   startTime: v.optional(v.number()),
   endTime: v.optional(v.number()),
+  seshCreation:v.optional(v.number()),
   duration: v.optional(v.number()),
   timerStatus:v.optional(v.union(v.literal("running"),v.literal("ended"),v.literal("not started"))),
   participants: v.optional(v.array(v.object({
@@ -76,13 +77,19 @@ export default defineSchema({
   data: v.any(),
   timestamp: v.number(),
    }).index("roomId",["roomId"]),
-
+  
+  
+   images:defineTable({
+    userId: v.id("users"),
+    body: v.id("_storage"),
+    
+  }).index("userId", ["userId"]),
   
   roomUsers:defineTable({
     userId: v.id("users"),
     roomId: v.id("rooms"),
     lastActive:v.number()
   }).index("userId", ["userId"]).index("roomId",["roomId"])
-},{
-  
-});
+},
+
+);

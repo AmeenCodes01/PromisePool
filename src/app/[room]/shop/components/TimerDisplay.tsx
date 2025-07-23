@@ -59,7 +59,8 @@ export default function TimerDisplay({
     <>
       <div
         className="items-center justify-center gap-10   border-dashed 
-    border-[2px] p-2 rounded-md flex flex-col sm:flex-row  py-6   "
+    border-[2px] p-2 rounded-md flex flex-col sm:flex-row  py-6 bg-cover  "
+    
       >
         <div className="flex flex-row sm:flex-col-reverse  items-center  gap-2  ">
           <Button

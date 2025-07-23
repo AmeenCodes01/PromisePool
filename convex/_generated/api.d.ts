@@ -18,6 +18,7 @@ import type * as activity from "../activity.js";
 import type * as auth from "../auth.js";
 import type * as history from "../history.js";
 import type * as http from "../http.js";
+import type * as images from "../images.js";
 import type * as leaderboard from "../leaderboard.js";
 import type * as promises from "../promises.js";
 import type * as rewards from "../rewards.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   history: typeof history;
   http: typeof http;
+  images: typeof images;
   leaderboard: typeof leaderboard;
   promises: typeof promises;
   rewards: typeof rewards;

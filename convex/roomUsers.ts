@@ -83,8 +83,20 @@ export const heartbeat = mutation({
     );
     if (!room) return;
 
-    // Only proceed if timer is active and not ended
-//     if (room.timerStatus !== undefined && room.timerStatus !== "ended") {
+    // only if it's not been started for too long, end session.   
+
+
+    if (room.timerStatus === undefined && room.seshCreation && ( Date.now()- room.seshCreation > 60000*3 )) {
+
+           await ctx.db.patch(room._id, {
+            timerStatus: undefined,
+            participants: undefined,
+            duration: undefined,
+            startTime: undefined,
+            endTime: undefined,
+            session_ownerId: undefined,
+          });
+
 //       const ownerSesh = await getOneFrom(
 //         ctx.db,
 //         "roomUsers",
@@ -103,14 +115,7 @@ export const heartbeat = mutation({
 //         //if no participants, clear
      
 //         if (room.participants?.length == 0) {
-//           await ctx.db.patch(room._id, {
-//             timerStatus: undefined,
-//             participants: undefined,
-//             duration: undefined,
-//             startTime: undefined,
-//             endTime: undefined,
-//             session_ownerId: undefined,
-//           });
+         
 //         } else {
 //           if (room.participants) {
 //             const newParticipants = room.participants.filter(
@@ -127,7 +132,7 @@ export const heartbeat = mutation({
 //           }
 //         }
 //       }
-//     }
+    }
 
     // Always update current user's heartbeat
   },
