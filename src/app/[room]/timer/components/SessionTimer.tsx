@@ -146,7 +146,7 @@ function SessionTimer({ room }: { room: string }) {
         console.log(user._id, roomInfo.session_ownerId);
         setOwnerSesh(user._id === roomInfo.session_ownerId);
       }
-      if (!ownerSesh && status === undefined) {
+      if (!ownerSesh &&( status === undefined || status=="ended")) {
       
       if(participant){
 
