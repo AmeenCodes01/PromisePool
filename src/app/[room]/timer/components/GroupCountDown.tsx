@@ -17,7 +17,8 @@ function GroupCountDown({
   setOwnerSesh,
   localTimerStatus,
   setLocalTimerStatus,
-  setParticipant
+  setParticipant,
+  participant
 }: {
   room: string;
   SettingWithProps: () => React.JSX.Element;
@@ -29,7 +30,8 @@ function GroupCountDown({
   userId: Id<"users">;
   ownerSesh:boolean;
   setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>;
-  setParticipant: React.Dispatch<React.SetStateAction<boolean>>
+  setParticipant: React.Dispatch<React.SetStateAction<boolean>>;
+  participant: boolean;
 
 }) {
  const {
@@ -59,9 +61,7 @@ function GroupCountDown({
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
 
-  const participant = roomInfo?.participants?.find((p) => p.id === userId)
-    ? true
-    : false;
+  
 
   const startGroupSesh = useMutation(api.rooms.startSesh);
   const endGroupSesh = useMutation(api.rooms.endSesh);

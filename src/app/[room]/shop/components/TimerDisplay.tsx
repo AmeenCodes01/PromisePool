@@ -122,7 +122,7 @@ export default function TimerDisplay({
               ) : null}
             </>
           )}
-          {groupSesh ? (
+          {groupSesh && showExitBtn ? ( //showExitBtn is participant
             <Dialog>
               <DialogTrigger asChild>
                 <button>

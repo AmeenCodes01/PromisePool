@@ -199,6 +199,7 @@ function SessionTimer({ room }: { room: string }) {
             setOwnerSesh={setOwnerSesh}
             localTimerStatus={localTimerStatus}
             setLocalTimerStatus={setLocalTimerStatus}
+            participant={participant}
             setParticipant={setParticipant}
           />
         ) : (
