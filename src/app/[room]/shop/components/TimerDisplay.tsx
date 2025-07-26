@@ -125,13 +125,13 @@ export default function TimerDisplay({
           {groupSesh && showExitBtn ? ( //showExitBtn is participant
             <Dialog>
               <DialogTrigger asChild>
-                <button>
+                
                   {showExitBtn ? (
                     <Button size={"sm"}>Exit/End</Button>
                   ) : (
                     <TimerReset color="var(--destructive)" />
-                  )}{" "}
-                </button>
+                  )}
+                
               </DialogTrigger>
               <ConfirmDialog
                 title="Exit Group Session"

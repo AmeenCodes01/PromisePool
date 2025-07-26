@@ -19,10 +19,11 @@ import { Edit } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 import FileUploader from "@/components/FileUploader";
+import MealCounter from "@/components/MealCounter";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
-  const bgImages = useQuery(api.images.list)
+  const bgImages = useQuery(api.images.list);
 
   const [ownerSesh, setOwnerSesh] = usePersistState<boolean>(
     false,
@@ -31,8 +32,8 @@ function SessionTimer({ room }: { room: string }) {
   const [localTimerStatus, setLocalTimerStatus] = usePersistState<
     null | string
   >(null, `${room}-timerStatus`);
-  const [participant, setParticipant] = useState(false);
-  const [bgImage, setbgImage]=usePersistState("","bgImage")
+  const [participant, setParticipant] = usePersistState(false, "participant");
+  const [bgImage, setbgImage] = usePersistState("", "bgImage");
 
   const {
     workMin,
@@ -116,10 +117,9 @@ function SessionTimer({ room }: { room: string }) {
       });
       setParticipant(true);
     } else {
-     
       setParticipant(false);
       setLocalTimerStatus(null);
-       onSeshReset();
+      onSeshReset();
     }
   };
 
@@ -128,11 +128,10 @@ function SessionTimer({ room }: { room: string }) {
       setPause(true);
       onSoloReset(room);
       secLeft !== workMin * 60 ? await resetSesh() : null;
-      if(ownerSesh){
-
-        (await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> }));
-       setOwnerSesh(false);
-      } 
+      if (ownerSesh) {
+        await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
+        setOwnerSesh(false);
+      }
     }
   };
   //change mode
@@ -146,13 +145,11 @@ function SessionTimer({ room }: { room: string }) {
         console.log(user._id, roomInfo.session_ownerId);
         setOwnerSesh(user._id === roomInfo.session_ownerId);
       }
-      if (!ownerSesh &&( status === undefined || status=="ended")) {
-      
-      if(participant){
-
-        onSeshReset();
-        setParticipant(false);
-      } 
+      if (!ownerSesh && (status === undefined || status == "ended")) {
+        if (participant) {
+          onSeshReset();
+          setParticipant(false);
+        }
         setGroupSesh(false);
       }
     }
@@ -175,13 +172,12 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   return (
-    <div 
-    style={{
-   backgroundImage: bgImage !=="" ? `url('${bgImage}')`: undefined,
-
-    }}
-    
-    className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover  ">
+    <div
+      style={{
+        backgroundImage: bgImage !== "" ? `url('${bgImage}')` : undefined,
+      }}
+      className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover  "
+    >
       <div
         className="flex gap-2 p-2 justify-center  flex-col-reverse flex-1 w-full items-center   "
         style={{
@@ -239,6 +235,10 @@ function SessionTimer({ room }: { room: string }) {
 
       {/* <BuildAnimation/> */}
 
+<div className="my-6">
+  <MealCounter/>
+</div>
+
       <div className=" flex-1   w-full flex gap-2 flex-col  items-center sm:py-6 px-2">
         <div className="flex flex-col items-center mt-2    ">
           {mode == "work" && roomInfo?.type !== "private" ? (
@@ -246,9 +246,9 @@ function SessionTimer({ room }: { room: string }) {
               {groupSesh ? (
                 <div className="flex items-center gap-4">
                   <span className="text-sm font-lightbold">
-                    Group Session:{" "}  <span className="text-primary ml-2 text-xs">Ongoing</span>
+                    Group Session:{" "}
+                    <span className="text-primary ml-2 text-xs">Ongoing</span>
                   </span>
-
 
                   {/* <Switch
                     checked={groupSesh}
@@ -337,27 +337,29 @@ function SessionTimer({ room }: { room: string }) {
           </>
         ) : null}
       </div>
-<div className="flex pb-2 mr-auto">
-  <FileUploader/>
-</div>
-{bgImages && bgImages?.length> 0 &&
-<div className="absolute bottom-4 right-12 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
-  <div className="h-[60px] min-w-[60px] border-[2px] text-xs font-mono text-center flex justify-center items-center" onClick={()=>setbgImage("")}>remove</div>
-  {bgImages.map(i=> {
-    
-    return(
-  <>
-    <img src={i.url as string} className="h-[60px]" onClick={()=>setbgImage(i.url as string)} />
-   
-  </>  
-  
-  
-  )}
-  )
-
-}
-
-</div>}
+      <div className="flex pb-2 mr-auto">
+        <FileUploader />
+      </div>
+      {bgImages && bgImages?.length > 0 && (
+        <div className="absolute bottom-4 right-12 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
+          <div
+            className="h-[60px] min-w-[60px] border-[2px] text-xs font-mono text-center flex justify-center items-center"
+            onClick={() => setbgImage("")}
+          >
+            remove
+          </div>
+          {bgImages.map((i) => {
+            return (
+              <img
+                src={i.url as string}
+                key={i.url}
+                className="h-[60px]"
+                onClick={() => setbgImage(i.url as string)}
+              />
+            );
+          })}
+        </div>
+      )}
       <ProgressDialog room={room} />
     </div>
   );

@@ -20,7 +20,7 @@ function RoomUsers({ name }: { name: string }) {
 
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button className="text-xs " size={"sm"}>
           Room Users
         </Button>
