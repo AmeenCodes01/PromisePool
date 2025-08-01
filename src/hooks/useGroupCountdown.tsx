@@ -4,9 +4,8 @@ import { usePromiseStore } from './usePromiseStore';
 
 
 export default function useGroupCountdown(room:string) {
-  const { playTick, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
+  const {secLeft, playTick, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
 
-  const secLeft = usePromiseStore(state=>state.timers[room]?.secLeft)
 
   const [endTime, setEndTime] = usePersistState(Date.now(), "endTime");
   
@@ -27,7 +26,7 @@ export default function useGroupCountdown(room:string) {
       const remainingTime = endTimeRef.current - Date.now();
       const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
       
-      setSecLeft(room,remainingSec);
+      setSecLeft(remainingSec);
       const tick = new Audio("/Tick.mp3");
       playTick && tick.play()
 
@@ -50,7 +49,7 @@ export default function useGroupCountdown(room:string) {
     console.log("Played", newEndTime);
     const remainingTime = newEndTime - Date.now();
     const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
-    setSecLeft(room,remainingSec);
+    setSecLeft(remainingSec);
     setEndTime(newEndTime);
     endTimeRef.current = newEndTime;  // Update ref immediately
     setPause(false);
@@ -60,7 +59,7 @@ export default function useGroupCountdown(room:string) {
 
   const onReset = () => {
     console.log("on Reset hit")
-    setSecLeft(room, workMin * 60);
+    setSecLeft( workMin * 60);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -77,5 +76,5 @@ export default function useGroupCountdown(room:string) {
     }
   };
 
-  return { secLeft, setSecLeft, onPlay, pause, onReset, onPause };
+  return {  setSecLeft, onPlay, pause, onReset, onPause };
 }

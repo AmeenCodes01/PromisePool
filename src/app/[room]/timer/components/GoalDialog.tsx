@@ -10,18 +10,11 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import calcReward from "@/lib/calcReward";
-import { useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
-import { useCallback, useEffect, useState } from "react";
-import useCountdown from "./useCountdown";
-import useGroupCountdown from "@/hooks/useGroupCountdown";
-import usePersistState from "@/hooks/usePersistState";
-import { set } from "react-hook-form";
+import { useState } from "react";
 
 function GoalDialog() {
 
-  const {workMin,onChangeMode, goalOpen, setGoalOpen,setGoal, goal:goalprev } = usePromiseStore((state) => state);
+  const { goalOpen, setGoalOpen,setGoal, goal:goalprev } = usePromiseStore((state) => state);
   const [goal, setGoaltxt]=useState(goalprev)  
 
 

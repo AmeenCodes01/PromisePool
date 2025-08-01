@@ -6,12 +6,11 @@ import { clearInterval, setInterval } from "worker-timers";
 
 
 function useCountdown({ sec, room }: { sec: number; room: string }) {
-  const { setSecLeft, decrement, pause, setPause, playTick } = usePromiseStore(
+  const {secLeft, setSecLeft, decrement, pause, setPause, playTick } = usePromiseStore(
     (state) => state
   );
 
-  const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
-
+  
   const intervalRef = useRef<number | null>(null);
 
   // keep tick in a ref to avoid stale closures
@@ -25,7 +24,7 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
 
     if (secLeft <= 1) {
       setPause(true);
-      setSecLeft(room, 0);
+      setSecLeft(0);
     } else {
       const tick = new Audio("/Tick.mp3");
       playTick &&  tick.play();
@@ -38,7 +37,7 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
         const bell = new Audio("/15min.mp3");
         bell.play();
       }
-      decrement(room);
+      decrement();
     }
   };
 

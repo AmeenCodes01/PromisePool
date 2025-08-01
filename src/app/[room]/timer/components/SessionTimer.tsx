@@ -38,7 +38,6 @@ function SessionTimer({ room }: { room: string }) {
   const {
     workMin,
     setWorkMin,
-    getOrCreateTimer,
     setBreakMin,
     mode,
     groupSesh,
@@ -48,11 +47,13 @@ function SessionTimer({ room }: { room: string }) {
     setGoalOpen,
     onSoloReset,
     setPause,
+    secLeft
   } = usePromiseStore(
     useShallow((state) => ({
       workMin: state.workMin,
       setWorkMin: state.setWorkMin,
-      getOrCreateTimer: state.getOrCreateTimer,
+      secLeft: state.secLeft,
+
       setBreakMin: state.setBreakMin,
       mode: state.mode,
       groupSesh: state.groupSesh,
@@ -72,12 +73,11 @@ function SessionTimer({ room }: { room: string }) {
 
   useEffect(() => {
     if (room !== undefined) {
-      getOrCreateTimer(room);
+   
       setGroupSesh(false);
     }
   }, [room]);
 
-  const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
 
@@ -93,10 +93,10 @@ function SessionTimer({ room }: { room: string }) {
   const onChangeSec = (min: number, type?: "work" | "break") => {
     if (type === "break") {
       setBreakMin(min);
-      mode == "break" && setSecLeft(room, min * 60);
+      mode == "break" && setSecLeft(min * 60);
     } else {
       setWorkMin(min);
-      mode == "work" && setSecLeft(room, min * 60);
+      mode == "work" && setSecLeft( min * 60);
     }
   };
 
@@ -124,6 +124,7 @@ function SessionTimer({ room }: { room: string }) {
   };
 
   const onSeshReset = async () => {
+    console.log("sessiontimer resset")
     if (mode == "work") {
       setPause(true);
       onSoloReset(room);
@@ -147,7 +148,7 @@ function SessionTimer({ room }: { room: string }) {
       }
       if (!ownerSesh && (status === undefined || status == "ended")) {
         if (participant) {
-          onSeshReset();
+      status ===undefined &&    onSeshReset();
           setParticipant(false);
         }
         setGroupSesh(false);

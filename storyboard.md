@@ -131,7 +131,7 @@ I should ponder on how offline sessions are added
 
 [] timer resets if anything changed in settings, even when paused
 
-[] openAI exposed
+
 
 
 ----optimisation--

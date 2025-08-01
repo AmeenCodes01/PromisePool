@@ -37,6 +37,7 @@ const {
     setGoalOpen: state.setGoalOpen,
     onChangeMode: state.onChangeMode,
     onSoloReset: state.onSoloReset,
+
   }))
 );
 
@@ -90,9 +91,9 @@ const onSeshStart = async () => {
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-        onChangeMode("break",roomName,onPause);
+        onChangeMode("break",onPause);
       } else {
-        onChangeMode("work",roomName,onPause);
+        onChangeMode("work",onPause);
          }
 
       const bell = new Audio("/bell.wav");

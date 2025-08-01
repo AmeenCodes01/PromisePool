@@ -36,17 +36,15 @@ function RoomDropDown({
   const [dialogOpen, setDialogOpen] = useState(false);
   const onCreated = () => setOpen(false);
   const rooms = useQuery(api.rooms.get);
-  const { pause, workMin,mode } = usePromiseStore(
+  const { pause, workMin,mode,secLeft } = usePromiseStore(
     useShallow((state) => ({
     
   pause:  state.pause,
   workMin: state.workMin,
-  mode: state.mode
-  
+  mode: state.mode,
+  secLeft:state.secLeft
   })));
-  const secLeft = usePromiseStore(
-    (state) => state.timers[inRoom as string]?.secLeft
-  ) as number;
+  
 
   const router = useRouter();
   const handleRoomClick = (roomName: string) => {
