@@ -14,7 +14,7 @@ export async function getMealResponse(count:number,content:string){
 
 Stay in character with warm but theatrical Egyptian mom energy."**
 
-no kisses please. also, medium dramatic. less words
+no kisses please. also, medium dramatic. ${ new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Africa/Cairo' }).split(' ')[0] < "15" ?"less words": ""}
 `,
         input: `I ate ${count} meal only and it was ${content}`,
     });
