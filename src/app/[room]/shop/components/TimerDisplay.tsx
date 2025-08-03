@@ -32,12 +32,11 @@ export default function TimerDisplay({
   const { workMin, mode, onChangeMode, groupSesh, secLeft,seshCount } = usePromiseStore(
     useShallow((state) => {
       return {
-        getOrCreateTimer: state.getOrCreateTimer,
         workMin: state.workMin,
         mode: state.mode,
         onChangeMode: state.onChangeMode,
         groupSesh: state.groupSesh,
-        secLeft: state.timers[room]?.secLeft,
+        secLeft: state.secLeft,
         seshCount:state.seshCount
       };
     })
@@ -59,26 +58,30 @@ export default function TimerDisplay({
     <>
       <div
         className="items-center justify-center gap-10   border-dashed 
-    border-[2px] p-2 rounded-md flex flex-col sm:flex-row  py-6   "
+    border-[2px] p-2 rounded-md flex flex-col sm:flex-row  py-6 bg-cover  "
+    
       >
         <div className="flex flex-row sm:flex-col-reverse  items-center  gap-2  ">
           <Button
             className="text-xs  border-[2px]"
             disabled={playing}
             variant={mode == "work" ? "outline" : "default"}
-            onClick={() => onChangeMode("break",room)}
+            onClick={() => onChangeMode("break")}
           >
             Break
           </Button>
           <Button
             className="text-xs border-[2px]  "
             variant={mode == "break" ? "outline" : "default"}
-            onClick={() => onChangeMode("work",room)}
+            onClick={() => onChangeMode("work")}
             disabled={playing}
           >
             Work
           </Button>
+          <button disabled={!pause} className={`${!pause ? "opacity-50":""}`}>
+
           <SettingWithProps />
+          </button>
         </div>
         <div className="flex flex-row  ">
           <div className=" flex ">
@@ -118,16 +121,16 @@ export default function TimerDisplay({
               ) : null}
             </>
           )}
-          {groupSesh ? (
+          {groupSesh && showExitBtn ? ( //showExitBtn is participant
             <Dialog>
-              <DialogTrigger>
-                <button>
-                  {groupSesh && showExitBtn ? (
+              <DialogTrigger asChild>
+                
+                  {showExitBtn ? (
                     <Button size={"sm"}>Exit/End</Button>
                   ) : (
-                    <TimerReset color="var(--primary)" />
-                  )}{" "}
-                </button>
+                    <TimerReset color="var(--destructive)" />
+                  )}
+                
               </DialogTrigger>
               <ConfirmDialog
                 title="Exit Group Session"

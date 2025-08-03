@@ -39,8 +39,10 @@
 [] pixel cam
 [] breathers 
 [] build animation
-
-
+[X] ticking sound
+[] Activity
+[X]showed prev Week total time
+[ ] Video/lives
 
  // thinking
  user1: starts session 
@@ -107,6 +109,29 @@ I should ponder on how offline sessions are added
 [X] Sessioncount auto update after each sesh#  (tobetestes)
 
 [X] Shop not enough coins error
+
+[X] rating doesn't go up to 10
+
+[X] reset rating coins. 
+
+[X] reminder after every 15.
+
+[X] leaving mid sesh 
+
+[X] weird behaviour after group sesh ends
+
+[X] timer playing false issue
+
+
+[X] ongoing timer gets paused
+
+[X] joining group timer when session ongoing, weird behaviour. Also need to check seshReset functionality
+
+[X] disable opening settings during timer play
+
+[] timer resets if anything changed in settings, even when paused
+
+
 
 
 ----optimisation--

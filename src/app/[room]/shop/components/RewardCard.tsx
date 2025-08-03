@@ -21,14 +21,17 @@ function RewardCard({
 }) {
   const [finished, setFinished] = useState(reward.finished);
   const [hours, setHours] = useState(reward.hours);
-  const [rating, setRating] = useState(reward.rating);
+  const [rating, setRating] = useState<string|number>(reward.rating);
   const edit = useMutation(api.rewards.edit);
   const del = useMutation(api.rewards.del);
   const unlock = useMutation(api.rewards.unlock);
 
   const onEdit = (title: string, coins: number) => {
     console.log(coins);
-    edit({ title, price: coins, finished, rId: reward._id ,hours,rating});
+    if (typeof rating ==="number"){
+
+      edit({ title, price: coins, finished, rId: reward._id ,hours,rating});
+    }
     //  edit({title, rId:reward._id})
   };
   const onDel = () => del({ rId: reward._id });
@@ -72,14 +75,21 @@ function RewardCard({
             <span className="font-lightbold text-sm">
               Average Rating ( out of 10 )
             </span>
-
-            <Input
-              min={1}
-              max={10}
-              value={rating}
-              onChange={(e) =>
-                setRating(e.target.value ? parseFloat(e.target.value) : 0)
-              }
+ <Input
+            min={1}
+            max={11}
+            value={rating}
+            onChange={(e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setRating(""); // let empty value for now
+      return;
+    }
+    const num = parseFloat(value);
+    if (!isNaN(num) && num <= 10) {
+      setRating(num);
+    }
+  }}
             />
           </div>
 

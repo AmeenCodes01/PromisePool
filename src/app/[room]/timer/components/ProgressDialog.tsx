@@ -17,19 +17,26 @@ import { useCallback, useEffect, useState } from "react";
 import useCountdown from "./useCountdown";
 import useGroupCountdown from "@/hooks/useGroupCountdown";
 
-function ProgressDialog({room}:{room:string}) {
+function ProgressDialog({ room }: { room: string }) {
   const [rated, setRated] = useState(false);
   const [rating, setRating] = useState<number | string>("");
 
-
-  const { isOpen, onClose,workMin,onChangeMode,goal,onSoloReset,incSeshCount } = usePromiseStore((state) => state);
+  const {
+    isOpen,
+    onClose,
+    workMin,
+    onChangeMode,
+    goal,
+    onSoloReset,
+    incSeshCount,
+  } = usePromiseStore((state) => state);
 
   const { onReset: onGroupReset } = useGroupCountdown(room);
 
   const onReset = () => {
     onSoloReset(room);
     onGroupReset();
-    onChangeMode("work",room)
+    onChangeMode("work");
   };
 
   const endSesh = useMutation(api.sessions.stop);
@@ -41,35 +48,40 @@ function ProgressDialog({room}:{room:string}) {
 
   return (
     <div>
-      <AlertDialog open={isOpen} defaultOpen={isOpen}
-      
-      // onOpenChange={()=>{
-      //   setRated(false)
-      //   setRating(null)
-      //   console.log("run")
-      // }}
+      <AlertDialog
+        open={isOpen}
+        defaultOpen={isOpen}
+
+        // onOpenChange={()=>{
+        //   setRated(false)
+        //   setRating(null)
+        //   console.log("run")
+        // }}
       >
         <AlertDialogContent>
           <AlertDialogTitle>Rate your session</AlertDialogTitle>
-<span className="text-sm italic text-muted-foreground">If this appears before starting session, kindly rate previous session.</span>
+          <span className="text-sm italic text-muted-foreground">
+            If this appears before starting session, kindly rate previous
+            session.
+          </span>
           <Input
             className=""
             value={rating}
             type="number"
             min={1}
-            max={10}
+            max={11}
             disabled={rated}
-             onChange={(e) => {
-    const value = e.target.value;
-    if (value === "") {
-      setRating(""); // let empty value for now
-      return;
-    }
-    const num = parseFloat(value);
-    if (!isNaN(num) && num < 10) {
-      setRating(num);
-    }
-  }}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "") {
+                setRating(""); // let empty value for now
+                return;
+              }
+              const num = parseFloat(value);
+              if (!isNaN(num) && num <= 10) {
+                setRating(num);
+              }
+            }}
           />
           <span className="italic text-sm ">rate out of 10</span>
           {rated ? (
@@ -92,25 +104,24 @@ function ProgressDialog({room}:{room:string}) {
           <AlertDialogFooter className="sm:justify-end flex flex-row">
             <Button
               className="justify-end w-fit "
-             onClick={() => {
-  if (!rated) {
-    //means it's now rated. 
-    endSesh({
-      rating: rating as number,
-      pCoins: getReward(),
-      wCoins: calcReward(workMin, rating as number),
-      duration:workMin,
-      goal
-    });
-    setRated(true);
-    incSeshCount()
-  } else {
-    setRated(false)
-        setRating("")
-    onClose();
-  }
-}}
-
+              onClick={() => {
+                if (!rated) {
+                  //means it's now rated.
+                  endSesh({
+                    rating: rating as number,
+                    pCoins: getReward(),
+                    wCoins: calcReward(workMin, rating as number),
+                    duration: workMin,
+                    goal,
+                  });
+                  setRated(true);
+                  incSeshCount();
+                } else {
+                  setRated(false);
+                  setRating("");
+                  onClose();
+                }
+              }}
               disabled={rating !== "" ? false : true}
             >
               {rated ? "Close" : "Rate"}

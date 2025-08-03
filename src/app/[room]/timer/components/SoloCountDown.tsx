@@ -19,7 +19,7 @@ roomName:string;
 SettingWithProps: () => React.JSX.Element;
 }) {
   // use the useCountDown hook here with pause,play,reset functionality
-
+console.log("solo")
 const {
   workMin,
   onOpen,
@@ -37,13 +37,15 @@ const {
     setGoalOpen: state.setGoalOpen,
     onChangeMode: state.onChangeMode,
     onSoloReset: state.onSoloReset,
+
   }))
 );
 
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
-console.log("render timer ")
- const onSeshStart = async () => {
+
+
+const onSeshStart = async () => {
     // call convex function. if returns true, start session.
     if (mode == "work" && secLeft == workMin * 60) {
       if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {
@@ -89,9 +91,9 @@ console.log("render timer ")
       // get progress. open progres
       if (mode == "work") {
         onOpen();
-        onChangeMode("break",roomName,onPause);
+        onChangeMode("break",onPause);
       } else {
-        onChangeMode("work",roomName,onPause);
+        onChangeMode("work",onPause);
          }
 
       const bell = new Audio("/bell.wav");
@@ -105,6 +107,7 @@ console.log("render timer ")
     onPause()
   //  onPauseGroup()
   }
+  
     return (
     <div>
       <TimerDisplay

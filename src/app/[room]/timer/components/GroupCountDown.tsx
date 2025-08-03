@@ -16,49 +16,51 @@ function GroupCountDown({
   ownerSesh,
   setOwnerSesh,
   localTimerStatus,
-  setLocalTimerStatus
+  setLocalTimerStatus,
+  setParticipant,
+  participant,
 }: {
   room: string;
   SettingWithProps: () => React.JSX.Element;
   seshId: Id<"sessions"> | undefined;
 
-  localTimerStatus:string|null;
-  setLocalTimerStatus:React.Dispatch<React.SetStateAction<string | null>>;
+  localTimerStatus: string | null;
+  setLocalTimerStatus: React.Dispatch<React.SetStateAction<string | null>>;
   lastSeshRated: boolean | undefined;
   userId: Id<"users">;
-  ownerSesh:boolean;
-  setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>
+  ownerSesh: boolean;
+  setOwnerSesh: React.Dispatch<React.SetStateAction<boolean>>;
+  setParticipant: React.Dispatch<React.SetStateAction<boolean>>;
+  participant: boolean;
 }) {
- const {
-  onOpen,
-  workMin,
-  setWorkMin,
-  mode,
-  setMode,
-  setGroupSesh,
-  onChangeMode,
-  setGoalOpen,
-  setSecLeft,
-} = usePromiseStore(
- useShallow( (state) => ({
-    onOpen: state.onOpen,
-    workMin: state.workMin,
-    setWorkMin: state.setWorkMin,
-    mode: state.mode,
-    setMode: state.setMode,
-    setGroupSesh: state.setGroupSesh,
-    onChangeMode: state.onChangeMode,
-    setGoalOpen: state.setGoalOpen,
-    setSecLeft: state.setSecLeft,
-  }))
-);
+  const {
+    onOpen,
+    workMin,
+    setWorkMin,
+    mode,
+    setMode,
+    setGroupSesh,
+    onChangeMode,
+    setGoalOpen,
+    setSecLeft,
+    secLeft,
+  } = usePromiseStore(
+    useShallow((state) => ({
+      onOpen: state.onOpen,
+      workMin: state.workMin,
+      setWorkMin: state.setWorkMin,
+      mode: state.mode,
+      setMode: state.setMode,
+      setGroupSesh: state.setGroupSesh,
+      onChangeMode: state.onChangeMode,
+      setGoalOpen: state.setGoalOpen,
+      setSecLeft: state.setSecLeft,
+      secLeft: state.secLeft,
+    }))
+  );
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
   const roomId = roomInfo?._id as Id<"rooms">;
-
-  const participant = roomInfo?.participants?.find((p) => p.id === userId)
-    ? true
-    : false;
 
   const startGroupSesh = useMutation(api.rooms.startSesh);
   const endGroupSesh = useMutation(api.rooms.endSesh);
@@ -70,22 +72,23 @@ function GroupCountDown({
 
   const { onPlay, pause, onReset, onPause } = useGroupCountdown(room);
 
-  const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
-
   // there should be option to exit group timer.
 
   const onSeshReset = async () => {
+    console.log("group sesh timer reset");
     onReset();
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
       if (ownerSesh) {
         await cancelGroupSesh({ roomId });
-        setGroupSesh(false);
-        setOwnerSesh(false)
-        setLocalTimerStatus(null)
+        setOwnerSesh(false);
       } else {
         await leaveGroupSesh({ userId, roomId });
       }
+
+      // setGroupSesh(false);
+      setParticipant(false);
+      setLocalTimerStatus(null);
       // we should show session ongoing ig.
     }
   };
@@ -93,6 +96,7 @@ function GroupCountDown({
   const onSeshStart = async () => {
     if (!pause) return;
     // call convex function. if returns true, start session.
+
     if (mode == "work") {
       if (
         lastSeshRated === true ||
@@ -104,10 +108,10 @@ function GroupCountDown({
               room: roomInfo.name,
             })
           : null;
-if(ownerSesh){
-  (await startGroupSesh({ roomId }));
-  setLocalTimerStatus("running")
-}
+        if (ownerSesh) {
+          await startGroupSesh({ roomId });
+          setLocalTimerStatus("running");
+        }
         setGoalOpen(true);
       } else {
         onOpen();
@@ -122,7 +126,7 @@ if(ownerSesh){
     if (ownerSesh) {
       const startTime = Date.now();
       const endTime = startTime + (roomInfo?.duration as number) * 60000;
-      onPlay(endTime);
+     // onPlay(endTime);
     }
     //roomInfo?.endTime ?onPlay(roomInfo?.endTime):null;
     //  onPause()
@@ -130,20 +134,22 @@ if(ownerSesh){
 
   useEffect(() => {
     if (secLeft == 0) {
+      console.log("changemode grouptimer useeffect, mode: ", mode);
       // get progress. open progres
       if (mode == "work") {
         onOpen();
         console.log("change Mode");
-        onChangeMode("break", room, onPause);
+        onChangeMode("break", onPause);
       } else {
         setWorkMin(workMin * 60);
       }
 
-      if(ownerSesh){
-
+      if (ownerSesh) {
+        console.log("hello group side");
         endGroupSesh({ roomId });
-        setOwnerSesh(false)
-        setLocalTimerStatus("ended")
+        setOwnerSesh(false);
+        setParticipant(false);
+        setLocalTimerStatus("ended");
       }
       setGroupSesh(false);
 
@@ -154,7 +160,7 @@ if(ownerSesh){
   }, [secLeft]);
 
   useEffect(() => {
-    const status = ownerSesh ? localTimerStatus: roomInfo?.timerStatus;
+    const status = ownerSesh ? localTimerStatus : roomInfo?.timerStatus;
     console.log(status, " status", roomInfo);
     if (!roomInfo || !participant) {
     } else {
@@ -166,8 +172,8 @@ if(ownerSesh){
       }
 
       if (status === "ended") {
-        setSecLeft(room, 0);
-        onChangeMode("break", room, onPause);
+        setSecLeft(0);
+        onChangeMode("break", onPause);
       }
     }
 
@@ -177,11 +183,13 @@ if(ownerSesh){
 
     if (roomInfo && status == "ended") {
       setGroupSesh(false);
-      setOwnerSesh(false)
+      setOwnerSesh(false);
     }
 
-    if (status === undefined && roomInfo && !ownerSesh) {
-      console.log("Undefined sesh")
+    console.log(status, " status");
+
+    if (status === undefined && roomInfo) {
+      console.log("Undefined sesh UNDEFINDE");
       onSeshReset();
       setGroupSesh(false);
       //!ownerSesh && setOwnerSesh(false);

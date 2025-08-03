@@ -18,56 +18,68 @@ import BuildAnimation from "./Animation";
 import { Edit } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
+import FileUploader from "@/components/FileUploader";
+import MealCounter from "@/components/MealCounter";
 
 function SessionTimer({ room }: { room: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
+  const bgImages = useQuery(api.images.list);
 
-  const [ownerSesh,setOwnerSesh]=usePersistState<boolean>(false,`${room}-seshOwner`)
-  const [localTimerStatus,setLocalTimerStatus]=usePersistState<null|string>(null,`${room}-timerStatus`)
+  const [ownerSesh, setOwnerSesh] = usePersistState<boolean>(
+    false,
+    `${room}-seshOwner`
+  );
+  const [localTimerStatus, setLocalTimerStatus] = usePersistState<
+    null | string
+  >(null, `${room}-timerStatus`);
+  const [participant, setParticipant] = usePersistState(false, "participant");
+  const [bgImage, setbgImage] = usePersistState("", "bgImage");
+
   const {
-  workMin,
-  setWorkMin,
-  getOrCreateTimer,
-  setBreakMin,
-  mode,
-  groupSesh,
-  setGroupSesh,
-  goal,
-  setSecLeft,
-  setGoalOpen,
-  onSoloReset,
-} = usePromiseStore(
-  useShallow(
-  (state) => ({
-    workMin: state.workMin,
-    setWorkMin: state.setWorkMin,
-    getOrCreateTimer: state.getOrCreateTimer,
-    setBreakMin: state.setBreakMin,
-    mode: state.mode,
-    groupSesh: state.groupSesh,
-    setGroupSesh: state.setGroupSesh,
-    goal: state.goal,
-    setSecLeft: state.setSecLeft,
-    setGoalOpen: state.setGoalOpen,
-    onSoloReset: state.onSoloReset,
-  })));
+    workMin,
+    setWorkMin,
+    setBreakMin,
+    mode,
+    groupSesh,
+    setGroupSesh,
+    goal,
+    setSecLeft,
+    setGoalOpen,
+    onSoloReset,
+    setPause,
+    secLeft
+  } = usePromiseStore(
+    useShallow((state) => ({
+      workMin: state.workMin,
+      setWorkMin: state.setWorkMin,
+      secLeft: state.secLeft,
+
+      setBreakMin: state.setBreakMin,
+      mode: state.mode,
+      groupSesh: state.groupSesh,
+      setGroupSesh: state.setGroupSesh,
+      goal: state.goal,
+      setSecLeft: state.setSecLeft,
+      setGoalOpen: state.setGoalOpen,
+      setPause: state.setPause,
+      onSoloReset: state.onSoloReset,
+    }))
+  );
 
   useEffect(() => {
+    console.log("store hydratted");
     usePromiseStore.persist.rehydrate();
   }, []);
 
   useEffect(() => {
     if (room !== undefined) {
-      getOrCreateTimer(room);
+   
+      setGroupSesh(false);
     }
   }, [room]);
-  const secLeft = usePromiseStore((state) => state.timers[room]?.secLeft);
+
 
   const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
-  const participant = roomInfo?.participants?.find((p) => p.id === user?._id)
-    ? true
-    : false;
-  //const ownerSesh = roomInfo?.session_ownerId === user?._id;
 
   const createGroupSesh = useMutation(api.rooms.createSesh);
 
@@ -81,46 +93,47 @@ function SessionTimer({ room }: { room: string }) {
   const onChangeSec = (min: number, type?: "work" | "break") => {
     if (type === "break") {
       setBreakMin(min);
-      mode == "break" && setSecLeft(room, min * 60);
+      mode == "break" && setSecLeft(min * 60);
     } else {
       setWorkMin(min);
-      mode == "work" && setSecLeft(room, min * 60);
+      mode == "work" && setSecLeft( min * 60);
     }
   };
 
   const onGroupSesh = (start: boolean) => {
+    //check if timer playing, ask user to reset it.
 
-    //check if timer playing, ask user to reset it. 
-    
     setGroupSesh(start);
     if (start) {
-
-      if( workMin * 60 !== secLeft ){
-onSoloReset(room)
+      if (workMin * 60 !== secLeft) {
+        onSoloReset(room);
       }
-      console.log("hit",start)
+      console.log("hit", start);
       setOwnerSesh(true);
-      setLocalTimerStatus("not started")
+      setLocalTimerStatus("not started");
       createGroupSesh({
         duration: workMin,
         roomId: roomInfo._id as Id<"rooms">,
       });
+      setParticipant(true);
     } else {
-      cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
+      setParticipant(false);
+      setLocalTimerStatus(null);
       onSeshReset();
-      setOwnerSesh(false)
-      setLocalTimerStatus(null)
     }
   };
 
   const onSeshReset = async () => {
+    console.log("sessiontimer resset")
     if (mode == "work") {
+      setPause(true);
+      onSoloReset(room);
       secLeft !== workMin * 60 ? await resetSesh() : null;
-      ownerSesh &&
-        (await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> }));
+      if (ownerSesh) {
+        await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
+        setOwnerSesh(false);
+      }
     }
-
-    //onReset();
   };
   //change mode
 
@@ -130,6 +143,15 @@ onSoloReset(room)
     } else {
       if (status === "not started") {
         setGroupSesh(true);
+        console.log(user._id, roomInfo.session_ownerId);
+        setOwnerSesh(user._id === roomInfo.session_ownerId);
+      }
+      if (!ownerSesh && (status === undefined || status == "ended")) {
+        if (participant) {
+      status ===undefined &&    onSeshReset();
+          setParticipant(false);
+        }
+        setGroupSesh(false);
       }
     }
   }, [roomInfo]);
@@ -139,25 +161,31 @@ onSoloReset(room)
   );
 
   const onJoinGroupSesh = () => {
+    //check if session ongoing, then do onSeshReset
+
+    onSeshReset();
     joinGroupSesh({
       userId: user?._id as Id<"users">,
       roomId: roomInfo._id as Id<"rooms">,
     });
     roomInfo.duration && onChangeSec(roomInfo.duration, "work");
+    setParticipant(true);
   };
 
-
   return (
-    <div className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md    ">
-     
-     
+    <div
+      style={{
+        backgroundImage: bgImage !== "" ? `url('${bgImage}')` : undefined,
+      }}
+      className="flex flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover  "
+    >
       <div
         className="flex gap-2 p-2 justify-center  flex-col-reverse flex-1 w-full items-center   "
         style={{
           justifyContent: goal !== "" ? "space-between" : "center",
         }}
       >
-        {groupSesh ? (
+        {groupSesh && participant ? (
           <GroupCountDown
             room={room as Id<"rooms">}
             lastSeshRated={user?.lastSeshRated}
@@ -168,6 +196,8 @@ onSoloReset(room)
             setOwnerSesh={setOwnerSesh}
             localTimerStatus={localTimerStatus}
             setLocalTimerStatus={setLocalTimerStatus}
+            participant={participant}
+            setParticipant={setParticipant}
           />
         ) : (
           <SoloCountDown
@@ -177,27 +207,38 @@ onSoloReset(room)
             SettingWithProps={SettingWithProps}
           />
         )}
-        
-          <div className="flex flex-col 
+
+        <div
+          className="flex flex-col 
            items-center gap-4 w-full
-            sm:w-[40%] h-fit p-6 rounded-md  border-dashed justify-center border-[2px]">
-            <span className="italic text-4xl font-normal font-mono text-wrap text-primary flex mx-auto  ">
-              {goal !=="" ? goal: <span className="text-muted text-lg">Enter your goal </span>}
-            </span>
-           {goal!=="" && <span className="text-xs text-chart-2 font-mono ml-auto">
+            sm:w-[40%] h-fit p-6 rounded-md  border-dashed justify-center border-[2px]"
+        >
+          <span className="italic text-4xl font-normal font-mono text-wrap text-primary flex mx-auto  ">
+            {goal !== "" ? (
+              goal
+            ) : (
+              <span className="text-muted text-lg">Enter your goal </span>
+            )}
+          </span>
+          {goal !== "" && (
+            <span className="text-xs text-chart-2 font-mono ml-auto">
               {" "}
               We got this, lesgoooo
-            </span>}
-            <Edit
-              size={18}
-              className="ml-auto"
-              onClick={() => setGoalOpen(true)}
-            />
-          </div>
-        
+            </span>
+          )}
+          <Edit
+            size={18}
+            className="ml-auto"
+            onClick={() => setGoalOpen(true)}
+          />
+        </div>
       </div>
 
       {/* <BuildAnimation/> */}
+
+<div className="my-6">
+  <MealCounter/>
+</div>
 
       <div className=" flex-1   w-full flex gap-2 flex-col  items-center sm:py-6 px-2">
         <div className="flex flex-col items-center mt-2    ">
@@ -207,24 +248,26 @@ onSoloReset(room)
                 <div className="flex items-center gap-4">
                   <span className="text-sm font-lightbold">
                     Group Session:{" "}
+                    <span className="text-primary ml-2 text-xs">Ongoing</span>
                   </span>
-                  <Switch
+
+                  {/* <Switch
                     checked={groupSesh}
                     onCheckedChange={(s) => {
                       //    setGroupSesh(s);
                       onGroupSesh(s);
                     }}
                     id="groupSesh"
-                    disabled={groupSesh && !ownerSesh}
-                  />
+                    disabled={!ownerSesh}
+                  /> */}
                 </div>
               ) : (
                 <Dialog>
-                  <DialogTrigger className="flex items-center gap-4">
+                  <DialogTrigger asChild className="flex items-center gap-4">
                     <span className="text-sm font-lightbold">
                       Group Session:{" "}
+                      <Switch checked={groupSesh} id="groupSesh" />
                     </span>
-                    <Switch checked={groupSesh} id="groupSesh" />
                   </DialogTrigger>
                   <ConfirmDialog
                     title={"Start a group session"}
@@ -262,38 +305,62 @@ onSoloReset(room)
                 </div>
               </>
             ) : (
-              <>
-                {/* <span>session {roomInfo?.timerStatus}</span> */}
-              </>
+              <>{/* <span>session {roomInfo?.timerStatus}</span> */}</>
             )
           ) : null}
         </div>
-        {roomInfo?.type !== "private" && participant ? (
-         <>
-        <span className="text-md mt-6 font-serif opacity-90 underline  ">
-          Participants
-        </span>
-          <div
-            className="flex flex-col 
+        {roomInfo?.type !== "private" && participant && groupSesh ? (
+          <>
+            <span className="text-md mt-6 font-serif opacity-90 underline  ">
+              Participants
+            </span>
+            <div
+              className="flex flex-col 
           gap-2 p-3  max-h-[200px]  overflow-auto max-w-[400px] text-center w-full mx-auto border-2 border-dotted border-primary rounded-md  "
-          >
-            {roomInfo?.participants?.map((u, i) => (
-              <div
-                className="p-2 w-full min-w-[150px] rounded-sm bg-cover"
-                key={u.id}
-                style={{
-                  backgroundImage: `url(${theme == "dark" ? (i % 2 == 0 ? "/black_1.jpg" : "/black_2.jpg") : i % 2 == 0 ? "/white_1.jpg" : "/white_2.jpg"})`,
-                }}
-              >
-                <span className="font-serif italic    ">{u.name}</span>
-              </div>
-            ))}
-          </div>
-         </>
-        
+            >
+              {roomInfo?.participants?.map((u, i) => (
+                <div
+                  className="p-2 w-full min-w-[150px] rounded-sm bg-cover"
+                  key={u.id}
+                  style={{
+                    backgroundImage: `url(${theme == "dark" ? (i % 2 == 0 ? "/black_1.jpg" : "/black_2.jpg") : i % 2 == 0 ? "/white_1.jpg" : "/white_2.jpg"})`,
+                  }}
+                >
+                  <span className="font-serif italic space-x-2   ">
+                    {u.name}{" "}
+                    {u.id === roomInfo.session_ownerId
+                      ? "     (owner)"
+                      : null}{" "}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
         ) : null}
       </div>
-
+      <div className="flex pb-2 mr-auto">
+        <FileUploader />
+      </div>
+      {bgImages && bgImages?.length > 0 && (
+        <div className="absolute bottom-4 right-12 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
+          <div
+            className="h-[60px] min-w-[60px] border-[2px] text-xs font-mono text-center flex justify-center items-center"
+            onClick={() => setbgImage("")}
+          >
+            remove
+          </div>
+          {bgImages.map((i) => {
+            return (
+              <img
+                src={i.url as string}
+                key={i.url}
+                className="h-[60px]"
+                onClick={() => setbgImage(i.url as string)}
+              />
+            );
+          })}
+        </div>
+      )}
       <ProgressDialog room={room} />
     </div>
   );

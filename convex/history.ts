@@ -3,6 +3,8 @@ import { query, mutation } from "./_generated/server";
 import { getCurrentUserOrThrow } from "./users";
 import { asyncMap } from "convex-helpers";
 import { Doc } from "./_generated/dataModel";
+
+// I want to send prev week total time.
 export const getWeekly = query({
   args: {},
   handler: async (ctx, args) => {
@@ -28,7 +30,7 @@ export const getWeekly = query({
       const endOfDay = new Date(startOfDay);
       endOfDay.setDate(startOfDay.getDate() + 1);
 
-      const results = await ctx.db
+      const thisWeek = await ctx.db
         .query("sessions")
         .withIndex("userId", q =>
           q.eq("userId", user._id)
@@ -36,13 +38,40 @@ export const getWeekly = query({
             .lt("_creationTime", endOfDay.getTime())
         )
         .collect();
-      data.push({ day: label, data: results });
+      data.push({ day: label, data: thisWeek });
     });
 
 
-   await  data.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
+     data.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
 
-      return data;
-  },
+     //get prev week data as well.
+     // Previous week range
+const prevWeekStart = new Date(weekStart);
+prevWeekStart.setDate(prevWeekStart.getDate() - 7);
+
+const prevWeekEnd = new Date(weekStart);
+
+// Get previous week sessions
+const prevWeekSessions = await ctx.db
+  .query("sessions")
+  .withIndex("userId", q =>
+    q.eq("userId", user._id)
+      .gte("_creationTime", prevWeekStart.getTime())
+      .lt("_creationTime", prevWeekEnd.getTime())
+  )
+  .collect();
+
+// Calculate total time (assuming you have a 'duration' field in each session)
+const prevWeekTotalMinutes = prevWeekSessions.reduce(
+  (acc, session) => acc + (session.duration || 0),
+  0
+);
+
+// Return both this week’s data and prev week total
+return {
+  thisWeek: data,
+  prevWeekTotalMinutes,
+};
+},
 });
 

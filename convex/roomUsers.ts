@@ -52,7 +52,7 @@ export const get = query({
     const results = await ctx.db
       .query("roomUsers")
       .withIndex("roomId", (q) => q.eq("roomId", room._id))
-      .filter((q) => q.gte(q.field("lastActive"), Date.now() - 30000))
+      .filter((q) => q.gte(q.field("lastActive"), Date.now() - 45000))
       .collect();
 
     const data = await asyncMap(results, async (r) => {
@@ -63,45 +63,77 @@ export const get = query({
     return data;
   },
 });
+
 export const heartbeat = mutation({
   args: {},
   handler: async (ctx) => {
     const user = await getCurrentUserOrThrow(ctx);
     const roomUser = await getOneFrom(ctx.db, "roomUsers", "userId", user._id);
     if (!roomUser) return;
-
-    const room = await getOneFrom(ctx.db, "rooms", "by_id", roomUser.roomId, "_id");
-    if (!room) return;
-
-    // Only proceed if timer is active and not ended
-    if (room.timerStatus !== undefined && room.timerStatus !== "ended") {
-      const ownerSesh = await getOneFrom(
-        ctx.db,
-        "roomUsers",
-        "userId",
-        room.session_ownerId as Id<"users">
-      );
-
-      // If session owner is inactive or has left the room → clear session
-      const ownerInactive = ownerSesh?.lastActive && Date.now() - ownerSesh.lastActive > 45000;
-      const ownerLeft = ownerSesh?.roomId !== room._id;
-
-      if (ownerSesh && (ownerInactive || ownerLeft)) {
-        await ctx.db.patch(room._id, {
-          timerStatus: undefined,
-          participants: undefined,
-          duration: undefined,
-          startTime: undefined,
-          endTime: undefined,
-          session_ownerId: undefined,
-        });
-      }
-    }
-
-    // Always update current user's heartbeat
     await ctx.db.patch(roomUser._id, {
       lastActive: Date.now(),
     });
+
+    const room = await getOneFrom(
+      ctx.db,
+      "rooms",
+      "by_id",
+      roomUser.roomId,
+      "_id"
+    );
+    if (!room) return;
+
+    // only if it's not been started for too long, end session.   
+
+
+    if (room.timerStatus === "not started" && room.seshCreation && ( Date.now() - room.seshCreation > 60000*3 )) {
+           console.log("heartbeat")
+           await ctx.db.patch(room._id, {
+            timerStatus: undefined,
+            participants: undefined,
+            duration: undefined,
+            startTime: undefined,
+            endTime: undefined,
+            session_ownerId: undefined,
+          });
+
+//       const ownerSesh = await getOneFrom(
+//         ctx.db,
+//         "roomUsers",
+//         "userId",
+//         room.session_ownerId as Id<"users">
+//       );
+
+//       // If session owner is inactive or has left the room → clear session
+//       const ownerInactive =
+//         ownerSesh?.lastActive && Date.now() - ownerSesh.lastActive > 45000;
+
+//       const ownerLeft = ownerSesh?.roomId !== room._id;
+
+      
+//       if (ownerSesh && (ownerInactive || ownerLeft)) {
+//         //if no participants, clear
+     
+//         if (room.participants?.length == 0) {
+         
+//         } else {
+//           if (room.participants) {
+//             const newParticipants = room.participants.filter(
+//               (u) => u.id !== room.session_ownerId
+//             );
+
+// const newOwner = newParticipants[
+//   Math.floor(Math.random() * newParticipants.length)
+// ];
+//             await ctx.db.patch(room._id, {
+//               participants: newParticipants,
+//               session_ownerId: newOwner.id,
+//             });
+//           }
+//         }
+//       }
+    }
+
+    // Always update current user's heartbeat
   },
 });
-
