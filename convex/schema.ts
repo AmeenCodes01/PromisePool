@@ -60,6 +60,7 @@ export default defineSchema({
   startTime: v.optional(v.number()),
   endTime: v.optional(v.number()),
   duration: v.optional(v.number()),
+  seshCreation: v.optional(v.number()),
   timerStatus:v.optional(v.union(v.literal("running"),v.literal("ended"),v.literal("not started"))),
   participants: v.optional(v.array(v.object({
     id: v.id("users"),
