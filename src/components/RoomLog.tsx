@@ -17,7 +17,7 @@ useEffect(() => {
   const interval = setInterval(() => {
 heartbeat()
 
-}, 15000);
+},60000);
 
   return () => clearInterval(interval);
 }, [name]);
