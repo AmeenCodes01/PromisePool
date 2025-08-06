@@ -8,7 +8,7 @@ import ReactPlayer from "react-player/youtube";
 
 const Stream = () => {
   const [url, setUrl] = usePersistState<string >(
-    "","url"
+    "https://youtu.be/eQHmKJh20_c?feature=shared","url"
   );
   const [pip, setPip] = useState(false);
   const [playing, setPlaying] = usePersistState(false,"playing");
@@ -64,10 +64,10 @@ const handleSeekMouseUp = (val:number) => {
   return (
     <div className="w-full h-full flex ">
       { url !== "" ?
-      <div className="flex flex-col gap-2 p-2">
+      <div className="flex flex-col gap-2 p-2 w-full">
           <ReactPlayer
             ref={playerRef}
-            className=" aspect-auto h-[90%] w-full bg-red-400"
+            className="  h-[90%] w-full"
             width="100%"
             height="100%"
             url={url}

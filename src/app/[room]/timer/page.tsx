@@ -18,12 +18,10 @@ export default async function Page({
 
   return (
     <div
-      className="w-full  h-full   pb-2 flex flex-col  justify-center items-center sm:p-0 pt-8  *:
-    relative 
-    
+      className="w-full flex-1  overflow-y-auto    px-2 py-4 flex flex-col  justify-center items-center sm:p-0 pt-8  
     "
     >
-      <div className=" flex ml-auto gap-4 p-2 px-4 ">
+      <div className=" flex ml-auto gap-4 p-2 px-4 flex-row  ">
         <RoomUsers name={p.room} />
         <InfoDialog
           title="It’s Timer Time! ⏳"
@@ -44,13 +42,16 @@ export default async function Page({
         />
       </div>
       {/* Video */}
-      {/* <div className="flex flex-1  w-full h-full">
+
+      <div className="flex  sm:flex-row flex-col-reverse gap-4 sm:gap-0 w-full   ">
+
+      <div className="flex flex-1    w-full h-full ">
 
       <Stream/>
 
-      </div> */}
+      </div>
       {/* Timer */}
-      <div className="flex flex-1  w-full h-full   sm:justify-center items-center    ">
+      <div className="flex sm:flex-[1.5] flex-1  w-full h-full   sm:justify-center items-center    ">
         {/* <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col"> */}
         {/* <TabsList className="  w-fit mx-auto justify-self-center justify-center ">
     <TabsTrigger value="pomodoro" className="">Pomodoro</TabsTrigger>
@@ -62,6 +63,7 @@ export default async function Page({
         <SessionTimer room={p.room} />
         {/* </TabsContent>
 </Tabs> */}
+      </div>
       </div>
     </div>
   );

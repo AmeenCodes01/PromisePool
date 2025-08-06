@@ -20,11 +20,11 @@ if(!roomInfo){
 
 }
 
-  return <div className="w-full  h-full flex flex-1 pr-0 sm:pr-7 relative">
+  return <div className="w-full  flex flex-1 pr-0 sm:pr-7 ">
 <RoomLog name={p.room}/>
 
             <main
-              className="flex flex-1 w-full h-full 
+              className="flex  w-full h-full 
               ">
               <CheckPrivate room={p.room}/>
               {children}
