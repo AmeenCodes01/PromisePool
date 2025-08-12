@@ -136,3 +136,37 @@ I should ponder on how offline sessions are added
 
 ----optimisation--
 [] useShallow 
+
+
+Your production config files are generated in directory: livekit.promise-pool.com
+
+Please point update DNS for the following domains to the IP address of your server.
+ * livekit.promise-pool.com
+ * turn.promis-pool.com
+ * livekit-whip.promise-pool.com
+Once started, Caddy will automatically acquire TLS certificates for the domains.
+
+The file "cloud_init.ubuntu.yaml" is a script that can be used in the "user-data" field when starting a new VM.
+
+Since you've enabled Egress/Ingress, we recommend running it on a machine with at least 4 cores
+
+Please ensure the following ports are accessible on the server
+ * 443 - primary HTTPS and TURN/TLS
+ * 80 - for TLS issuance
+ * 7881 - for WebRTC over TCP
+ * 3478/UDP - for TURN/UDP
+ * 50000-60000/UDP - for WebRTC over UDP
+ * 1935 - for RTMP Ingress
+ * 7885/UDP - for WHIP Ingress WebRTC
+
+
+Server URL: wss://livekit.promise-pool.com
+RTMP Ingress URL: rtmp://livekit.promise-pool.com/x
+WHIP Ingress URL: https://livekit-whip.promise-pool.com/w
+API Key: APIaRm5nNeeCTsN
+API Secret: 8p00dEO4HRvZMeNbw323eiZXB5YfDxHGbXWf50LiE0cD
+
+
+    Here's a test token generated with your keys: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTEwMDI3NDAsImlzcyI6IkFQSVp6V1QyWkxhNllHVyIsIm5hbWUiOiJUZXN0IFVzZXIiLCJuYmYiOjE3NTUwMDI3NDAsInN1YiI6InRlc3QtdXNlciIsInZpZGVvIjp7InJvb20iOiJteS1maXJzdC1yb29tIiwicm9vbUpvaW4iOnRydWV9fQ.HFKWO2W3KjF0fgyu18xm3m4lOpU9PV-LXRS9bADqSa0
+
+

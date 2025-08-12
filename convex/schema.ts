@@ -15,9 +15,10 @@ export default defineSchema({
     email: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
-    roomIds : v.optional(v.array(v.id("rooms")))
+    roomIds : v.optional(v.array(v.id("rooms"))),
+  countryprops : v.optional(v.object({coords: v.array(v.number()), color: v.string(), timezone:v.string()}))    
 
-  }).index("pCoins",["pCoins"]),
+  }).index("pCoins",["pCoins"]).index("country", ["country"]),
 
   sessions: defineTable({
     duration: v.number(),

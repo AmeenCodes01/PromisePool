@@ -72,8 +72,12 @@ useEffect(() => {
   
   (async () => {
     try {
-      const resp = await fetch(`/api/token?room=${room}&username=${user?.name}`);
-      const data = await resp.json();
+      if(user?.name){
+
+        const res = await fetch(`/api/token?room=${room}&username=${user?.name}`);
+      // const resp = await fetch(`/api/token?room=${room}&username=${user?.name}`);
+      const data = await res.json();
+      console.log(data.token, " token")
       if (!mounted) return;
       
       if (data.token) {
@@ -84,6 +88,7 @@ useEffect(() => {
         //console.log(localVideoTrack, " localPixelTrack");
         
         // Connect to the room first
+        console.log("room connecting")
         await roomInstance.connect(process.env.NEXT_PUBLIC_LIVEKIT_URL as string, data.token);
         
         // IMPORTANT: Publish the pixelated track (uncomment this line!)
@@ -96,6 +101,7 @@ useEffect(() => {
         //await roomInstance.localParticipant.setCameraEnabled(true);
       }
       token = data.token;
+      }
 
           roomInstance.on(RoomEvent.Disconnected, handleOnLeave);
 

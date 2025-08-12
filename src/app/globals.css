@@ -399,3 +399,8 @@
       0px 0px 5px 3px #1a1a1a;
   }
 }
+
+.leaflet-container {
+  outline-offset: 0px;
+  border: 0px;
+}
