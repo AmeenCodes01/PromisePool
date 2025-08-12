@@ -66,6 +66,11 @@ const items = [
     url: "/shop",
     icon: Store,
   },
+  {
+    title: "Call",
+    url: "/pixelcam",
+    icon: Store,
+  },
 ];
 
 const timer = [
