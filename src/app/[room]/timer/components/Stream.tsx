@@ -10,6 +10,8 @@ const Stream = () => {
   const [url, setUrl] = usePersistState<string >(
     "https://youtu.be/eQHmKJh20_c?feature=shared","url"
   );
+
+  const [showVid, setShowVid]= usePersistState(false,"showVid")
   const [pip, setPip] = useState(false);
   const [playing, setPlaying] = usePersistState(false,"playing");
   const [controls, setControls] = useState(false);
@@ -62,7 +64,10 @@ const handleSeekMouseUp = (val:number) => {
   }, []);
 
   return (
-    <div className="w-full h-full flex ">
+    <div className={ showVid ?"flex flex-1    w-full h-full ":""}>
+      {
+        showVid ?
+        <div className="w-full h-full flex ">
       { url !== "" ?
       <div className="flex flex-col gap-2 p-2 w-full">
           <ReactPlayer
@@ -96,9 +101,28 @@ const handleSeekMouseUp = (val:number) => {
             /> 
         <Button variant={"secondary"} onClick={()=>setUrl("")}>Change Video</Button>
             </div>
-        : <Input value={url} onChange={(e)=> setUrl(e.target.value)} placeholder="paste in URL of youtube video" className="self-center mx-auto my-auto border-2 w-[50%]" />
+        :
+        <div className="h-fit my-auto p-2 ">
+        < Input value={url} onChange={(e)=> setUrl(e.target.value)} placeholder="paste in URL of youtube video" className="self-center mx-auto my-auto border-2 w-[50%]" />
+        <span className="text-xs  italic">Click on "Share" button under the youtube video & copy that link here.</span>
+        </div>
         }
         </div>
+
+        :null
+      }
+        <Button
+        variant={"outline"}
+        onClick={()=>setShowVid(state=>!state)}
+        className="absolute bottom-10 left-5"
+      >
+        
+        {!showVid ? "Show ":"Hide "  } 
+        
+        Video</Button>
+
+    </div>
+    
 
         
   );
