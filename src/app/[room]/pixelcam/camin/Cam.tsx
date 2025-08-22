@@ -5,6 +5,7 @@ import {
   useTracks,
   RoomContext,
   VideoConference,
+  LiveKitRoom,
 } from '@livekit/components-react';
 import { LocalParticipant, Room, RoomEvent, Track } from 'livekit-client';
 import '@livekit/components-styles';
@@ -123,7 +124,10 @@ export default function Cam({ room }: { room: string }) {
       roomInstance.disconnect();
     };
   }, [roomInstance, user]);
+
   console.log(token, " token")
+
+
   if (token === '') {
     return <div>Getting token...</div>;
   }
@@ -154,9 +158,11 @@ function MyVideoConference() {
     { onlySubscribed: false },
   );
   return (
-    <VideoConference
+
+      <VideoConference/>
+  
     // chatMessageFormatter={formatChatMessageLinks}
     // SettingsComponent={SHOW_SETTINGS_MENU ? SettingsMenu : undefined}
-    />
-  );
+    
+  )
 }
