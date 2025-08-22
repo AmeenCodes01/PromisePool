@@ -31,6 +31,9 @@ interface DialogProps {
   incSeshCount: () => void;
   playTick: boolean;
   setPlayTick: (state: boolean) => void;
+  showVid: boolean;
+  setShowVid: (state: boolean) => void;
+  
 }
 
 export const usePromiseStore = create<DialogProps>()(
@@ -83,6 +86,8 @@ export const usePromiseStore = create<DialogProps>()(
         })),
       playTick: false,
       setPlayTick: (state) => set({ playTick: state }),
+      showVid: false,
+      setShowVid: (state) => set({ showVid: state }),
     }),
     {
       name: "promise-pool",

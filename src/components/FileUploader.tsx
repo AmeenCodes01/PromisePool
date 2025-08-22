@@ -33,8 +33,10 @@ export default function FileUploader() {
   return (
  <form
   onSubmit={handleSendImage}
-  className="border border-gray-700 rounded p-2 flex items-center gap-2 w-fit shadow-sm "
+  className="border border-gray-700 rounded p-2 flex flex-col items-center gap-2 w-fit shadow-sm "
 >
+  <div>
+
   <input
     type="file"
     accept="image/*"
@@ -50,6 +52,8 @@ export default function FileUploader() {
     disabled={selectedImage === null}
     className="px-3 py-1 text-xs bg-blue-600 text-white rounded disabled:bg-gray-300"
   />
+    </div>
+  <span className="text-xs italic text-primary">upload img to set as bg</span>
 </form>
 
   )

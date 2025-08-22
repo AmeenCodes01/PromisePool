@@ -4,6 +4,7 @@ import Stream from "./components/Stream";
 import InfoDialog from "../InfoDialog";
 import RoomUsers from "@/components/RoomUsers";
 import { Button } from "@/components/ui/button";
+import ShowVidBtn from "./components/ShowVidBtn";
 
 // hook gives all countdown functionality. handle end session/rat e session here.
 export default async function Page({
@@ -15,7 +16,7 @@ export default async function Page({
 
   return (
     <div
-      className="w-full  flex-1 relative  overflow-y-auto    px-2 py-4 flex flex-col  justify-center items-center sm:p-0 pt-8  
+      className="w-full flex-1 relative  overflow-y-auto    flex flex-col  justify-center items-center sm:p-0 pt-8  
     "
     >
       <div className=" flex ml-auto gap-4 p-2 px-4 flex-row  ">
@@ -53,7 +54,7 @@ export default async function Page({
       >Show Video</Button> */}
 
         {/* Timer */}
-        <div className="flex sm:flex-[1.5] flex-1  w-full h-full   sm:justify-center items-center    ">
+        <div className="flex flex-col sm:flex-[1.5] flex-1   w-full h-full   sm:justify-center items-center    ">
           {/* <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col"> */}
           {/* <TabsList className="  w-fit mx-auto justify-self-center justify-center ">
     <TabsTrigger value="pomodoro" className="">Pomodoro</TabsTrigger>
@@ -65,6 +66,10 @@ export default async function Page({
           <SessionTimer room={p.room} />
           {/* </TabsContent>
 </Tabs> */}
+<div className="m-2 mr-auto">
+
+<ShowVidBtn/>
+</div>
         </div>
       </div>
     

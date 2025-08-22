@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import usePersistState from "@/hooks/usePersistState";
+import { usePromiseStore } from "@/hooks/usePromiseStore";
 import React, { useState, useRef, useEffect } from "react";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player/youtube";
@@ -10,8 +11,7 @@ const Stream = () => {
   const [url, setUrl] = usePersistState<string >(
     "https://youtu.be/eQHmKJh20_c?feature=shared","url"
   );
-
-  const [showVid, setShowVid]= usePersistState(false,"showVid")
+const showVid = usePromiseStore(state=>state.showVid)
   const [pip, setPip] = useState(false);
   const [playing, setPlaying] = usePersistState(false,"playing");
   const [controls, setControls] = useState(false);
@@ -111,16 +111,7 @@ const handleSeekMouseUp = (val:number) => {
 
         :null
       }
-        <Button
-        variant={"outline"}
-        onClick={()=>setShowVid(state=>!state)}
-        className="absolute bottom-10 left-5"
-      >
-        
-        {!showVid ? "Show ":"Hide "  } 
-        
-        Video</Button>
-
+       
     </div>
     
 

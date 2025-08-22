@@ -20,7 +20,7 @@ if(!roomInfo){
 
 }
 
-  return <div className="w-full  flex flex-1 pr-0 sm:pr-7 ">
+  return <div className="w-full  flex flex-1 px-2 ">
 <RoomLog name={p.room}/>
 
             <main
