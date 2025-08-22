@@ -181,7 +181,7 @@ function SessionTimer({ room }: { room: string }) {
       style={{
         backgroundImage: bgImage !== "" ? `url('${bgImage}')` : undefined,
       }}
-      className="flex flex-1  flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover   "
+      className="flex flex-1   flex-col w-full h-full px-4 bg-color-background items-center pt-6l  rounded-md bg-cover   "
     >
       <div
         className="flex gap-2 p-2 justify-center  flex-col-reverse flex-1 w-full items-center   "
@@ -342,6 +342,10 @@ function SessionTimer({ room }: { room: string }) {
           </>
         ) : null}
       </div>
+
+      <div className="pt-12 sm:pt-0 pb-2 sm:pb-0">
+
+
       {/* BgImages */}
       {bgImages && bgImages?.length > 0 && (
         <div className=" mt-4 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
@@ -366,6 +370,7 @@ function SessionTimer({ room }: { room: string }) {
       <div className="mt-2">
 
       <FileUploader/>
+      </div>
       </div>
     
       <ProgressDialog room={room} />
