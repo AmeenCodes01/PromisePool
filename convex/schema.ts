@@ -27,9 +27,9 @@ export default defineSchema({
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
     room: v.string(),
+    roomId:v.optional(v.id("rooms")),
     userId: v.id("users"),
-  }).index("userId", ["userId"])
-  ,
+  }).index("userId", ["userId"]).index("room",["room"]),
 
   promises: defineTable({
     title: v.string(),

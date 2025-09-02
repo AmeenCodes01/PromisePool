@@ -86,7 +86,7 @@ export const heartbeat = mutation({
     // only if it's not been started for too long, end session.   
 
 
-    if (room.timerStatus === "not started" && room.seshCreation && ( Date.now() - room.seshCreation > 30000*1 )) {
+    if (room.timerStatus === "not started" && room.seshCreation && ( Date.now() - room.seshCreation > 60000*5 )) {
            console.log("heartbeat")
            await ctx.db.patch(room._id, {
             timerStatus: undefined,

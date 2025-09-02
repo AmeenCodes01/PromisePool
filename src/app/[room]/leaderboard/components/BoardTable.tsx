@@ -1,34 +1,37 @@
 "use client"
+import React from 'react'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useQueries, useQuery } from "convex/react"
-import { api } from "../../../../../convex/_generated/api"
+import { useQuery } from 'convex/react';
+import { api } from '../../../../../convex/_generated/api';
+function BoardTable({room, type}:{room:string;type:string }) {
 
-export function Board() {
+    
+    function formatMinutes(totalMinutes:number| undefined) {
+        if(totalMinutes==undefined)return;
+    
+      const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+      const minutes = (totalMinutes % 60).toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
 
-function formatMinutes(totalMinutes:number| undefined) {
-    if(totalMinutes==undefined)return;
 
-  const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
-  const minutes = (totalMinutes % 60).toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
-}
 
-console.log(formatMinutes(5));   // "00 hr 05 min"
+ const roomR = useQuery(api.leaderboard.getRoom, type=="room"?{
+      room
+    }:"skip")
 
-    const rankings = useQuery(api.leaderboard.get)
+ const global = useQuery(api.leaderboard.getGlobal, type!=="room"?{    }:"skip")
 
-    const data = [rankings,rankings,rankings]
+ const rankings = type=="room" ? roomR:global
   return (
-    <Table className=" ">
+     <Table className="w-full ">
       {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
       <TableHeader className="sticky top-0 bg-accent">
         <TableRow>
@@ -42,7 +45,7 @@ console.log(formatMinutes(5));   // "00 hr 05 min"
         {rankings?.map((user,i) => (
           <TableRow key={user._id}>
             <TableCell className="font-medium">{i}</TableCell>
-            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.name}</TableCell>
             <TableCell>{formatMinutes(user?.totalDuration)}</TableCell>
             <TableCell className="text-right">{user.pCoins}</TableCell>
           </TableRow>
@@ -58,3 +61,5 @@ console.log(formatMinutes(5));   // "00 hr 05 min"
     </Table>
   )
 }
+
+export default BoardTable
