@@ -145,29 +145,3 @@ I should ponder on how offline sessions are added
 
 
 
-
-
-  <Tabs defaultValue="global">
-          <TabsList>
-          <TabsTrigger value="room">Room</TabsTrigger>
-          <TabsTrigger value="global">Global</TabsTrigger>
-        </TabsList>
-        <TabsContent value="room">
-
-      <div className="w-full   sm:ml-8 mt-2 flex flex-col gap-4 text-lg ">
-        <h1>Global Leaderboard</h1>
-        <div className="max-h-[600px] flex">
-          <Board room={p.room}/>
-        </div>
-      </div>
-        </TabsContent>
-        <TabsContent value="global">
-
-      <div className="w-full   sm:ml-8 mt-2 flex flex-col gap-4 text-lg ">
-        <h1>Global Leaderboard</h1>
-        <div className="max-h-[600px] flex">
-          <Board room={p.room}/>
-        </div>
-      </div>
-        </TabsContent>
-      </Tabs>
