@@ -87,7 +87,7 @@ const onSeshStart = async () => {
 
   useEffect(() => {
     if (secLeft == 0) {
-      notifyUser("Break Time",`Your ${workMin}m session is over. Well done! `)
+      notifyUser(`${mode=="work" ? "Break":"Work/Study"} Time`,`Your ${mode=="work" ?workMin:breakMin}m ${mode=="work"? "session":"break"} is over. Well done!`)
       // get progress. open progres
       if (mode == "work") {
         onOpen();

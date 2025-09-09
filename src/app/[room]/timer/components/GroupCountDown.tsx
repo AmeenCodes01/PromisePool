@@ -48,7 +48,8 @@ function GroupCountDown({
     setEndTime, 
     pause,
     onReset,
-    onPause
+    onPause,
+    breakMin
   } = usePromiseStore(
     useShallow((state) => ({
       onOpen: state.onOpen,
@@ -65,7 +66,8 @@ function GroupCountDown({
     setEndTime: state.setEndTime,
      pause: state.pause,
     onReset: state.onReset,
-    onPause: state.onPause
+    onPause: state.onPause,
+    breakMin: state.breakMin
     }))
   );
 
@@ -144,9 +146,10 @@ function GroupCountDown({
   useEffect(() => {
     if (secLeft == 0) {
       console.log("changemode grouptimer useeffect, mode: ", mode);
+            notifyUser(`${mode=="work" ? "Break":"Work/Study"} Time`,`Your ${mode=="work" ?workMin:breakMin}m ${mode=="work"? "session":"break"} is over. Well done!`)
+      
       // get progress. open progres
       if (mode == "work") {
-              notifyUser("Break Time",`Your ${workMin}m session is over. Well done! `)
         
         onOpen();
                 console.log("from the status useEffect")
