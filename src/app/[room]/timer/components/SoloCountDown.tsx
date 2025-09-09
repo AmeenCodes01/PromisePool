@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import TimerDisplay from '../../shop/components/TimerDisplay';
-import useCountdown from './useCountdown';
 import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import useGroupCountdown from '@/hooks/useGroupCountdown';
 import { Id } from '../../../../../convex/_generated/dataModel';
 import { useShallow } from 'zustand/react/shallow';
+import { notifyUser } from '@/lib/notifyUser';
 
 export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,seshId
 
@@ -18,7 +17,6 @@ roomName:string;
   seshId: Id<"sessions">| undefined,
 SettingWithProps: () => React.JSX.Element;
 }) {
-  // use the useCountDown hook here with pause,play,reset functionality
 console.log("solo")
 const {
   workMin,
@@ -27,7 +25,11 @@ const {
   breakMin,
   setGoalOpen,
   onChangeMode,
-  onSoloReset,
+  onReset,
+ onPlay,onPause,
+   secLeft,
+  pause
+
 } = usePromiseStore(
  useShallow( (state) => ({
     workMin: state.workMin,
@@ -36,14 +38,20 @@ const {
     breakMin: state.breakMin,
     setGoalOpen: state.setGoalOpen,
     onChangeMode: state.onChangeMode,
-    onSoloReset: state.onSoloReset,
+    onReset: state.onReset,
+    onPlay: state.onPlay,
+    onPause: state.onPause,
+    secLeft:state.secLeft,
+    pause:state.pause
 
   }))
 );
 
+
+
+
 const startSesh = useMutation(api.sessions.start);
 const resetSesh = useMutation(api.sessions.reset);
-
 
 const onSeshStart = async () => {
     // call convex function. if returns true, start session.
@@ -62,8 +70,6 @@ const onSeshStart = async () => {
       // if rating required, then update workMin to match.
     }
     onPlay();
-  
-    //  onPause()
     
     
   };
@@ -72,40 +78,34 @@ const onSeshStart = async () => {
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
     }
-    onPauseGroup();
-    onSoloReset(roomName)
+    onPause();
+    onReset()
   };
 
-  const { onPause, onPlay, secLeft, setSecLeft, pause } = useCountdown(
-    {
-      sec: mode == "work" ? workMin * 60 : breakMin * 60,
-    room:roomName
-    }
-  );
 
-  const {onPause:onPauseGroup}= useGroupCountdown(roomName)
 
 
   useEffect(() => {
     if (secLeft == 0) {
+      notifyUser(`${mode=="work" ? "Break":"Work/Study"} Time`,`Your ${mode=="work" ?workMin:breakMin}m ${mode=="work"? "session":"break"} is over. Well done!`)
       // get progress. open progres
       if (mode == "work") {
         onOpen();
+        //changed pause to stop
         onChangeMode("break",onPause);
       } else {
         onChangeMode("work",onPause);
          }
 
       const bell = new Audio("/bell.wav");
-
+         console.log("Hitting useEffect")
       bell.play();
     }
   }, [secLeft]);
 
 
   const onBothCountDownPause= ()=>{
-    onPause()
-  //  onPauseGroup()
+   onPause()
   }
   
     return (

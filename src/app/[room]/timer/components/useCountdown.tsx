@@ -49,15 +49,17 @@
       setPause(false);
     };
 
-    useEffect(() => {
-      if (pause) {
-        // If paused, clear the interval if it's running
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-        return;
+  useEffect(() => {
+
+    console.log("useeffect solo ran")
+    if (pause) {
+      // If paused, clear the interval if it's running
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
+      return;
+    }
 
       // Only start a new interval if one doesn't exist
       if (!intervalRef.current) {

@@ -45,9 +45,10 @@ function SessionTimer({ room }: { room: string }) {
     goal,
     setSecLeft,
     setGoalOpen,
-    onSoloReset,
+    onReset,
     setPause,
-    secLeft
+    secLeft,
+    recoverInterval
   } = usePromiseStore(
     useShallow((state) => ({
       workMin: state.workMin,
@@ -62,7 +63,9 @@ function SessionTimer({ room }: { room: string }) {
       setSecLeft: state.setSecLeft,
       setGoalOpen: state.setGoalOpen,
       setPause: state.setPause,
-      onSoloReset: state.onSoloReset,
+      onReset: state.onReset,
+      
+    recoverInterval: state.recoverInterval
     }))
   );
 
@@ -71,6 +74,11 @@ function SessionTimer({ room }: { room: string }) {
     usePromiseStore.persist.rehydrate();
   }, []);
 
+
+  useEffect(()=>{
+    console.log("Hello, recoverInternal")
+recoverInterval()
+  },[])
   useEffect(() => {
     if (room !== undefined) {
    
@@ -106,7 +114,7 @@ function SessionTimer({ room }: { room: string }) {
     setGroupSesh(start);
     if (start) {
       if (workMin * 60 !== secLeft) {
-        onSoloReset(room);
+        onReset();
       }
       console.log("hit", start);
       setOwnerSesh(true);
@@ -127,7 +135,7 @@ function SessionTimer({ room }: { room: string }) {
     console.log("sessiontimer resset")
     if (mode == "work") {
       setPause(true);
-      onSoloReset(room);
+      onReset();
       secLeft !== workMin * 60 ? await resetSesh() : null;
       if (ownerSesh) {
         await cancelGroupSesh({ roomId: roomInfo._id as Id<"rooms"> });
