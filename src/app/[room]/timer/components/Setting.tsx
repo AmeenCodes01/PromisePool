@@ -46,11 +46,20 @@ function Setting({
             <span className="">work</span>
             <Input
               value={work}
-              onChange={(e) => {
-                isNaN(parseInt(e.target.value)) || parseInt(e.target.value) == 0
-                  ? setWork(0)
-                  : setWork(parseInt(e.target.value));
-              }}
+            onChange={(e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setWork(0); // allow empty temporarily
+    } else {
+      setWork(parseInt(value));
+    }
+  }}
+  onBlur={() => {
+    // enforce minimum 1 on blur
+    if (!work || isNaN(work) || work <= 0) {
+      setWork(1);
+    }
+  }}
               type="number"
               min={10}
             />
@@ -63,6 +72,11 @@ function Setting({
               value={brk}
               onChange={(e) => {
                 setBrk(e.target.value === "" ? 0 : parseInt(e.target.value));
+              }}
+              onBlur = {()=>{
+                if (!brk || isNaN(brk) || brk <= 0) {
+      setBrk(1);
+    }
               }}
               type="number"
               min={1}
