@@ -1,6 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation, query, QueryCtx } from "./_generated/server";
-import { getManyFrom } from "convex-helpers/server/relationships";
+import { getManyFrom, getOneFrom } from "convex-helpers/server/relationships";
 import { v } from "convex/values";
  
 export const current = query({
@@ -13,7 +13,19 @@ export const current = query({
     return await ctx.db.get(userId);
   },
 });
+
+export const room = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+        throw new Error("Can't get current user");
+    }
+    return await getOneFrom(ctx.db,"rooms","owner_id",userId)
+  },
+});
  
+
 export const addCountry = mutation({
   args: {
     country: v.string(), 

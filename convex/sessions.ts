@@ -30,12 +30,19 @@ export const start = mutation
   handler: async (ctx, args) => {
     //need to check if prev session
     const user = await getCurrentUserOrThrow(ctx)
+
+    const room = await getOneFrom(ctx.db, "rooms","name",args.room)
     if (user.lastSeshRated == false){
       return {message:"previous session not rated"}
     }
-    const sesh= {...args, userId:user._id}
-    const sessionId = await ctx.db.insert("sessions", sesh)
-    await ctx.db.patch(user._id, {lastSeshId: sessionId, lastSeshRated:false} )
+    if(room){
+
+      const sesh= {...args, userId:user._id, roomId: room?._id}
+      const sessionId = await ctx.db.insert("sessions", sesh)
+      await ctx.db.patch(user._id, {lastSeshId: sessionId, lastSeshRated:false} )
+    }else{
+      console.log("the room in which session started doesn't exist ?")
+    }
    
   },
 });

@@ -1,5 +1,5 @@
 import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";import { authTables } from "@convex-dev/auth/server";
+import { v } from "convex/values"; import { authTables } from "@convex-dev/auth/server";
 
 
 export default defineSchema({
@@ -11,14 +11,14 @@ export default defineSchema({
     score: v.optional(v.number()),
     lastSeshId: v.optional(v.id("sessions")),
     lastSeshRated: v.optional(v.boolean()),
-    totalDuration:v.optional(v.number()),
+    totalDuration: v.optional(v.number()),
     email: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
-    roomIds : v.optional(v.array(v.id("rooms"))),
-  countryprops : v.optional(v.object({coords: v.array(v.number()), color: v.string(), timezone:v.string()}))    
+    roomIds: v.optional(v.array(v.id("rooms"))),
+    countryprops: v.optional(v.object({ coords: v.array(v.number()), color: v.string(), timezone: v.string() }))
 
-  }).index("pCoins",["pCoins"]).index("country", ["country"]),
+  }).index("pCoins", ["pCoins"]).index("country", ["country"]),
 
   sessions: defineTable({
     duration: v.number(),
@@ -27,71 +27,77 @@ export default defineSchema({
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
     room: v.string(),
-    roomId:v.optional(v.id("rooms")),
+    roomId: v.optional(v.id("rooms")),
     userId: v.id("users"),
-  }).index("userId", ["userId"]).index("room",["room"]),
+  }).index("userId", ["userId"]).index("room", ["room"]),
 
   promises: defineTable({
     title: v.string(),
     coins: v.optional(v.number()),
     userId: v.id("users"),
-  }).index("by_userId", ["userId"]).index("title",["title"]),
+  }).index("by_userId", ["userId"]).index("title", ["title"]),
 
   rewards: defineTable({
     title: v.string(),
-    hours:v.number(),
-    rating:v.number(),
+    hours: v.number(),
+    rating: v.number(),
     price: v.number(),
     partsUnlocked: v.optional(v.number()),
     finished: v.boolean(),
     userId: v.id("users"),
   }).index("by_userId", ["userId"]),
-  
+
   rooms: defineTable({
     name: v.string(),
     owner_id: v.id("users"),
-    session_ownerId:v.optional(v.id("users")),
+    session_ownerId: v.optional(v.id("users")),
     type: v.union(
 
-    v.literal("private"), //default room
-    v.literal("public"), //streamer's room
-    v.literal("group"), // friends created room.
+      v.literal("private"), //default room
+      v.literal("public"), //streamer's room
+      v.literal("group"), // friends created room.
 
-  ),
-  startTime: v.optional(v.number()),
-  endTime: v.optional(v.number()),
-  seshCreation:v.optional(v.number()),
-  duration: v.optional(v.number()),
-  timerStatus:v.optional(v.union(v.literal("running"),v.literal("ended"),v.literal("not started"))),
-  participants: v.optional(v.array(v.object({
-    id: v.id("users"),
-    name: v.string()
-  }))), 
-  password:v.optional(v.string())
-  }).index("name",["name"])
-  .index("type",["type"]),
+    ),
 
- signals: defineTable({
-  roomId: v.id("rooms"),
-  senderId: v.string(),
-  receiverId: v.optional(v.string()),  // <-- New
-  type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
-  data: v.any(),
-  timestamp: v.number(),
-   }).index("roomId",["roomId"]),
-  
-  
-   images:defineTable({
+
+
+    startTime: v.optional(v.number()),
+    endTime: v.optional(v.number()),
+    seshCreation: v.optional(v.number()),
+    duration: v.optional(v.number()),
+    timerStatus: v.optional(v.union(v.literal("running"), v.literal("ended"), v.literal("not started"))),
+    participants: v.optional(v.array(v.object({
+      id: v.id("users"),
+      name: v.string()
+    }))),
+    password: v.optional(v.string())
+  }).index("name", ["name"])
+    .index("type", ["type"])
+    .index("owner_id", ["owner_id"]),
+
+
+
+  signals: defineTable({
+    roomId: v.id("rooms"),
+    senderId: v.string(),
+    receiverId: v.optional(v.string()),  // <-- New
+    type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
+    data: v.any(),
+    timestamp: v.number(),
+  }).index("roomId", ["roomId"]),
+
+
+  images: defineTable({
     userId: v.id("users"),
     body: v.id("_storage"),
-    
+
   }).index("userId", ["userId"]),
-  
-  roomUsers:defineTable({
+
+  roomUsers: defineTable({
     userId: v.id("users"),
     roomId: v.id("rooms"),
-    lastActive:v.number()
-  }).index("userId", ["userId"]).index("roomId",["roomId"])
+    lastActive: v.number()
+  }).index("userId", ["userId"]).index("roomId", ["roomId"])
 },
 
 );

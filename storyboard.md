@@ -145,3 +145,11 @@ I should ponder on how offline sessions are added
 
 
 
+
+
+### should use roomIds instead of room names. 
+ with sessions, I'm adding roomIds.
+ [] backfill all the sessions with roomIds by getting names => getting id => roomId:id 
+ 
+ [] start from /page, get user default roomId & redirect user to there.
+  -----when backfill done, remove index on name of rooms doc-----------
