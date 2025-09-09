@@ -1,4 +1,3 @@
-import useGroupCountdown from "@/hooks/useGroupCountdown";
 import { useMutation, useQuery } from "convex/react";
 import React, { useEffect } from "react";
 import { api } from "../../../../../convex/_generated/api";
@@ -6,6 +5,7 @@ import { Id, Doc } from "../../../../../convex/_generated/dataModel";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
 import TimerDisplay from "../../shop/components/TimerDisplay";
 import { useShallow } from "zustand/react/shallow";
+import { notifyUser } from "@/lib/notifyUser";
 
 function GroupCountDown({
   room,
@@ -44,6 +44,11 @@ function GroupCountDown({
     setGoalOpen,
     setSecLeft,
     secLeft,
+    onPlayGroup,
+    setEndTime, 
+    pause,
+    onReset,
+    onPause
   } = usePromiseStore(
     useShallow((state) => ({
       onOpen: state.onOpen,
@@ -56,6 +61,11 @@ function GroupCountDown({
       setGoalOpen: state.setGoalOpen,
       setSecLeft: state.setSecLeft,
       secLeft: state.secLeft,
+      onPlayGroup:state.onPlayGroup,
+    setEndTime: state.setEndTime,
+     pause: state.pause,
+    onReset: state.onReset,
+    onPause: state.onPause
     }))
   );
 
@@ -70,7 +80,6 @@ function GroupCountDown({
   const cancelGroupSesh = useMutation(api.rooms.cancelSesh);
   const leaveGroupSesh = useMutation(api.rooms.leaveSesh);
 
-  const { onPlay, pause, onReset, onPause } = useGroupCountdown(room);
 
   // there should be option to exit group timer.
 
@@ -137,8 +146,11 @@ function GroupCountDown({
       console.log("changemode grouptimer useeffect, mode: ", mode);
       // get progress. open progres
       if (mode == "work") {
+              notifyUser("Break Time",`Your ${workMin}m session is over. Well done! `)
+        
         onOpen();
-        console.log("change Mode");
+                console.log("from the status useEffect")
+
         onChangeMode("break", onPause);
       } else {
         setWorkMin(workMin * 60);
@@ -168,10 +180,13 @@ function GroupCountDown({
         console.log("running useEffect");
         setMode("work");
         !ownerSesh && onSeshStart();
-        onPlay(roomInfo?.endTime as number);
+        setEndTime(roomInfo?.endTime as number)
+        //onPlay(roomInfo?.endTime as number);
+        onPlayGroup()
       }
 
       if (status === "ended") {
+        console.log("from the status useEffect")
         setSecLeft(0);
         onChangeMode("break", onPause);
       }

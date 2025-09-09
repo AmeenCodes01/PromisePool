@@ -14,10 +14,60 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import { createPixelatedVideoTrack, createUltraLowDataPixelTrack } from '@/lib/createPixelCam';
 import { useRouter } from 'next/navigation';
+import { usePromiseStore } from '@/hooks/usePromiseStore';
+import { useShallow } from 'zustand/react/shallow';
 
 
 export default function Cam({ room }: { room: string }) {
   console.log(room, " camroom")
+
+  const {
+      // workMin,
+      // setWorkMin,
+      // setBreakMin,
+      // mode,
+      // groupSesh,
+      // setGroupSesh,
+      // goal,
+      // setSecLeft,
+      // setGoalOpen,
+      // onSoloReset,
+      // setPause,
+      secLeft,
+      recoverInterval,
+      onPause,
+      pause
+    } = usePromiseStore(
+      useShallow((state) => ({
+        // workMin: state.workMin,
+        // setWorkMin: state.setWorkMin,
+        secLeft: state.secLeft,
+        onPause:state.onPause,
+        pause: state.pause,
+
+  
+        // setBreakMin: state.setBreakMin,
+        // mode: state.mode,
+        // groupSesh: state.groupSesh,
+        // setGroupSesh: state.setGroupSesh,
+        // goal: state.goal,
+        // setSecLeft: state.setSecLeft,
+        // setGoalOpen: state.setGoalOpen,
+        // setPause: state.setPause,
+        // onSoloReset: state.onSoloReset,
+        
+      recoverInterval: state.recoverInterval
+      }))
+    );
+  
+  
+    useEffect(() => {
+      console.log("store hydratted");
+      usePromiseStore.persist.rehydrate();
+        recoverInterval()
+    }, []);
+  
+  console.log(secLeft, " secLeft")
   const router = useRouter()
   // TODO: get user input for room and name
   const user = useQuery(api.users.current)
@@ -132,10 +182,35 @@ export default function Cam({ room }: { room: string }) {
     return <div>Getting token...</div>;
   }
 
-  return (
-    <RoomContext.Provider value={roomInstance}>
-      <div data-lk-theme="default" style={{ height: '100dvh' }}>
 
+  const hours = Math.floor(Math.floor(secLeft / 60) / 60);
+
+  const minutes =
+    hours > 0
+      ? Math.floor(secLeft / 60 - hours * 60)
+      : Math.floor(secLeft / 60);
+  const seconds = Math.floor(secLeft % 60);
+
+
+  return (
+    <RoomContext.Provider value={roomInstance} >
+
+
+      <div data-lk-theme="default" style={{ height: '100%' }}>
+  <div className=" flex ">
+            {hours !== 0 && (
+              <span className=" text-lg font-mono">
+                {hours < 10 ? "0" + hours : hours}:
+              </span>
+            )}
+            <span className="text-lg  font-mono ">
+              {minutes < 10 ? "0" + minutes : minutes}:
+            </span>
+            <span className=" text-lg font-mono">
+              {seconds < 10 ? "0" + seconds : seconds}
+            </span>
+          </div>
+        
         {/* Your custom component with basic video conferencing functionality. */}
         <MyVideoConference />
         {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
@@ -158,9 +233,11 @@ function MyVideoConference() {
     { onlySubscribed: false },
   );
   return (
+<>
 
       <VideoConference/>
   
+</>
     // chatMessageFormatter={formatChatMessageLinks}
     // SettingsComponent={SHOW_SETTINGS_MENU ? SettingsMenu : undefined}
     

@@ -14,9 +14,6 @@ import calcReward from "@/lib/calcReward";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useCallback, useEffect, useState } from "react";
-import useCountdown from "./useCountdown";
-import useGroupCountdown from "@/hooks/useGroupCountdown";
-
 function ProgressDialog({ room }: { room: string }) {
   const [rated, setRated] = useState(false);
   const [rating, setRating] = useState<number | string>("");
@@ -27,15 +24,13 @@ function ProgressDialog({ room }: { room: string }) {
     workMin,
     onChangeMode,
     goal,
-    onSoloReset,
+    onReset,
     incSeshCount,
   } = usePromiseStore((state) => state);
 
-  const { onReset: onGroupReset } = useGroupCountdown(room);
 
-  const onReset = () => {
-    onSoloReset(room);
-    onGroupReset();
+  const onSeshReset = () => {
+    onReset()
     onChangeMode("work");
   };
 
@@ -130,7 +125,7 @@ function ProgressDialog({ room }: { room: string }) {
               disabled={rated}
               onClick={() => {
                 resetSesh();
-                onReset();
+                onSeshReset();
                 setRated(false);
                 onClose();
               }}

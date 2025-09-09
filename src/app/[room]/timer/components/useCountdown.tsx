@@ -50,6 +50,8 @@ function useCountdown({ sec, room }: { sec: number; room: string }) {
   };
 
   useEffect(() => {
+
+    console.log("useeffect solo ran")
     if (pause) {
       // If paused, clear the interval if it's running
       if (intervalRef.current) {

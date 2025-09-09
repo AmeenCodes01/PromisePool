@@ -1,9 +1,11 @@
-import React, { useRef } from 'react'
+import  { useRef } from 'react'
 import usePersistState from './usePersistState';
 import { usePromiseStore } from './usePromiseStore';
 
 
 export default function useGroupCountdown(room:string) {
+
+  
   const {secLeft, playTick, setSecLeft, workMin,pause,setPause } = usePromiseStore(state => state);
 
 
@@ -53,8 +55,10 @@ export default function useGroupCountdown(room:string) {
     setEndTime(newEndTime);
     endTimeRef.current = newEndTime;  // Update ref immediately
     setPause(false);
+(!pause || secLeft <= 0)
 
     startTimer();
+
   };
 
   const onReset = () => {

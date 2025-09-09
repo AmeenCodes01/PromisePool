@@ -100,8 +100,8 @@ export function AppSidebar() {
    const {secLeft, pause, workMin , mode} = usePromiseStore((state) => state);
   
     
-  const data =  (mode=="work"&& (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined))) ? timer:items
-  
+  //const data =  (mode=="work"&& (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined))) ? timer:items
+  const data = items
   // const handleRoomClick = (roomName: string) => {
   //     if (!pause ||( workMin * 60 !== secLeft && secLeft!==undefined)) {
   //       } else {
