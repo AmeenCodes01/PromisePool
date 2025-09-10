@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
 import { Users } from "lucide-react";
+import { Id } from "../../convex/_generated/dataModel";
 function RoomUsers({ roomId}: { roomId: string }) {
-  const users = useQuery(api.roomUsers.get, { roomId });
+  const users = useQuery(api.roomUsers.get, { roomId:roomId as Id<"rooms"> });
   const { theme } = useTheme();
   const user = useQuery(api.users.current);
 
