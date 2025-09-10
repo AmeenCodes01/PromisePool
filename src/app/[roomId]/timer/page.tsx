@@ -10,7 +10,7 @@ import ShowVidBtn from "./components/ShowVidBtn";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ room: string }>;
+  params: Promise<{ roomId: string }>;
 }) {
   const p = await params;
 
@@ -20,7 +20,7 @@ export default async function Page({
     "
     >
       <div className=" flex ml-auto gap-4  p-2 px-4 flex-row  ">
-        <RoomUsers name={p.room} />
+        <RoomUsers roomId={p.roomId} />
         <InfoDialog
           title="It’s Timer Time! ⏳"
           desc={
@@ -63,7 +63,7 @@ export default async function Page({
           {/* <TabsContent value="record">Make changes to your account here.</TabsContent> */}
           {/* <TabsContent value="pomodoro" className="w-full flex-1 "> */}
 
-          <SessionTimer room={p.room} />
+          <SessionTimer roomId={p.roomId} />
           {/* </TabsContent>
 </Tabs> */}
           <div className="m-2 mr-auto">

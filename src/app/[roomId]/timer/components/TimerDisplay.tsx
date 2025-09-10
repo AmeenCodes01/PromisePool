@@ -18,7 +18,7 @@ export default function TimerDisplay({
   onSeshStart,
   onSeshReset,
   ownerSesh,
-  room,
+  roomId,
 }: {
   pause: boolean;
   showExitBtn: boolean;
@@ -27,7 +27,7 @@ export default function TimerDisplay({
   onSeshReset: () => void;
   SettingWithProps: () => React.JSX.Element;
   ownerSesh?: boolean;
-  room: string;
+  roomId: string;
 }) {
   const { workMin, mode, onChangeMode, groupSesh, secLeft,seshCount } = usePromiseStore(
     useShallow((state) => {
@@ -78,10 +78,9 @@ export default function TimerDisplay({
           >
             Work
           </Button>
-          <button disabled={!pause} className={`${!pause ? "opacity-50":""}`}>
-
-          <SettingWithProps />
-          </button>
+          <div className={`${playing ? "opacity-50" : ""}`} aria-disabled={!pause}>
+  <SettingWithProps  />
+</div>
         </div>
         <div className="flex flex-row  ">
           <div className=" flex ">

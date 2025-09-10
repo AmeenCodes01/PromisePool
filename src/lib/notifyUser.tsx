@@ -5,7 +5,6 @@ export function notifyUser(title: string, body: string) {
 return;
     
   } 
-console.log("running")
   if (Notification.permission === "granted") {
     new Notification(title, { body });
   } else if (Notification.permission !== "denied") {

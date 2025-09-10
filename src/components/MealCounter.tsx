@@ -2,7 +2,6 @@
 import React from 'react'
 import { Input } from './ui/input';
 import usePersistState from '@/hooks/usePersistState';
-import client from '@/lib/openAI';
 import { Button } from './ui/button';
 import { getMealResponse } from '@/lib/getMealResponse';
 import { ArrowDown } from 'lucide-react';

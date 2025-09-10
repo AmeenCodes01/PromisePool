@@ -14,24 +14,23 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import GroupCountDown from "./GroupCountDown";
 import SoloCountDown from "./SoloCountDown";
 import ProgressDialog from "./ProgressDialog";
-import BuildAnimation from "./Animation";
 import { Edit } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 import FileUploader from "@/components/FileUploader";
 import MealCounter from "@/components/MealCounter";
 
-function SessionTimer({ room }: { room: string }) {
+function SessionTimer({ roomId }: { roomId: string }) {
   const user = useQuery(api.users.current) as Doc<"users">;
   const bgImages = useQuery(api.images.list);
 
   const [ownerSesh, setOwnerSesh] = usePersistState<boolean>(
     false,
-    `${room}-seshOwner`
+    `${roomId}-seshOwner`
   );
   const [localTimerStatus, setLocalTimerStatus] = usePersistState<
     null | string
-  >(null, `${room}-timerStatus`);
+  >(null, `${roomId}-timerStatus`);
   const [participant, setParticipant] = usePersistState(false, "participant");
   const [bgImage, setbgImage] = usePersistState("", "bgImage");
 
@@ -80,14 +79,14 @@ function SessionTimer({ room }: { room: string }) {
 recoverInterval()
   },[])
   useEffect(() => {
-    if (room !== undefined) {
+    if (roomId !== undefined) {
    
       setGroupSesh(false);
     }
-  }, [room]);
+  }, [roomId]);
 
 
-  const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
+  const roomInfo = useQuery(api.rooms.getOne, { id: roomId as Id<"rooms"> }) as Doc<"rooms">;
 
   const createGroupSesh = useMutation(api.rooms.createSesh);
 
@@ -116,7 +115,6 @@ recoverInterval()
       if (workMin * 60 !== secLeft) {
         onReset();
       }
-      console.log("hit", start);
       setOwnerSesh(true);
       setLocalTimerStatus("not started");
       createGroupSesh({
@@ -151,7 +149,6 @@ recoverInterval()
     } else {
       if (status === "not started") {
         setGroupSesh(true);
-        console.log(user._id, roomInfo.session_ownerId);
         setOwnerSesh(user._id === roomInfo.session_ownerId);
       }
       if (!ownerSesh && (status === undefined || status == "ended")) {
@@ -199,7 +196,7 @@ recoverInterval()
       >
         {groupSesh && participant ? (
           <GroupCountDown
-            room={room as Id<"rooms">}
+            roomId={roomId as Id<"rooms">}
             lastSeshRated={user?.lastSeshRated}
             userId={user?._id}
             SettingWithProps={SettingWithProps}
@@ -214,7 +211,7 @@ recoverInterval()
         ) : (
           <SoloCountDown
             lastSeshRated={user?.lastSeshRated}
-            roomName={roomInfo?.name}
+            roomId={roomId}
             seshId={user?.lastSeshId}
             SettingWithProps={SettingWithProps}
           />
@@ -381,7 +378,7 @@ recoverInterval()
       </div>
       </div>
     
-      <ProgressDialog room={room} />
+      <ProgressDialog roomId={roomId} />
     </div>
   );
 }

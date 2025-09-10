@@ -24,7 +24,7 @@ import { ConvexError } from "convex/values"
 const formSchema = z.object({
   name: z.string()
     .min(5, { message: "Name must be at least 5 characters & no spaces" })
-    .regex(/^[^\s]+$/, { message: "No spaces allowed." }),
+    ,
   password: z.string()
     .min(6, { message: "Password must be at least 6 characters" })
 });
@@ -43,9 +43,11 @@ const formSchema = z.object({
       async function onSubmit(values: z.infer<typeof formSchema>) {
          try{
 
-          await createRoom({type:"group", name: values.name, password:values.password })
+        const roomId=  await createRoom({type:"group", name: values.name, password:values.password })
+          console.log(roomId)
           onCreated()
-          router.push(`/${values.name}`)
+      roomId &&    router.push(`/${roomId}`)
+        
         }catch(error){
           const errorMessage = error instanceof ConvexError
           ? (error.data as { message: string }).message
@@ -56,7 +58,7 @@ const formSchema = z.object({
       }
 
   return (
-    <DialogContent>
+    <DialogContent >
  <DialogHeader>
       <DialogTitle>Create room</DialogTitle>
       <DialogDescription>
@@ -95,13 +97,14 @@ const formSchema = z.object({
             </FormItem>
           )}
         />
-    <DialogFooter className="sm:justify-start">
+    <DialogFooter className="sm:justify-start  ">
         <Button type="submit">Create</Button>
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               Close
             </Button>
           </DialogClose>
+            <span className="text-sm italic font-semibold pl-2  my-auto ">Please refresh after closing.</span>
         </DialogFooter>
       </form>
 

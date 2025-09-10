@@ -8,6 +8,7 @@ import {
   getManyFrom,
   getManyVia,
 } from "convex-helpers/server/relationships";
+import { asyncMap } from "convex-helpers";
 
 export const get = query({
   args:{}, 
@@ -24,24 +25,25 @@ export const start = mutation
 ({
   args: {
     duration: v.number(),
-    room: v.string(),
+    roomId: v.id("rooms"),
     goal: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     //need to check if prev session
     const user = await getCurrentUserOrThrow(ctx)
 
-    const room = await getOneFrom(ctx.db, "rooms","name",args.room)
+    const room = await ctx.db.get(args.roomId)
     if (user.lastSeshRated == false){
       return {message:"previous session not rated"}
     }
+
     if(room){
 
       const sesh= {...args, userId:user._id, roomId: room?._id}
       const sessionId = await ctx.db.insert("sessions", sesh)
       await ctx.db.patch(user._id, {lastSeshId: sessionId, lastSeshRated:false} )
     }else{
-      console.log("the room in which session started doesn't exist ?")
+      console.log("the room in which session started doesn't exist")
     }
    
   },
@@ -98,3 +100,32 @@ console.log("sesison reset & deleted")
   
   },
 });
+
+
+
+// migrate room names --> room Ids
+
+
+// export const addRoomIds = mutation
+// ({
+//   args: {
+    
+//   },
+//   handler: async (ctx, args) => {
+//     //need to check if prev session
+    
+//     const sessions = await ctx.db.query("sessions").collect()
+
+//     const rooms = await ctx.db.query("rooms").collect()
+
+//     await asyncMap(sessions, async (s)=>{
+//       const room = rooms.filter(r => s.room === r.name)
+// if(room.length ==1){
+
+//   await ctx.db.patch(s._id, {roomId: room[0]._id, room:undefined})
+// }
+//     })
+
+//   },
+// });
+

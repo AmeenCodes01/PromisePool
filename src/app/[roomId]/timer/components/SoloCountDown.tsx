@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import TimerDisplay from '../../shop/components/TimerDisplay';
+import TimerDisplay from './TimerDisplay';
 import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
@@ -7,13 +7,13 @@ import { Id } from '../../../../../convex/_generated/dataModel';
 import { useShallow } from 'zustand/react/shallow';
 import { notifyUser } from '@/lib/notifyUser';
 
-export default function SoloCountDown({ lastSeshRated, roomName,SettingWithProps,seshId
+export default function SoloCountDown({ lastSeshRated, roomId,SettingWithProps,seshId
 
 }:{
 
 
 lastSeshRated: boolean|undefined;
-roomName:string;
+roomId:string;
   seshId: Id<"sessions">| undefined,
 SettingWithProps: () => React.JSX.Element;
 }) {
@@ -59,7 +59,7 @@ const onSeshStart = async () => {
       if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {
         const result = await startSesh({
           duration: workMin,
-          room: roomName,
+          roomId: roomId as Id<"rooms">,
         });
         setGoalOpen(true)
       } else {
@@ -116,8 +116,8 @@ const onSeshStart = async () => {
     showExitBtn={false}
     onPause={onBothCountDownPause}
     onSeshStart={onSeshStart}
-    onSeshReset={onSeshReset}
-      room={roomName}
+      onSeshReset={onSeshReset}
+      roomId={roomId}
       />
     </div>
   )

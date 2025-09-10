@@ -24,16 +24,17 @@ function Setting({
   onChangeSec: (sec: number, type: "break" | "work") => void;
   participant: boolean;
 }) {
-  const { workMin, breakMin, playTick, setPlayTick } = usePromiseStore(
+  const { workMin, breakMin, playTick, setPlayTick, secLeft, mode,  } = usePromiseStore(
     (state) => state
   );
   const [work, setWork] = useState(workMin);
   const [brk, setBrk] = useState(breakMin);
+  const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button disabled={participant}>
+        <button disabled={participant || playing }>
           <Settings size={18} />
         </button>
       </DialogTrigger>

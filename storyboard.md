@@ -153,3 +153,5 @@ I should ponder on how offline sessions are added
  
  [] start from /page, get user default roomId & redirect user to there.
   -----when backfill done, remove index on name of rooms doc-----------
+
+ [] i added roomId to users which will be their priv room Id. 

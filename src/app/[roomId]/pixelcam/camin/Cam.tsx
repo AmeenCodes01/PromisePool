@@ -18,8 +18,8 @@ import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useShallow } from 'zustand/react/shallow';
 
 
-export default function Cam({ room }: { room: string }) {
-  console.log(room, " camroom")
+export default function Cam({ roomId }: { roomId: string }) {
+  console.log(roomId, " camroom")
 
   const {
       // workMin,
@@ -115,7 +115,7 @@ export default function Cam({ room }: { room: string }) {
 
 
   );
-  const handleOnLeave = useCallback(() => router.push(`/${room}/pixelcam`), [router]);
+  const handleOnLeave = useCallback(() => router.push(`/${roomId}/pixelcam`), [router]);
   let token;
   useEffect(() => {
     let mounted = true;
@@ -125,7 +125,7 @@ export default function Cam({ room }: { room: string }) {
       try {
         if (user?.name) {
 
-          const res = await fetch(`/api/token?room=${room}&username=${user?.name}`);
+          const res = await fetch(`/api/token?room=${roomId}&username=${user?.name}`);
           const data = await res.json();
           console.log(data.token, " token")
           if (!mounted) return;

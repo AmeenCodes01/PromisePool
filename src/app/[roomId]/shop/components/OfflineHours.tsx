@@ -15,6 +15,7 @@ import calcRewards from "@/lib/calcReward";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useParams } from "next/navigation";
 import { number } from "zod";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 
 export function Coins(){
@@ -29,7 +30,7 @@ function OfflineHours() {
   const startSesh = useMutation(api.sessions.start);
   const endSesh = useMutation(api.sessions.stop);
   
-  const {room} = useParams<{room:string}>()
+  const {roomId} = useParams<{roomId:string}>()
 
    const getReward = useCallback(() => {
       return calcRewards(hours*60, rating as number);
@@ -66,6 +67,7 @@ function OfflineHours() {
           <Input
                        value={hours}
                        type="number"
+                       max={5}
                        onBlur={(e) => {
                          const clean = e.target.value.replace(/^0+(?=\d)/, "");
                          setHours(Number(clean));
@@ -101,7 +103,7 @@ function OfflineHours() {
               if(typeof rating === "number"){
 
                 const coins = calcRewards(hours * 60, rating as number, true);
-                await startSesh({ duration: hours * 60, room: room });
+                await startSesh({ duration: hours * 60, roomId: roomId as Id<"rooms"> });
                 await endSesh({wCoins:coins, pCoins:coins, rating:rating as number,duration:hours*60})
                 setShowCoins(true)
               }

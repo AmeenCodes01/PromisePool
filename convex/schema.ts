@@ -16,7 +16,8 @@ export default defineSchema({
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
     roomIds: v.optional(v.array(v.id("rooms"))),
-    countryprops: v.optional(v.object({ coords: v.array(v.number()), color: v.string(), timezone: v.string() }))
+    countryprops: v.optional(v.object({ coords: v.array(v.number()), color: v.string(), timezone: v.string() })),
+    roomId: v.optional(v.id("rooms"))
 
   }).index("pCoins", ["pCoins"]).index("country", ["country"]),
 
@@ -26,10 +27,10 @@ export default defineSchema({
     goal: v.optional(v.string()),
     wCoins: v.optional(v.number()),
     pCoins: v.optional(v.number()),
-    room: v.string(),
+  
     roomId: v.optional(v.id("rooms")),
     userId: v.id("users"),
-  }).index("userId", ["userId"]).index("room", ["room"]),
+  }).index("userId", ["userId"]).index("roomId", ["roomId"]),
 
   promises: defineTable({
     title: v.string(),
@@ -71,20 +72,8 @@ export default defineSchema({
       name: v.string()
     }))),
     password: v.optional(v.string())
-  }).index("name", ["name"])
-    .index("type", ["type"])
+  }).index("type", ["type"])
     .index("owner_id", ["owner_id"]),
-
-
-
-  signals: defineTable({
-    roomId: v.id("rooms"),
-    senderId: v.string(),
-    receiverId: v.optional(v.string()),  // <-- New
-    type: v.union(v.literal("offer"), v.literal("answer"), v.literal("candidate")),
-    data: v.any(),
-    timestamp: v.number(),
-  }).index("roomId", ["roomId"]),
 
 
   images: defineTable({

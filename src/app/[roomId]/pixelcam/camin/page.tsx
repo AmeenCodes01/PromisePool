@@ -4,17 +4,16 @@ import Cam from "./Cam";
 async function Page({
   params,
 }: {
-  params: Promise<{ room: string }>
+  params: Promise<{ roomId: string }>
 }) {
   const p =  await params
   //get room. if room
-console.log(p.room," room")
   // join room & send heartbeat
 
 
 
   return <div className="w-full relative h-full justify-center items-center flex">
-   <Cam room={p.room}/>
+   <Cam roomId={p.roomId}/>
   </div>;
 }
 

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 
-const Joinbtn = ({room}:{room:string})=>{
+const Joinbtn = ({roomId}:{roomId:string})=>{
 "use client"
 return (
   <Link href={`pixelcam/camin`}>
@@ -18,7 +18,7 @@ return (
 async function Page({
   params,
 }: {
-  params: Promise<{ room: string }>
+  params: Promise<{ roomId: string }>
 }) {
   const p =  await params
   //get room. if room
@@ -36,7 +36,7 @@ async function Page({
 
 
   return <div className="w-full relative h-full justify-center items-center flex">
-  <Joinbtn room={p.room}/>
+  <Joinbtn roomId={p.roomId}/>
   </div>;
 }
 

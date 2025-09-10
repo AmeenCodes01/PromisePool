@@ -1,5 +1,4 @@
 "use client";
-import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
 import { notFound, redirect } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
@@ -17,6 +16,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import usePersistState from "@/hooks/usePersistState";
+import { Id } from "../../../convex/_generated/dataModel";
 
 const CheckPass = ({
   password,
@@ -64,13 +64,13 @@ const CheckPass = ({
   );
 };
 
-function CheckPrivate({ room }: { room: string }) {
+function CheckPrivate({ roomId }: { roomId: string }) {
   const user = useQuery(api.users.current);
   const [verified, setVerified] = usePersistState(
     false,
-    `${room}${user?._id}Verify`
+    `${user?.roomId}Verify`
   );
-  const roomInfo = useQuery(api.rooms.getOne, { name: room });
+  const roomInfo = useQuery(api.rooms.getOne, { id: roomId as Id<"rooms"> });
   const addRoom = useMutation(api.rooms.add);
   const onVerified = () => {
     setVerified(true);
@@ -78,19 +78,21 @@ function CheckPrivate({ room }: { room: string }) {
   };
 
   if (roomInfo?.type === "private") {
-    if (user?.name !== room) {
-      redirect(`/${user?.name}/timer`);
+    if (user?._id !== roomInfo?.owner_id) {
+    // if it's not user's private room, redirect to user private room.s
+      redirect(`/${user?.roomId}/timer`);
     }
   }
 
   const onCancel = () => {
-    redirect(`/${user?.name}/timer`);
+    redirect(`/${user?.roomId}/timer`);
   };
   
   if (
     roomInfo?.type === "group" &&
     (!(user?.roomIds && user?.roomIds.includes(roomInfo._id)) )
   ) {
+    console.log(roomInfo, " roominfo")
     return (
       <div>
         <CheckPass

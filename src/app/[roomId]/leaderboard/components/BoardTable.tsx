@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/table"
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-function BoardTable({room, type}:{room:string;type:string }) {
+import { Id } from '../../../../../convex/_generated/dataModel';
+function BoardTable({roomId, type}:{roomId:string;type:string }) {
 
     
     function formatMinutes(totalMinutes:number| undefined) {
@@ -24,7 +25,7 @@ function BoardTable({room, type}:{room:string;type:string }) {
 
 
  const roomR = useQuery(api.leaderboard.getRoom, type=="room"?{
-      room
+      roomId:roomId as Id<"rooms">
     }:"skip")
 
  const global = useQuery(api.leaderboard.getGlobal, type!=="room"?{    }:"skip")

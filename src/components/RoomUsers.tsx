@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
 import { Users } from "lucide-react";
-function RoomUsers({ name }: { name: string }) {
-  const users = useQuery(api.roomUsers.get, { name });
+function RoomUsers({ roomId}: { roomId: string }) {
+  const users = useQuery(api.roomUsers.get, { roomId });
   const { theme } = useTheme();
   const user = useQuery(api.users.current);
 

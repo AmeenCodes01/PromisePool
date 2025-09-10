@@ -15,11 +15,11 @@ export const get = query({
     const user = await getCurrentUserOrThrow(ctx);
     const publicRooms = await getManyFrom(ctx.db, "rooms", "type", "public");
     const groups = user.roomIds ? await getAll(ctx.db, user.roomIds) : [];
-    
-    const priv = groups.filter(g=>g?.name === user.email)
-    const privGroups = groups.filter(g=>g?.name !== user.email)
 
-    return { public: publicRooms, groups: privGroups, private:priv };
+    const priv = groups.filter(g => g?.name === user.email)
+    const privGroups = groups.filter(g => g?.name !== user.email)
+
+    return { public: publicRooms, groups: privGroups, private: priv };
   },
 });
 
@@ -28,7 +28,7 @@ export const add = mutation({
   handler: async (ctx, { id }) => {
     const user = await getCurrentUserOrThrow(ctx);
     if (user && !user.roomIds?.includes(id)) {
-      
+
       await ctx.db.patch(user._id, { roomIds: [...(user?.roomIds ?? []), id] });
     }
   },
@@ -46,25 +46,26 @@ export const create = mutation({
     ),
   },
   handler: async (ctx, { name, type, password }) => {
+    console.log("Helo idiot")
     const user = await getCurrentUserOrThrow(ctx);
-    const existingRoom = await ctx.db
-      .query("rooms")
-      .filter((q) => q.eq(q.field("name"), name))
-      .unique();
+    // const existingRoom = await ctx.db
+    //   .query("rooms")
+    //   .filter((q) => q.eq(q.field("name"), name))
+    //   .unique();
 
-    if (existingRoom) {
-      throw new ConvexError({ message: "Room with this name already exists" });
-    }
-
-    await createRoom(ctx, name, user._id, type, password);
+    // if (existingRoom) {
+    //   throw new ConvexError({ message: "Room with this name already exists" });
+    // }
+console.log("hloo create")
+    return await createRoom(ctx, name, user._id, type, password, undefined);
   },
 });
 
 export const getOne = query({
-  args: { name: v.string() },
-  handler: async (ctx, { name }) => {
-    const room = await getOneFrom(ctx.db, "rooms", "name", name);
-    return room;
+  args: { id: v.id("rooms") },
+  handler: async (ctx, { id }) => {
+    return await ctx.db.get(id)
+
   },
 });
 
@@ -83,7 +84,7 @@ export const createSesh = mutation({
         timerStatus: "not started",
         duration,
         session_ownerId: user._id as Id<"users">,
-        participants: [{id: user._id, name: user.name as string}],
+        participants: [{ id: user._id, name: user.name as string }],
         seshCreation: Date.now()
       });
     }
@@ -98,7 +99,7 @@ export const startSesh = mutation({
   handler: async (ctx, args) => {
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
-      const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUserOrThrow(ctx);
 
     if (room) {
       const startTime = Date.now();
@@ -122,10 +123,10 @@ export const participate = mutation({
     const { roomId, userId } = args;
     const room = await ctx.db.get(roomId);
     const user = await getCurrentUserOrThrow(ctx);
-    const participant = room?.participants?.find(p=> p.id ===userId)
-    if (room && room.timerStatus === "not started"&& !participant) {
+    const participant = room?.participants?.find(p => p.id === userId)
+    if (room && room.timerStatus === "not started" && !participant) {
       await ctx.db.patch(roomId, {
-        participants: [...(room.participants ?? []), {id:userId,name:user.name as string}],
+        participants: [...(room.participants ?? []), { id: userId, name: user.name as string }],
       });
     }
   },
@@ -139,12 +140,12 @@ export const endSesh = mutation({
   handler: async (ctx, args) => {
     const { roomId } = args;
     const room = await ctx.db.get(roomId);
-console.log("endsESH")
+    console.log("endsESH")
     if (room) {
-     
+
       await ctx.db.patch(roomId, {
         timerStatus: "ended",
-       participants: undefined
+        participants: undefined
       });
     }
   },
@@ -165,37 +166,37 @@ export const cancelSesh = mutation({
         timerStatus: undefined,
         participants: undefined,
         duration: undefined,
-        startTime:undefined,
-        endTime:undefined,
-        session_ownerId:undefined
+        startTime: undefined,
+        endTime: undefined,
+        session_ownerId: undefined
       });
     }
   },
 })
 
 
-export const leaveSesh =mutation({
+export const leaveSesh = mutation({
   args: {
     roomId: v.id("rooms"),
     userId: v.id("users")
   },
   handler: async (ctx, args) => {
-    const { roomId,userId } = args;
+    const { roomId, userId } = args;
     console.log("levegroupsesh")
     const room = await ctx.db.get(roomId);
     // don't start if one already started.
     if (room) {
       await ctx.db.patch(roomId, {
-        
-        participants: room?.participants ? room.participants?.filter((p)=> p.id !==userId): room?.participants
-        
+
+        participants: room?.participants ? room.participants?.filter((p) => p.id !== userId) : room?.participants
+
       });
     }
   },
 })
- 
 
- 
+
+
 
 
 export async function createRoom(
@@ -203,16 +204,17 @@ export async function createRoom(
   name: string,
   id: Id<"users">,
   type: "private" | "public" | "group",
-  password?: string
+  password?: string,
+  mode?: "init" | undefined
 ) {
-  const user = await ctx.db.get(id);
-const roomId=   await ctx.db.insert("rooms", {
+  const user = await ctx.db.get(id)
+  const roomId = await ctx.db.insert("rooms", {
     name,
     owner_id: id,
     type: type,
     password: password,
   });
-
-  await ctx.db.patch(id,{roomIds:[...(user?.roomIds ?? []),roomId]})
-  
+  console.log(mode, " creating room")
+  mode ? await ctx.db.patch(id, { roomId }) : await ctx.db.patch(id, { roomIds: [...user?.roomIds ?? [], roomId] })
+  return roomId
 }

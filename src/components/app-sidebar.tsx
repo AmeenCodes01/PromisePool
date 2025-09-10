@@ -7,6 +7,7 @@ import {
   Search,
   Settings,
   Store,
+  Phone
 } from "lucide-react";
 
 import {
@@ -38,14 +39,15 @@ import RoomDropDown from "./RoomDropDown";
 import { useParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 
 // Menu items.
 const items = [
-  {
-    title: "Map",
-    url: "/map",
-    icon: Inbox,
-  },
+  // {
+  //   title: "Map",
+  //   url: "/map",
+  //   icon: Inbox,
+  // },
   {
     title: "Timer",
     url: "/timer",
@@ -69,7 +71,7 @@ const items = [
   {
     title: "Call",
     url: "/pixelcam",
-    icon: Store,
+    icon: Phone,
   },
 ];
 
@@ -85,17 +87,17 @@ export function AppSidebar() {
   // if no room is chosen, default is user name. for that, we need user from clerk/convex? 
   const user = useQuery(api.users.current)
   const params = useParams()
-  const [inRoom,setInRoom]= useState<string| undefined>( params.room as string)
+  const [inRoom,setInRoom]= useState<Doc<"rooms">| undefined>()
+
+  const room = useQuery(api.rooms.getOne, {id:params.roomId ? params.roomId as Id<"rooms"> : user?.roomId as Id<"rooms">})
   const { signOut } = useAuthActions();
+
   useEffect(() => {
-    if (params.room) {
+    if (room) {
       // If params.room is defined, use it
-      setInRoom(params.room as string);
-    } else if (user?.name) {
-      // If params.room is undefined, use user.name as the default
-      setInRoom(user.name);
+      setInRoom(room);
     }
-  }, [params.room, user?.name]);
+  }, [params.roomId, room]);
 
    const {secLeft, pause, workMin , mode} = usePromiseStore((state) => state);
   
@@ -112,7 +114,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-              <RoomDropDown inRoom={inRoom} setInRoom={setInRoom} />
+              <RoomDropDown inRoom={inRoom??undefined} setInRoom={setInRoom} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -123,7 +125,7 @@ export function AppSidebar() {
               {data.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={"/"+inRoom + "/" + item.url}>
+                    <a href={"/"+inRoom?._id + "/" + item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>

@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id, Doc } from "../../../../../convex/_generated/dataModel";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
-import TimerDisplay from "../../shop/components/TimerDisplay";
+import TimerDisplay from "./TimerDisplay";
 import { useShallow } from "zustand/react/shallow";
 import { notifyUser } from "@/lib/notifyUser";
 
 function GroupCountDown({
-  room,
+  roomId,
   userId,
   lastSeshRated,
   SettingWithProps,
@@ -20,7 +20,7 @@ function GroupCountDown({
   setParticipant,
   participant,
 }: {
-  room: string;
+  roomId: Id<"rooms">;
   SettingWithProps: () => React.JSX.Element;
   seshId: Id<"sessions"> | undefined;
 
@@ -71,9 +71,8 @@ function GroupCountDown({
     }))
   );
 
-  const roomInfo = useQuery(api.rooms.getOne, { name: room }) as Doc<"rooms">;
-  const roomId = roomInfo?._id as Id<"rooms">;
 
+  const roomInfo = useQuery(api.rooms.getOne, { id: roomId as Id<"rooms"> }) as Doc<"rooms">;
   const startGroupSesh = useMutation(api.rooms.startSesh);
   const endGroupSesh = useMutation(api.rooms.endSesh);
 
@@ -116,7 +115,7 @@ function GroupCountDown({
         const result = roomInfo.duration
           ? await startSesh({
               duration: roomInfo.duration,
-              room: roomInfo.name,
+              roomId
             })
           : null;
         if (ownerSesh) {
@@ -223,7 +222,7 @@ function GroupCountDown({
         onSeshStart={onSeshStart}
         onSeshReset={onSeshReset}
         ownerSesh={ownerSesh}
-        room={room}
+        roomId={roomId}
       />
     </div>
   );

@@ -14,7 +14,7 @@ import calcReward from "@/lib/calcReward";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useCallback, useEffect, useState } from "react";
-function ProgressDialog({ room }: { room: string }) {
+function ProgressDialog({ roomId }: { roomId: string }) {
   const [rated, setRated] = useState(false);
   const [rating, setRating] = useState<number | string>("");
 

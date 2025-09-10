@@ -4,7 +4,7 @@ import Board from "./components/Board";
 async function Page({
   params,
 }: {
-  params: Promise<{ room: string }>
+  params: Promise<{ roomId: string }>
 }) {
 
   const p = await params
@@ -14,7 +14,7 @@ async function Page({
       <div className="w-full   sm:ml-8 mt-2 flex flex-col gap-4 text-lg ">
        
         <div className="max-h-[600px] flex">
-          <Board room={p.room}/>
+          <Board roomId={p.roomId}/>
         </div>
       </div>
     </div>

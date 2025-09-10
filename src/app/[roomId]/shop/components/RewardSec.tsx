@@ -132,7 +132,6 @@ function RewardSec() {
                 title="Reset Reward Coins "
                 onConfirm={() => {
                   resetCoins()
-                  console.log("executed")
                 }}
                 desc="Reset Reward Coins to 0 ? So you can start from scratch again to earn the next reward. "
               />

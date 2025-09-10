@@ -33,11 +33,11 @@ interface userSesh {
 
 export const getRoom = query({
   args: {
-    room: v.string()
+    roomId: v.id("rooms")
   },
   handler: async (ctx, args) => {
     // get all sessions of that room
-    const roomSesh = await getManyFrom(ctx.db, "sessions", "room", args.room);
+    const roomSesh = await getManyFrom(ctx.db, "sessions", "roomId", args.roomId);
 
     // group by userId
     const userSesh: userSesh[] = [];

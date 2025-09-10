@@ -87,7 +87,6 @@ const tick = new Audio("/Tick.mp3");
 
           if (remainingSec <= 0) {
             clearInterval(id);
-            console.log("hitting this")
             set({ intervalRef: null, pause: true })
           }
 
@@ -103,7 +102,6 @@ const tick = new Audio("/Tick.mp3");
 
         set({ pause: false });
 
-        console.log("OnPlay ", pause, secLeft, " run")
         const id = setInterval(() => {
           const { secLeft, pause, playTick, lastBell, workMin, mode } = get();
 

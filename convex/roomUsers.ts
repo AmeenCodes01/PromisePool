@@ -11,11 +11,11 @@ import { asyncMap } from "convex-helpers";
 
 export const join = mutation({
   args: {
-    name: v.string(),
+    id: v.id("rooms"),
   },
   handler: async (ctx, args) => {
-    const { name } = args;
-    const room = await getOneFrom(ctx.db, "rooms", "name", name);
+    const { id } = args;
+    const room = await ctx.db.get(id)
     const user = await getCurrentUserOrThrow(ctx);
     if (room) {
       //del old rooms if exist
@@ -41,11 +41,11 @@ export const join = mutation({
 
 export const get = query({
   args: {
-    name: v.string(),
+    roomId: v.id("rooms"),
   },
   handler: async (ctx, args) => {
-    const { name } = args;
-    const room = await getOneFrom(ctx.db, "rooms", "name", name);
+    const {roomId } = args;
+    const room = await ctx.db.get(roomId);
     const user = await getCurrentUserOrThrow(ctx);
     // don't start if one already started.
     if (!room) return;

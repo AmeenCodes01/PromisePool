@@ -22,7 +22,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       });
 
       await PSpromise(ctx,userId);
-      await createRoom(ctx,args.profile.name as string,userId,"private")
+      await createRoom(ctx,args.profile.name as string,userId,"private","init")
 
       return userId
     },

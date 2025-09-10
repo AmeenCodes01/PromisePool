@@ -7,8 +7,8 @@ import { api } from "../../convex/_generated/api";
 export default async function Home() {
 
 const token = await convexAuthNextjsToken();
-const room= await fetchQuery(api.users.room, {},{token})
-redirect(`/${room?._id}`)
+const user= await fetchQuery(api.users.current, {},{token})
+redirect(`/${user?.roomId}`)
   //redirect to user default room. we get that by intaking room.
   //migrating: we need to use roomId. 
   return <div className="">

@@ -21,49 +21,51 @@ import CreateRoomDialog from "./CreateRoomDialog";
 import Link from "next/link";
 import { usePromiseStore } from "@/hooks/usePromiseStore";
 import ConfirmDialog from "./ConfirmDialog";
-import { DialogContent } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
+import { Doc } from "../../convex/_generated/dataModel";
+import { Button } from "./ui/button";
 
 function RoomDropDown({
   inRoom,
   setInRoom,
 }: {
-  inRoom: string | undefined;
-  setInRoom: (new_state: string | undefined) => void;
+  inRoom: Doc<"rooms"> | undefined;
+  setInRoom: (new_state: Doc<"rooms"> | undefined) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const onCreated = () => setOpen(false);
+  const onCreated = () => {setOpen(false)};
   const rooms = useQuery(api.rooms.get);
-  const { pause, workMin,mode,secLeft } = usePromiseStore(
+  const { pause, workMin, mode, secLeft } = usePromiseStore(
     useShallow((state) => ({
-    
-  pause:  state.pause,
-  workMin: state.workMin,
-  mode: state.mode,
-  secLeft:state.secLeft
-  })));
-  
+
+      pause: state.pause,
+      workMin: state.workMin,
+      mode: state.mode,
+      secLeft: state.secLeft
+    })));
+
 
   const router = useRouter();
-  const handleRoomClick = (roomName: string) => {
-    if (mode=="work" && (!pause || (workMin * 60 !== secLeft && secLeft !== undefined))) {
-     // setDialogOpen(true);
-     alert("Please stop/reset any timers playing")
+  const handleRoomClick = (room: Doc<"rooms">) => {
+    if (mode == "work" && (!pause || (workMin * 60 !== secLeft && secLeft !== undefined))) {
+      // setDialogOpen(true);
+      alert("Please stop/reset any timers playing")
     } else {
-      setInRoom(roomName);
-      router.push(`/${roomName}/timer`);
+      setInRoom(room);
+      router.push(`/${room._id}/timer`);
     }
   };
-
+console.log(open," open")
+  
   return (
-    <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DropdownMenu>
+    
+      <Dialog open={open} onOpenChange={(s)=>setOpen(s)} >
+        <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton>
-              Selected Room : {inRoom}
+              Selected Room : {inRoom?.name}
               <ChevronDown className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -74,8 +76,8 @@ function RoomDropDown({
                 <AccordionContent>
                   {rooms?.public.map((room) => (
                     <DropdownMenuItem
-                      key={room.name}
-                      onClick={() => handleRoomClick(room.name)}
+                      key={room._id}
+                      onClick={() => handleRoomClick(room)}
                     >
                       <span>{room?.name}</span>
                     </DropdownMenuItem>
@@ -86,63 +88,64 @@ function RoomDropDown({
               <AccordionItem value="item-2">
                 <AccordionTrigger>Groups</AccordionTrigger>
                 <AccordionContent>
-                  {rooms?.groups.map((room) => (
-                    <Link
-                      href={`/${room?.name}/timer`}
-                      key={room?._creationTime}
-                      onClick={() => setInRoom(room?.name ? room?.name : "")}
-                    >
-                      <DropdownMenuItem>
-                        <span>{room?.name}</span>
-                      </DropdownMenuItem>
-                    </Link>
-                  ))}
+                  {rooms?.groups
+                    .filter((room): room is NonNullable<typeof room> => room !== null)
+                    .map((room) => (
+                      <Link
+                        href={`/${room._id}/timer`}
+                        key={room._creationTime}
+                        onClick={() => setInRoom(room)}
+                      >
+                        <DropdownMenuItem>
+                          <span>{room.name}</span>
+                        </DropdownMenuItem>
+                      </Link>
+                    ))}
+
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3">
                 <AccordionTrigger>Private</AccordionTrigger>
                 <AccordionContent>
-                  {rooms?.private.map((room) => (
-                    <Link
-                      href={`/${room?.name}/`}
-                      key={room?._creationTime}
-                      onClick={() => setInRoom(room?.name ? room?.name : "")}
-                    >
-                      <DropdownMenuItem>
-                        <span>{room?.name}</span>
-                      </DropdownMenuItem>
-                    </Link>
-                  ))}
+                  {rooms?.private
+                    .filter((room): room is NonNullable<typeof room> => room !== null)
+                    .map((room) => (
+                      <Link
+                        href={`/${room._id}/timer`}
+                        key={room._creationTime}
+                        onClick={() => setInRoom(room)}
+                      >
+                        <DropdownMenuItem>
+                          <span>{room.name}</span>
+                        </DropdownMenuItem>
+                      </Link>
+                    ))}
+
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
 
-            <DialogTrigger asChild>
-              <DropdownMenuItem className="bg-primary">
-                Create room
-              </DropdownMenuItem>
-            </DialogTrigger>
+             
+             <DialogTrigger asChild >
+        <DropdownMenuItem className="bg-primary">
+          Create room
+        </DropdownMenuItem>
+      </DialogTrigger>
+
+
+        
+
+
+
           </DropdownMenuContent>
         </DropdownMenu>
-        <CreateRoomDialog onCreated={onCreated} />
+
+           <CreateRoomDialog onCreated={onCreated} />
+        
       </Dialog>
 
-      {/* Centralized Dialog */}
-      {/* <Dialog open={dialogOpen} modal={true} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <ConfirmDialog
-            title="Timer running"
-            desc="Please reset/finish any ongoing session before switching."
-            onConfirm={() => {
-              setDialogOpen(false);
-              // optionally, reset timer / leave room etc
-            }}
-          />
-        </DialogContent>
-      </Dialog> */}
-    </>
-  );
+    );
 }
 
 export default RoomDropDown;
