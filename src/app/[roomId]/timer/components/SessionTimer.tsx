@@ -14,7 +14,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import GroupCountDown from "./GroupCountDown";
 import SoloCountDown from "./SoloCountDown";
 import ProgressDialog from "./ProgressDialog";
-import { Edit } from "lucide-react";
+import { Delete, Edit, Trash } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 import FileUploader from "@/components/FileUploader";
@@ -28,12 +28,13 @@ function SessionTimer({ roomId }: { roomId: string }) {
     false,
     `${roomId}-seshOwner`
   );
+  const [show,setShow]=usePersistState(true,"showFileUpload")
+  
   const [localTimerStatus, setLocalTimerStatus] = usePersistState<
     null | string
   >(null, `${roomId}-timerStatus`);
   const [participant, setParticipant] = usePersistState(false, "participant");
   const [bgImage, setbgImage] = usePersistState("", "bgImage");
-
   const {
     workMin,
     setWorkMin,
@@ -86,6 +87,8 @@ recoverInterval()
   }, [roomId]);
 
 
+  console.log(bgImages,"imgs")
+
   const roomInfo = useQuery(api.rooms.getOne, { id: roomId as Id<"rooms"> }) as Doc<"rooms">;
 
   const createGroupSesh = useMutation(api.rooms.createSesh);
@@ -94,6 +97,9 @@ recoverInterval()
   const resetSesh = useMutation(api.sessions.reset);
 
   const joinGroupSesh = useMutation(api.rooms.participate);
+
+  const delImage = useMutation(api.images.del)
+
   // there are 2 states. (in session & paused), (stopped: paused & not Insesh)
   const { theme } = useTheme();
 
@@ -348,36 +354,56 @@ recoverInterval()
         ) : null}
       </div>
 
+{ show ?
       <div className="pt-12 sm:pt-0 pb-2 sm:pb-0">
 
 
       {/* BgImages */}
-      {bgImages && bgImages?.length > 0 && (
+<>
+      { bgImages && bgImages?.length > 0 && (
         <div className=" mt-4 border-2 rounded-md p-2 max-w-[300px] overflow-y-auto gap-2 flex flex-row">
           <div
-            className="h-[60px] min-w-[60px] border-[2px] text-xs font-mono text-center flex justify-center items-center"
+            className="h-[80px] min-w-[70px] border-[2px] text-xs font-mono text-center flex justify-center items-center"
             onClick={() => setbgImage("")}
           >
             remove
           </div>
           {bgImages.map((i) => {
             return (
-              <img
-                src={i.url as string}
-                key={i.url}
-                className="h-[60px]"
-                onClick={() => setbgImage(i.url as string)}
-              />
-            );
-          })}
+              <div className="relative">
+                <Trash className="absolute bottom-1 right-1" color="red" size={15}
+                onClick={()=> delImage({storageId: i.storageId, imageId:i._id})}
+                />
+                <img
+                  src={i.url as string}
+                  key={i.url}
+                  className="h-[80px] min-w-[70px]"
+                  onClick={() => setbgImage(i.url as string)}
+                  />
+              </div>
+              );
+            })}
         </div>
       )}
       <div className="mt-2">
 
       <FileUploader/>
       </div>
+      </>
       </div>
+    :null
+ }
+ <div className="min-w-[300px] p-2">
+
+ <Switch
+ 
+                    checked={show}
+                    onCheckedChange={(s) => {
+                      setShow(s);
+                    }}
+                    />
     
+ </div>
       <ProgressDialog roomId={roomId} />
     </div>
   );

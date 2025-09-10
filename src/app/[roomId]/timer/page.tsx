@@ -44,9 +44,14 @@ export default async function Page({
       <div className="flex  flex-1   sm:flex-row flex-col-reverse gap-4 sm:gap-0 w-full   ">
 
         {/* <div className="flex flex-1    w-full h-full "> */}
+<div className="flex flex-col">
 
         <Stream />
+<div className="m-2 mr-auto">
 
+            <ShowVidBtn />
+          </div>
+</div>
         {/* </div> */}
 
         {/* <Button
@@ -66,10 +71,7 @@ export default async function Page({
           <SessionTimer roomId={p.roomId} />
           {/* </TabsContent>
 </Tabs> */}
-          <div className="m-2 mr-auto">
-
-            <ShowVidBtn />
-          </div>
+          
         </div>
       </div>
 

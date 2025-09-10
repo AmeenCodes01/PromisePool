@@ -42,9 +42,12 @@ interface DialogProps {
   toggleTick: () => void;
   onPause: () => void;
   onPlay: () => void;
+  onPlayStopWatch: () => void;
   onPlayGroup: () => void;
   endTime: number;
   setEndTime: (num: number) => void;
+  stopwatch: boolean;
+  toggleStopWatch: () => void;
 
 }
 
@@ -56,8 +59,9 @@ export const usePromiseStore = create<DialogProps>()(
       endTime: Date.now(),
       setEndTime: (n) => set({ endTime: n }),
       toggleTick: () => set((s) => ({ playTick: !s.playTick })),
-
-
+      stopwatch: false,
+      toggleStopWatch: () => set((state)=>({ stopwatch: !state.stopwatch, secLeft: !state.stopwatch ? 0: state.workMin*60 })),
+      
       onPlayGroup: () => {
         const { intervalRef } = get();
 
@@ -65,7 +69,7 @@ export const usePromiseStore = create<DialogProps>()(
         if (intervalRef) clearInterval(intervalRef);
 
         const id = setInterval(() => {
-          const { endTime,playTick,workMin,secLeft,lastBell } = get();
+          const { endTime, playTick, workMin, secLeft, lastBell } = get();
 
           const remainingTime = endTime - Date.now();
           const remainingSec = Math.max(0, Math.round(remainingTime / 1000));
@@ -75,15 +79,15 @@ export const usePromiseStore = create<DialogProps>()(
 
 
           set({ secLeft: remainingSec });
-const tick = new Audio("/Tick.mp3");
-      playTick && tick.play()
+          const tick = new Audio("/Tick.mp3");
+          playTick && tick.play()
 
-      const elapsed = workMin*60 -  secLeft 
-        if (elapsed - lastBell >= 15 * 60 && playTick) {
-        set({lastBell:elapsed});
-        const bell = new Audio("/15min.mp3");
-        bell.play();
-      }
+          const elapsed = workMin * 60 - secLeft
+          if (elapsed - lastBell >= 15 * 60 && playTick) {
+            set({ lastBell: elapsed });
+            const bell = new Audio("/15min.mp3");
+            bell.play();
+          }
 
           if (remainingSec <= 0) {
             clearInterval(id);
@@ -95,6 +99,35 @@ const tick = new Audio("/Tick.mp3");
         set({ intervalRef: id });
       },
 
+      onPlayStopWatch: () => {
+
+        const { intervalRef, } = get();
+        if (intervalRef) clearInterval(intervalRef);
+
+        set({ pause: false });
+
+        const id = setInterval(() => {
+          const { secLeft, pause, playTick, } = get();
+
+          if (pause) {
+            clearInterval(id);
+            set({ intervalRef: null });
+            return;
+          }
+
+
+          // Tick sound
+          if (playTick) {
+            const tick = new Audio("/Tick.mp3");
+            tick.play();
+          }
+
+          set({ secLeft: secLeft + 1 });
+        }, 1000);
+
+        set({ intervalRef: id });
+
+      },
 
       onPlay: () => {
         const { pause, secLeft, intervalRef, } = get();
@@ -103,7 +136,7 @@ const tick = new Audio("/Tick.mp3");
         set({ pause: false });
 
         const id = setInterval(() => {
-          const { secLeft, pause, playTick, lastBell, workMin, mode } = get();
+          const { secLeft, pause, playTick, lastBell, workMin, mode, stopwatch } = get();
 
           if (pause) {
             clearInterval(id);
@@ -111,28 +144,31 @@ const tick = new Audio("/Tick.mp3");
             return;
           }
 
-          if (secLeft <= 1) {
-            clearInterval(id);
-            set({ secLeft: 0, pause: true, intervalRef: null });
-            return;
+          if(!stopwatch){
+
+            if (secLeft <= 1) {
+              clearInterval(id);
+              set({ secLeft: 0, pause: true, intervalRef: null });
+              return;
+            }
+  
+            // Tick sound
+            if (playTick) {
+              const tick = new Audio("/Tick.mp3");
+              tick.play();
+            }
+  
+            const elapsed = workMin * 60 - secLeft;
+  
+            // 15-min bell
+            if (elapsed - lastBell >= 15 * 60 && playTick && mode == "work") {
+              set({ lastBell: elapsed });
+              const bell = new Audio("/15min.mp3");
+              bell.play();
+            }
           }
 
-          // Tick sound
-          if (playTick) {
-            const tick = new Audio("/Tick.mp3");
-            tick.play();
-          }
-
-          const elapsed = workMin * 60 - secLeft;
-
-          // 15-min bell
-          if (elapsed - lastBell >= 15 * 60 && playTick && mode == "work") {
-            set({ lastBell: elapsed });
-            const bell = new Audio("/15min.mp3");
-            bell.play();
-          }
-
-          set({ secLeft: secLeft - 1 });
+          set({ secLeft: stopwatch ?secLeft+1: secLeft - 1 });
         }, 1000);
 
         set({ intervalRef: id });
@@ -178,13 +214,13 @@ const tick = new Audio("/Tick.mp3");
       setGoal: (goal) => set({ goal: goal }),
 
       onReset: () => {
-        const { workMin, mode, breakMin , intervalRef} = get();
-        if(intervalRef)clearInterval(intervalRef);
+        const { workMin, mode, breakMin, intervalRef,stopwatch } = get();
+        if (intervalRef) clearInterval(intervalRef);
 
         set({
           pause: true,
-          secLeft: mode == "work" ? workMin * 60 : breakMin * 60,
-          intervalRef:null
+          secLeft: stopwatch ? 0: mode == "work" ? workMin * 60 : breakMin * 60,
+          intervalRef: null
         });
       },
       seshCount: 0,

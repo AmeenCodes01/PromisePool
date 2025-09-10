@@ -24,7 +24,7 @@ export const get = query({
 export const start = mutation
 ({
   args: {
-    duration: v.number(),
+    duration: v.optional(v.number()),
     roomId: v.id("rooms"),
     goal: v.optional(v.string()),
   },
@@ -70,7 +70,7 @@ export const stop =  mutation({
     })
 // patch session rating
     user.lastSeshId &&  await ctx.db.patch(user.lastSeshId,{rating:args.rating, goal:args.goal,
-      pCoins:args.pCoins, wCoins:args.wCoins
+      pCoins:args.pCoins, wCoins:args.wCoins, duration:args.duration
     })
   
   },

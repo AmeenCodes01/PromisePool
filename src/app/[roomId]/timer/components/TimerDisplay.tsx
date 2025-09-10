@@ -19,6 +19,7 @@ export default function TimerDisplay({
   onSeshReset,
   ownerSesh,
   roomId,
+  onStopWatchEnd
 }: {
   pause: boolean;
   showExitBtn: boolean;
@@ -28,8 +29,9 @@ export default function TimerDisplay({
   SettingWithProps: () => React.JSX.Element;
   ownerSesh?: boolean;
   roomId: string;
+  onStopWatchEnd?: ()=>void;
 }) {
-  const { workMin, mode, onChangeMode, groupSesh, secLeft,seshCount } = usePromiseStore(
+  const { workMin, mode, onChangeMode, groupSesh, secLeft,stopwatch } = usePromiseStore(
     useShallow((state) => {
       return {
         workMin: state.workMin,
@@ -37,7 +39,7 @@ export default function TimerDisplay({
         onChangeMode: state.onChangeMode,
         groupSesh: state.groupSesh,
         secLeft: state.secLeft,
-        seshCount:state.seshCount
+        stopwatch:state.stopwatch
       };
     })
   );
@@ -142,6 +144,8 @@ export default function TimerDisplay({
               <TimerReset color="var(--destructive)" />
             </button>
           )}
+
+          { onStopWatchEnd ? <Button onClick={onStopWatchEnd}>End</Button>:null}
         </div>
       </div>
       <div className="mx-auto flex  justify-center mt-4" >

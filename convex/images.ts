@@ -22,19 +22,27 @@ export const sendImage = mutation({
   },
 });
 
+export const del = mutation({
+  args: { storageId: v.id("_storage"), imageId: v.id("images") },
+
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.imageId)
+  return await ctx.storage.delete(args.storageId)
+  },
+});
+
 
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx)
-    const images = await getManyFrom(ctx.db, "images","userId",user._id)
+    const user = await getCurrentUserOrThrow(ctx);
+    const images = await getManyFrom(ctx.db, "images", "userId", user._id);
     return Promise.all(
       images.map(async (img) => ({
         ...img,
-          url: await ctx.storage.getUrl(img.body) 
-          
-      })),
-
+        url: await ctx.storage.getUrl(img.body),
+        storageId: img.body, // Include the storageId for deletion
+      }))
     );
   },
 });

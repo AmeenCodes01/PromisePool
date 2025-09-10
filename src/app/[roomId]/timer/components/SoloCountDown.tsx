@@ -6,6 +6,9 @@ import { api } from '../../../../../convex/_generated/api';
 import { Id } from '../../../../../convex/_generated/dataModel';
 import { useShallow } from 'zustand/react/shallow';
 import { notifyUser } from '@/lib/notifyUser';
+import usePersistState from '@/hooks/usePersistState';
+import { Button } from '@/components/ui/button';
+import { on } from 'events';
 
 export default function SoloCountDown({ lastSeshRated, roomId,SettingWithProps,seshId
 
@@ -18,6 +21,7 @@ roomId:string;
 SettingWithProps: () => React.JSX.Element;
 }) {
 console.log("solo")
+
 const {
   workMin,
   onOpen,
@@ -28,7 +32,11 @@ const {
   onReset,
  onPlay,onPause,
    secLeft,
-  pause
+  pause,
+  onPlayStopWatch,
+  setSecLeft,
+  stopWatch,
+  toggleStopWatch
 
 } = usePromiseStore(
  useShallow( (state) => ({
@@ -42,11 +50,16 @@ const {
     onPlay: state.onPlay,
     onPause: state.onPause,
     secLeft:state.secLeft,
-    pause:state.pause
+    pause:state.pause,
+    onPlayStopWatch:state.onPlayStopWatch, 
+    setSecLeft: state.setSecLeft,
+  stopWatch:state.stopwatch,
+  toggleStopWatch:state.toggleStopWatch
 
   }))
 );
 
+  const playing = secLeft !== 0 && mode === "work" && secLeft !== workMin * 60;
 
 
 
@@ -58,7 +71,7 @@ const onSeshStart = async () => {
     if (mode == "work" && secLeft == workMin * 60) {
       if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {
         const result = await startSesh({
-          duration: workMin,
+          duration: stopWatch ? undefined: workMin,
           roomId: roomId as Id<"rooms">,
         });
         setGoalOpen(true)
@@ -69,11 +82,16 @@ const onSeshStart = async () => {
       
       // if rating required, then update workMin to match.
     }
+    // if(stopWatch){
+    // !playing ? setSecLeft(1) : null 
+    //   onPlayStopWatch();
+    //   return
+    // }
     onPlay();
     
     
   };
-
+console.log(stopWatch, " stpwtch")
   const onSeshReset = async () => {
     if (mode == "work") {
       secLeft !== workMin * 60 ? await resetSesh() : null;
@@ -86,7 +104,8 @@ const onSeshStart = async () => {
 
 
   useEffect(() => {
-    if (secLeft == 0) {
+    if (secLeft == 0&& !stopWatch) {
+      
       notifyUser(`${mode=="work" ? "Break":"Work/Study"} Time`,`Your ${mode=="work" ?workMin:breakMin}m ${mode=="work"? "session":"break"} is over. Well done!`)
       // get progress. open progres
       if (mode == "work") {
@@ -109,7 +128,28 @@ const onSeshStart = async () => {
   }
   
     return (
-    <div>
+    <div className='flex  flex-col p-2 '>
+  <div className="flex flex-row sm:flex-row  items-center self-center mb-2 gap-2  ">
+          <Button
+            className="text-xs  border-[2px]"
+            disabled={playing}
+            variant={stopWatch ? "outline" : "default"}
+            onClick={() => toggleStopWatch()}
+          >
+            Countdown
+          </Button>
+          <Button
+            className="text-xs border-[2px]  "
+            variant={!stopWatch ? "outline" : "default"}
+            onClick={() => toggleStopWatch()}
+            disabled={playing}
+          >
+            Stopwatch
+          </Button>
+          <div className={`${playing ? "opacity-50" : ""}`} aria-disabled={!pause}>
+  
+</div>
+        </div>
       <TimerDisplay
     SettingWithProps={SettingWithProps}
     pause={pause}
@@ -118,7 +158,14 @@ const onSeshStart = async () => {
     onSeshStart={onSeshStart}
       onSeshReset={onSeshReset}
       roomId={roomId}
+      onStopWatchEnd= {
+      ()=>{
+        onPause();
+        onOpen()
+      }
+      }
       />
+      
     </div>
   )
 }

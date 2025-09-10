@@ -26,6 +26,7 @@ function ProgressDialog({ roomId }: { roomId: string }) {
     goal,
     onReset,
     incSeshCount,
+    stopwatch, secLeft
   } = usePromiseStore((state) => state);
 
 
@@ -40,6 +41,10 @@ function ProgressDialog({ roomId }: { roomId: string }) {
   const getReward = useCallback(() => {
     return calcReward(workMin, rating as number);
   }, [rating, workMin]);
+
+// time done is workMin - secLeft fr countdown
+const workDuration = Math.floor((workMin*60-secLeft)/60)
+console.log(workDuration)
 
   return (
     <div>
@@ -99,18 +104,19 @@ function ProgressDialog({ roomId }: { roomId: string }) {
           <AlertDialogFooter className="sm:justify-end flex flex-row">
             <Button
               className="justify-end w-fit "
-              onClick={() => {
+              onClick={async() => {
                 if (!rated) {
                   //means it's now rated.
-                  endSesh({
+                  await endSesh({
                     rating: rating as number,
                     pCoins: getReward(),
-                    wCoins: calcReward(workMin, rating as number),
-                    duration: workMin,
+                    wCoins: calcReward(stopwatch ? Math.floor(secLeft/60) :workDuration, rating as number),
+                    duration: stopwatch ? Math.floor(secLeft/60) :workDuration,
                     goal,
                   });
                   setRated(true);
                   incSeshCount();
+                  (stopwatch || workMin !==workDuration) && onReset()
                 } else {
                   setRated(false);
                   setRating("");

@@ -11,7 +11,6 @@ export default function FileUploader() {
 
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [show,setShow]=usePersistState(true,"showFileUpload")
   const [name] = useState(() => "User " + Math.floor(Math.random() * 10000));
   async function handleSendImage(event: FormEvent) {
     event.preventDefault();
@@ -35,8 +34,6 @@ export default function FileUploader() {
   return (
     <div className=" flex flex-col  gap-2 min-w-[300px]  ">
 
-    {
-      show ?
       <form
   onSubmit={handleSendImage}
   className="border border-gray-700 rounded p-2 flex flex-col items-center gap-2 w-fit shadow-sm "
@@ -60,16 +57,7 @@ export default function FileUploader() {
   />
     </div>
   <span className="text-xs italic text-primary">upload img to set as bg</span>
-</form>: null
-    }
- <Switch
- 
-                    checked={show}
-                    onCheckedChange={(s) => {
-                      //    setGroupSesh(s);
-                      setShow(s);
-                    }}
-                    />
+</form>
     </div>
 
   )
