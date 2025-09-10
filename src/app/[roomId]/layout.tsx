@@ -7,6 +7,7 @@ import PromiseCircle from "./PromiseCircle";
 import RoomLog from "@/components/RoomLog";
 import { notFound } from "next/navigation";
 import { Id } from "../../../convex/_generated/dataModel";
+import ShareLink from "./ShareLink";
 
 export default async function layout({ children, params }: { children: React.ReactNode, params: Promise<{ roomId: string }> }) {
   const p = await params
@@ -19,9 +20,7 @@ export default async function layout({ children, params }: { children: React.Rea
   }
 
   return <div className="w-full  flex flex-1 px-2 ">
-    <RoomLog roomId={p.roomId} />
-
-    <main
+    <RoomLog roomId={p.roomId} /> <main
       className="flex  w-full h-full 
               ">
       <CheckPrivate roomId={p.roomId} />

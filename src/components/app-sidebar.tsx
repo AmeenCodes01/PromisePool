@@ -7,7 +7,8 @@ import {
   Search,
   Settings,
   Store,
-  Phone
+  Phone,
+  HomeIcon
 } from "lucide-react";
 
 import {
@@ -43,6 +44,11 @@ import { Doc, Id } from "../../convex/_generated/dataModel";
 
 // Menu items.
 const items = [
+  {
+    title: "Home",
+    url: "/",
+    icon: HomeIcon,
+  },
   // {
   //   title: "Map",
   //   url: "/map",
