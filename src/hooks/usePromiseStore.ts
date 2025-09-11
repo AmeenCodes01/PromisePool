@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { clearInterval, setInterval } from "worker-timers";
 
 interface DialogProps {
   isOpen: boolean;
@@ -36,7 +37,7 @@ interface DialogProps {
 
   // solo countdown
 
-  intervalRef: NodeJS.Timeout | null;
+  intervalRef: null| number;
   recoverInterval: () => void;
   lastBell: number;
   toggleTick: () => void;

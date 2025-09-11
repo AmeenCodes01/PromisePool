@@ -139,6 +139,7 @@ I should ponder on how offline sessions are added
 
 [] Session time shouldn't be 0m. 
 
+[]   goaldialog doesn't open w stopwatch
 
 ----optimisation--
 [] useShallow 
