@@ -34,14 +34,14 @@ export function TimeLine({data}:{data:Doc<"sessions">[]}){
 
                         return(
                         <div key={index} className="flex flex-col items-start   justify-between p-2 border-b last:border-b-0">
-                            <span className="text-sm text-gray-500">{formattedStartTime}</span>
+                            <span className="text-sm text-gray-500">{formattedEndTime}</span>
                             <div className="flex flex-row gap-8 items-center w-full justify-between pl-3 border-l-2 py-3">
 
                             <span className="text-sm">{session?.duration}m</span>
                             <span className="text-sm">{session.rating} <span className="text-[10px] text-muted-foreground ">/ 10</span> </span>
                             <span className="text-sm flex flex-row  items-center justify-between gap-2 w-[30px]">{session.pCoins ?session.pCoins :0} <Coins size={12}/></span>
                             </div>
-                            <span className="text-sm text-gray-500">{formattedEndTime}</span>
+                            <span className="text-sm text-gray-500">{formattedStartTime}</span>
                         </div>
                     )
                     }
