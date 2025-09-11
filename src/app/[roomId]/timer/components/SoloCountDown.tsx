@@ -71,7 +71,7 @@ const onSeshStart = async () => {
     if (mode == "work" && secLeft == workMin * 60) {
       if (lastSeshRated === true || (lastSeshRated === undefined&& seshId==undefined)) {
         const result = await startSesh({
-          duration: stopWatch ? undefined: workMin,
+          duration:  workMin,
           roomId: roomId as Id<"rooms">,
         });
         setGoalOpen(true)

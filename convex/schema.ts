@@ -22,7 +22,7 @@ export default defineSchema({
   }).index("pCoins", ["pCoins"]).index("country", ["country"]),
 
   sessions: defineTable({
-    duration: v.optional(v.number()),
+    duration: (v.number()),
     rating: v.optional(v.number()),
     goal: v.optional(v.string()),
     wCoins: v.optional(v.number()),

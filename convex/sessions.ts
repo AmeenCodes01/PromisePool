@@ -24,7 +24,7 @@ export const get = query({
 export const start = mutation
 ({
   args: {
-    duration: v.optional(v.number()),
+    duration:(v.number()),
     roomId: v.id("rooms"),
     goal: v.optional(v.string()),
   },
