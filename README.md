@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 PromisePool
 
-## Getting Started
+**PromisePool** is a collaborative study hub where students can create private rooms, invite friends, and study together with **group timers, points, leaderboards, and built-in video calls**.  
+It’s designed to make online studying feel like being in the same room — accountable, productive, and fun.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👥 Custom Private Rooms
+Build private study rooms, invite friends via link & password, and collaborate.  
+There are also **public default rooms** available for anyone.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🎬 In-app Video
+Paste a YouTube link to play an embedded video.  
+This could be a **stretch video for breaks** or **ambience video during sessions**!
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### ⏱️ Group Study Timers
+Stay focused with synchronized Pomodoro-style timers in every room.  
+- Countdown / Stopwatch modes  
+- Ticking sounds  
+- Rate your sessions to earn coins  
+- Use a **custom image** as your study background  
 
-## Learn More
+### 🏆 Points & Rewards
+Earn points for each completed session — then spend them in the **in-app shop**.
 
-To learn more about Next.js, take a look at the following resources:
+### 📜 History Tracking
+Track your past study sessions to measure progress over time.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📊 Leaderboards
+Compete with friends locally (**per room**) and globally (**across all users**).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🎥 Video Calls
+Built-in video conferencing powered by **LiveKit**, hosted on a custom server.  
+Optimized to use **minimum data possible**.  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔮 Upcoming Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🌍 World Map of Users
+Display participating users’ countries in color (opt-in) and show their time zones for better coordination.
+
+### ⏱️ Multiple Timers
+Run and manage multiple timers in the same room for advanced workflows.
+
+---
