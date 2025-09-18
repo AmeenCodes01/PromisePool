@@ -203,7 +203,7 @@ export const usePromiseStore = create<DialogProps>()(
       setGroupSesh: (state) => set({ groupSesh: state }),
       onChangeMode: (md, fn) => {
         console.log("onchangefuckingmode");
-        set((state) => ({ secLeft: md === "break" ? state.breakMin * 60 : state.workMin * 60, mode: md }));
+        set((state) => ({ secLeft: md === "break" ? state.breakMin * 60 : state.workMin * 60, mode: md, stopwatch: md == "break" ? false : state.stopwatch }));
 
 
         fn ? fn() : null;

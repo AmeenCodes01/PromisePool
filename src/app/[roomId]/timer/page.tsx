@@ -44,10 +44,10 @@ export default async function Page({
       <div className="flex  flex-1   sm:flex-row flex-col-reverse gap-4 sm:gap-0 w-full   ">
 
         {/* <div className="flex flex-1    w-full h-full "> */}
-<div className="flex flex-col">
+<div className="flex  flex-col">
 
         <Stream />
-<div className="m-2 mr-auto">
+<div className="m-2 mr-auto mt-auto">
 
             <ShowVidBtn />
           </div>
@@ -59,7 +59,7 @@ export default async function Page({
       >Show Video</Button> */}
 
         {/* Timer */}
-        <div className="flex flex-col sm:flex-[1.5] flex-1  w-full h-full   sm:justify-center items-center   border-black">
+        <div className="flex flex-col sm:flex-[2] flex-1  w-full h-full   sm:justify-center items-center ">
           {/* <Tabs defaultValue="pomodoro" className=" w-full h-full flex flex-col"> */}
           {/* <TabsList className="  w-fit mx-auto justify-self-center justify-center ">
     <TabsTrigger value="pomodoro" className="">Pomodoro</TabsTrigger>

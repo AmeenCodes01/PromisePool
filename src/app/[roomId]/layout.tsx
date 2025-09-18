@@ -7,12 +7,11 @@ import PromiseCircle from "./PromiseCircle";
 import RoomLog from "@/components/RoomLog";
 import { notFound } from "next/navigation";
 import { Id } from "../../../convex/_generated/dataModel";
-import ShareLink from "./ShareLink";
 
 export default async function layout({ children, params }: { children: React.ReactNode, params: Promise<{ roomId: string }> }) {
   const p = await params
   const roomInfo = await fetchQuery(api.rooms.getOne, { id: p.roomId as Id<"rooms"> })
-
+console.log("Hello")
   if (!roomInfo) {
     console.log("inside")
     notFound()

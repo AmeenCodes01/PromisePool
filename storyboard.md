@@ -131,15 +131,22 @@ I should ponder on how offline sessions are added
 
 [X] disable opening settings during timer play
 
-[] timer resets if anything changed in settings, even when paused
+[X] timer resets if anything changed in settings, even when paused  (fix: settings disabled while ongoing session, pause/play)
 
-[] Hide Video button overlaps with play/pause btn of video.
+[X] Hide Video button overlaps with play/pause btn of video.
 
 [] delete storyboard from commit histories.
 
-[] Session time shouldn't be 0m. 
+[X] Session time shouldn't be 0m. 
 
-[]   goaldialog doesn't open w stopwatch
+[X]   goal dialog doesn't open w stopwatch
+
+[X] stopwatch hide on break  (disabled for better UX)
+
+[X] end button appears in break
+
+[] bell/notif doesn't play if session end while in cam.
+
 
 ----optimisation--
 [] useShallow 

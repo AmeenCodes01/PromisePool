@@ -57,6 +57,7 @@ function RoomDropDown({
       router.push(`/${room._id}/timer`);
     }
   };
+  
 console.log(open," open")
   
   return (

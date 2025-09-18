@@ -145,7 +145,7 @@ export default function TimerDisplay({
             </button>
           )}
 
-          { onStopWatchEnd ? <Button onClick={onStopWatchEnd}>End</Button>:null}
+          { onStopWatchEnd && mode!=="break" ? <Button onClick={onStopWatchEnd}>End</Button>:null}
         </div>
       </div>
       <div className="mx-auto flex  justify-center mt-4" >

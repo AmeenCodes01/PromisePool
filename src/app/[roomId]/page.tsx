@@ -21,13 +21,12 @@ const token = await convexAuthNextjsToken();
 
    const room = await fetchQuery(api.rooms.getOne, {id:p.roomId as Id<"rooms">},{token})
 const user= await fetchQuery(api.users.current, {},{token})
-
   return <div className="w-full relative h-full justify-center items-center flex flex-row">
     <CheckPrivate roomId={p.roomId} />
 
     
     <div className="absolute top-3 right-3 flex flex-row gap-4">
-     <ShareLink roomId={p.roomId} password={room?.password}/>
+    {room?.type !=="private" && <ShareLink roomId={p.roomId} password={room?.password}/>}
       <InfoDialog title={`Welcome to  ${room?.type === "private"?"Your Private": room?.type==="group"?"Your Private Group":room?.name} Room!`}
         desc={
           <p>

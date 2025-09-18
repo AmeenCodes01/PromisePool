@@ -3,12 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner"
-import { Password } from "@convex-dev/auth/providers/Password";
-
-import { ConvexError } from "convex/values";
-import { redirect } from "next/dist/server/api-utils";
-
-
 export function SignInWithPassword({
   provider,
   handleSent,
@@ -37,9 +31,7 @@ export function SignInWithPassword({
         setSubmitting(true);
         const formData = new FormData(event.currentTarget);
         formData.set("email",formData.get("name")as string)
-        for (let pair of formData.entries()) {
-            console.log(pair[0]+ ': ' + pair[1]);
-          }        
+       
           signIn(provider ?? "password", formData)
           .then(() => {
             handleSent?.(formData.get("email") as string);
