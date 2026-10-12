@@ -1,6 +1,8 @@
 #  PromisePool
 ## https://promise-pool.vercel.app/
-Soon coming live! Undergoing final testing.
+
+Update: No longer in production & calls no longer possible because I stopped paying for the hosting, it was expensive! Deployed  still working :)
+
 
 **PromisePool** is a collaborative study hub where students can create private rooms, invite friends, and study together with **group timers, points, leaderboards, and built-in video calls**.  
 It’s designed to make online studying feel like being in the same room — accountable, productive, and fun.
@@ -38,16 +40,3 @@ Built-in video conferencing powered by **LiveKit**, hosted on a custom server.
 Optimized to use **minimum data possible**.  
 
 ---
-
-## Upcoming Features
-
-### World Map of Users
-Display participating users’ countries in color (opt-in) and show their time zones for better coordination.
-
-### Multiple Timers
-Run and manage multiple timers in the same room.
-
-### To do list
-
-### 
-
