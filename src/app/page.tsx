@@ -12,6 +12,7 @@ if(!token){
   return null
 }
 const user= await fetchQuery(api.users.current, {},{token})
+console.log("user",user)
 if(user){
 
   redirect(`/${user?.roomId}`)

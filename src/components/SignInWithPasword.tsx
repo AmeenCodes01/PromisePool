@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner"
+import { ConvexError } from "convex/values";
 export function SignInWithPassword({
   provider,
   handleSent,
@@ -22,7 +23,6 @@ export function SignInWithPassword({
   const [submitting, setSubmitting] = useState(false);
 
 
-
   return (
     <form
       className="flex flex-col"
@@ -30,6 +30,12 @@ export function SignInWithPassword({
         event.preventDefault();
         setSubmitting(true);
         const formData = new FormData(event.currentTarget);
+         const name = formData.get("name") as string;
+
+  if (!name || name.trim() === "") {
+    toast.error("Please enter a username.");
+    return;
+  }
         formData.set("email",formData.get("name")as string)
        
           signIn(provider ?? "password", formData)
@@ -37,23 +43,21 @@ export function SignInWithPassword({
             handleSent?.(formData.get("email") as string);
           })
           .catch((error) => {
-            console.error("error",error);
-            
+   
             let toastTitle: string;
-            // if (
-            //   error instanceof ConvexError &&
-            //   error.data === "INVALID_PASSWORD"
-            // ) {
-            //   toastTitle =
-            //   "Invalid password";
-            // } else {
-            //   console.log("erro")
-            //   toastTitle =
-            //     flow === "signIn"
-            //       ? "Could not sign in, did you mean to sign up?"
-            //       : "Could not sign up, did you mean to sign in?";
-            // }
-            toast.error("Wrong Credentials.");
+            if (
+              error instanceof ConvexError &&
+              error.data === "INVALID_PASSWORD"
+            ) {
+              console.log(error.data,"data")
+              toastTitle =
+              "Invalid password";
+            } else {
+              console.log("erro")
+              toastTitle =  error?.message.includes("INVALID_PASSWORD") ? "Invalid password" : flow === "signIn" ? "Invalid username or password" : "Error signing up";
+         
+            }
+            toast.error(toastTitle);
             setSubmitting(false);
           });
       }}

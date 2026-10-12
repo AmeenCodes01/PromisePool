@@ -65,7 +65,6 @@ export const getOne = query({
   args: { id: v.id("rooms") },
   handler: async (ctx, { id }) => {
     return await ctx.db.get(id)
-
   },
 });
 
@@ -214,7 +213,9 @@ export async function createRoom(
     type: type,
     password: password,
   });
-  console.log(mode, " creating room")
-  mode ? await ctx.db.patch(id, { roomId }) : await ctx.db.patch(id, { roomIds: [...user?.roomIds ?? [], roomId] })
+
+  
+  mode === "init" && await ctx.db.patch(id, { roomId }) 
+  await ctx.db.patch(id, { roomIds: [...user?.roomIds ?? [], roomId] })
   return roomId
 }

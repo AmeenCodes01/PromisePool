@@ -58,8 +58,8 @@ function RoomDropDown({
     }
   };
   
-console.log(open," open")
-  
+
+  console.log(rooms, "rooms")
   return (
     
       <Dialog open={open} onOpenChange={(s)=>setOpen(s)} >
@@ -129,7 +129,7 @@ console.log(open," open")
 
              
              <DialogTrigger asChild >
-        <DropdownMenuItem className="bg-primary">
+        <DropdownMenuItem className="bg-primary rounde-sm hover:cursor-pointer">
           Create room
         </DropdownMenuItem>
       </DialogTrigger>
