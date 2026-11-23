@@ -36,7 +36,14 @@ Track your past study sessions to measure progress over time. Weekly & Daily. Mo
 Compete with friends locally (**per room**) and globally (**across all users**).
 
 ### Video Calls
-Built-in video conferencing powered by **LiveKit**, hosted on a custom server.  
+Built-in video conferencing powered by **LiveKit**, hosted on [LiveKit Cloud](https://livekit.io) (free Build plan).  
 Optimized to use **minimum data possible**.  
+
+Set these in `.env.local` (from your LiveKit Cloud project settings):
+```
+NEXT_PUBLIC_LIVEKIT_URL=wss://<your-project>.livekit.cloud
+LIVEKIT_API_KEY=...
+LIVEKIT_API_SECRET=...
+```
 
 ---
