@@ -186,7 +186,7 @@ export default function Cam({ roomId }: { roomId: string }) {
     <RoomContext.Provider value={roomInstance} >
 
 
-      <div data-lk-theme="default" style={{ height: '100%' }}>
+      <div data-lk-theme="default" className="flex flex-col w-full h-full">
   <div className=" flex ">
             {hours !== 0 && (
               <span className=" text-lg font-mono">
@@ -217,9 +217,11 @@ function MyVideoConference() {
   const tracks = useTracks([{ source: Track.Source.Camera, withPlaceholder: true }]);
   return (
     <>
-      <GridLayout tracks={tracks} style={{ height: 'calc(100% - 60px)' }}>
-        <ParticipantTile />
-      </GridLayout>
+      <div className="flex-1 min-h-0 w-full">
+        <GridLayout tracks={tracks} style={{ height: '100%' }}>
+          <ParticipantTile />
+        </GridLayout>
+      </div>
       <ControlBar controls={{ screenShare: false, chat: false, settings: false }} />
     </>
   );
