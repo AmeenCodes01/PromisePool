@@ -7,9 +7,10 @@ import {
   GridLayout,
   ParticipantTile,
   ControlBar,
+  useTrackRefContext,
   LiveKitRoom,
 } from '@livekit/components-react';
-import { AudioPresets, LocalParticipant, Room, RoomEvent, Track } from 'livekit-client';
+import { AudioPresets, LocalParticipant, RemoteTrackPublication, Room, RoomEvent, Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
@@ -212,6 +213,30 @@ export default function Cam({ roomId }: { roomId: string }) {
   );
 }
 
+// Remote tiles get a button that unsubscribes from that person's video: nothing is downloaded while hidden.
+function Tile() {
+  const ref = useTrackRefContext();
+  const [hidden, setHidden] = useState(false);
+  const pub = ref.publication as RemoteTrackPublication | undefined;
+  const canHide = !ref.participant.isLocal && !!pub;
+  return (
+    <div className="relative w-full h-full min-h-0">
+      <ParticipantTile />
+      {canHide && (
+        <button
+          className="absolute top-2 left-2 z-10 rounded bg-black/60 px-2 py-1 text-xs text-white"
+          onClick={() => {
+            pub.setSubscribed(hidden);
+            setHidden(!hidden);
+          }}
+        >
+          {hidden ? 'Show cam' : 'Hide cam'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function MyVideoConference() {
   // Camera tiles only: screen share is left out on purpose, it costs far more data than the 150 kbps camera.
   const tracks = useTracks([{ source: Track.Source.Camera, withPlaceholder: true }]);
@@ -219,7 +244,7 @@ function MyVideoConference() {
     <>
       <div className="flex-1 min-h-0 w-full">
         <GridLayout tracks={tracks} style={{ height: '100%' }}>
-          <ParticipantTile />
+          <Tile />
         </GridLayout>
       </div>
       <ControlBar controls={{ screenShare: false, chat: false, settings: false }} />
