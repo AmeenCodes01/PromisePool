@@ -4,15 +4,16 @@ import {
   RoomAudioRenderer,
   useTracks,
   RoomContext,
-  VideoConference,
+  GridLayout,
+  ParticipantTile,
+  ControlBar,
   LiveKitRoom,
 } from '@livekit/components-react';
-import { LocalParticipant, Room, RoomEvent, Track } from 'livekit-client';
+import { AudioPresets, LocalParticipant, Room, RoomEvent, Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import { createPixelatedVideoTrack, createUltraLowDataPixelTrack } from '@/lib/createPixelCam';
 import { useRouter } from 'next/navigation';
 import { usePromiseStore } from '@/hooks/usePromiseStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -72,6 +73,9 @@ export default function Cam({ roomId }: { roomId: string }) {
   // TODO: get user input for room and name
   const user = useQuery(api.users.current)
   const [roomInstance] = useState(() => new Room({
+    // Only receive the resolution the tile actually shows; stop sending layers nobody watches.
+    adaptiveStream: true,
+    dynacast: true,
     // Video capture defaults: The settings for the video track we create.
     videoCaptureDefaults: {
       resolution: {
@@ -92,21 +96,12 @@ export default function Cam({ roomId }: { roomId: string }) {
         maxFramerate: 10,
       },
 
-      // Low simulcast layers for subscribers with even worse network conditions.
-      videoSimulcastLayers: [
-        {
-          width: 160,
-          height: 120,
-          encoding: {
-            maxBitrate: 50_000, // 50 kbps
-            maxFramerate: 5,
-          },
-          resolution: {
-            width: 160,
-            height: 120,
-          }
-        },
-      ],
+      // One small stream is enough for 3-4 people; simulcast would upload a second copy.
+      simulcast: false,
+      // Opus at speech bitrate; DTX sends nothing while silent; RED would double audio data.
+      audioPreset: AudioPresets.speech,
+      dtx: true,
+      red: false,
     },
   })
 
@@ -154,11 +149,6 @@ export default function Cam({ roomId }: { roomId: string }) {
         }
 
         roomInstance.on(RoomEvent.Disconnected, handleOnLeave);
-        roomInstance.on(RoomEvent.Reconnected,()=>{
-          console.log("reconnected")
-          roomInstance.localParticipant.setCameraEnabled(true)}
-        
-        )
       } catch (e) {
         console.error(e);
       }
@@ -223,23 +213,14 @@ export default function Cam({ roomId }: { roomId: string }) {
 }
 
 function MyVideoConference() {
-  // `useTracks` returns all camera and screen share tracks. If a user
-  // joins without a published camera track, a placeholder track is returned.
-  const tracks = useTracks(
-    [
-      { source: Track.Source.Camera, withPlaceholder: true },
-      { source: Track.Source.ScreenShare, withPlaceholder: false },
-    ],
-    { onlySubscribed: false },
-  );
+  // Camera tiles only: screen share is left out on purpose, it costs far more data than the 150 kbps camera.
+  const tracks = useTracks([{ source: Track.Source.Camera, withPlaceholder: true }]);
   return (
-<>
-
-      <VideoConference/>
-  
-</>
-    // chatMessageFormatter={formatChatMessageLinks}
-    // SettingsComponent={SHOW_SETTINGS_MENU ? SettingsMenu : undefined}
-    
-  )
+    <>
+      <GridLayout tracks={tracks} style={{ height: 'calc(100% - 60px)' }}>
+        <ParticipantTile />
+      </GridLayout>
+      <ControlBar controls={{ screenShare: false, chat: false, settings: false }} />
+    </>
+  );
 }
